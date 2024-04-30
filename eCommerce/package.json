@@ -22,6 +22,10 @@
       "git add"
     ]
   },
+  "validate-branch-name": {
+    "pattern": "(feat|refactor|fix)/eCommerce-*",
+    "errorMsg": "Error branch"
+  },
   "repository": {
     "type": "git",
     "url": ""

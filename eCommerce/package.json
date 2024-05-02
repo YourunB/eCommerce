@@ -14,7 +14,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "prettier --check .",
-      "pre-push": "eslint . && validate-branch-name"
+      "pre-push": "eslint ."
     }
   },
   "lint-staged": {
@@ -22,10 +22,6 @@
       "npm run lint:write",
       "git add"
     ]
-  },
-  "validate-branch-name": {
-    "pattern": "(feat|refactor|fix)/eCommerce-*",
-    "errorMsg": "Error branch"
   },
   "repository": {
     "type": "git",

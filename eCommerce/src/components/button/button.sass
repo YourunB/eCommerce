@@ -1,0 +1,15 @@
+@use './src/variables' as *
+
+.button-base
+  font-size: 1rem
+  color: $color-button-common
+
+  padding: 0.63rem 1rem
+  cursor: pointer
+  border: none
+  border-radius: 5px
+  background-color: $color-button-background
+
+@media (hover: hover)
+  .button-base:hover
+    background-color: color-mix(in srgb, $color-button-background 90%, black 10%)

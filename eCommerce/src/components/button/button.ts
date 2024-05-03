@@ -3,13 +3,7 @@ import { BaseComponent, TaggedElementProps } from '../../BaseComponent/BaseCompo
 
 export class Button extends BaseComponent<HTMLButtonElement> {
   constructor(props: TaggedElementProps) {
-    super({
-      tagName: 'button',
-      attribute: props.attribute,
-      classNames: props.classNames,
-      parentNode: props.parentNode,
-      textContent: props.textContent,
-    });
+    super({ tagName: 'button', ...props });
     this.setClassName('button-base');
   }
 }

@@ -3,13 +3,7 @@ import './input.sass';
 
 export class Input extends BaseComponent<HTMLInputElement> {
   constructor(props: TaggedElementProps) {
-    super({
-      tagName: 'input',
-      attribute: props.attribute,
-      classNames: props.classNames,
-      parentNode: props.parentNode,
-      textContent: props.textContent,
-    });
+    super({ tagName: 'input', ...props });
     this.setClassName('input-base');
   }
 

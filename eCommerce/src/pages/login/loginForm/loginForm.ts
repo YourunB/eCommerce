@@ -47,6 +47,7 @@ export class LoginForm extends BaseComponent {
     this.inputEmail.value = 'seb@example.com';
     this.inputPass.value = 'test12345TEST';
 
+    this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });

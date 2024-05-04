@@ -19,10 +19,12 @@ import { BaseComponent } from '../../../BaseComponent/BaseComponent';
 import { InputWithNotice } from '../inputWithNotice/inputWithNotice';
 
 export class LoginForm extends BaseComponent {
-  dispatch: Dispatch;
-  inputEmail: InputWithNotice;
-  inputPass: InputWithNotice;
-  showPassword: Input;
+  private dispatch: Dispatch;
+  private inputEmail: InputWithNotice;
+  private inputPass: InputWithNotice;
+  private showPassword: Input;
+  // после первого сабмита начнется валидация при каждом изменении инпутов
+  private isSubmitted = false;
 
   constructor(dispatch: Dispatch) {
     super({ tagName: 'div', classNames: 'form__conteiner' });
@@ -55,6 +57,8 @@ export class LoginForm extends BaseComponent {
     passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
     form.insertChildren([this.inputEmail, passwordContainer, button]);
 
+    this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
     labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
     form.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     this.insertChild(form);
@@ -66,7 +70,8 @@ export class LoginForm extends BaseComponent {
 
   private handleSubmit(e: SubmitEvent): void {
     e.preventDefault();
-    if (!this.isFormValid()) return;
+    this.isSubmitted = true;
+    if (!this.validateForm()) return;
     this.dispatch({
       type: 'login',
       payload: {
@@ -76,15 +81,16 @@ export class LoginForm extends BaseComponent {
     });
   }
 
-  private isFormValid(): boolean {
+  private handleChangeInput(): void {
+    if (this.isSubmitted) this.validateForm();
+  }
+
+  private validateForm(): boolean {
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidPassword = this.validatePassword(this.inputPass.value);
-    if (!isValidLogin.validate || !isValidPassword.validate) {
-      this.inputEmail.showNotice(isValidLogin.errors);
-      this.inputPass.showNotice(isValidPassword.errors);
-      return false;
-    }
-    return true;
+    this.inputEmail.showNotice(isValidLogin.errors);
+    this.inputPass.showNotice(isValidPassword.errors);
+    return isValidLogin.validate && isValidPassword.validate;
   }
 
   private validateEmail(input: string): Validation {

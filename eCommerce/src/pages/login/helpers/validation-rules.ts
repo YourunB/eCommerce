@@ -74,7 +74,7 @@ export const isPassContainLowercase: Rule = (target) => {
 
 export const isPassContainNumber: Rule = (target) => {
   const result = { ...target };
-  const regexp = /[0-9]+/g;
+  const regexp = /[0-9]+/gi;
   if (!result.subject.match(regexp)) {
     result.errors.push('Password must contain at least one digit (0-9)');
     result.validate = false;

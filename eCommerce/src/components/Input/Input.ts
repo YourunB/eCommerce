@@ -14,4 +14,12 @@ export class Input extends BaseComponent<HTMLInputElement> {
   set value(val: string) {
     this.element.value = val;
   }
+
+  get type() {
+    return this.element.getAttribute('type') || '';
+  }
+
+  set type(value: string) {
+    this.setAttribute({ name: 'type', value });
+  }
 }

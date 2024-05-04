@@ -12,9 +12,13 @@ export class InputWithNotice extends Input {
 
   public showNotice(messages: string | string[]): void {
     this.notice.getElement().innerHTML = '';
+    if (this.isEmptyMessages(messages)) {
+      this.notice.destroy();
+      return;
+    }
     let msg;
     if (typeof messages === 'string') {
-      msg = `<p>${messages}</p>`;
+      msg = messages === '' ? '' : `<p>${messages}</p>`;
     } else {
       msg = messages.reduce((html, message) => `${html}<li>${message}</li>`, '<ul>');
       msg += '</li>';
@@ -22,5 +26,11 @@ export class InputWithNotice extends Input {
 
     this.notice.getElement().innerHTML = msg;
     this.element.after(this.notice.getElement());
+  }
+
+  private isEmptyMessages(messages: string | string[]): boolean {
+    if (typeof messages === 'string') return messages === '';
+    if (messages.length === 0) return true;
+    return messages[0] === '';
   }
 }

@@ -12,18 +12,29 @@
   background-color: #E5E5E5
 
 .form__conteiner
-  width: clamp(10rem, 80%, 31.25rem)
+  position: relative
+  width: clamp(10rem, 100%, 30rem)
+
+  &::after
+    content: ''
+    position: absolute
+    display: block
+    width: 100%
+    height: 0.5rem
+    bottom: 0
+    left: 0
+
+    background-color: $color-button-background
 
 .login-form
   display: flex
   flex-direction: column
   justify-content: center
   align-items: center
-  width: clamp(10rem, 80%, 30rem)
+  width: clamp(10rem, 100%, 30rem)
 
   gap: 1rem
-  padding: 1rem
-  margin: 0 auto
+  padding: clamp(1rem, 15%, 5rem) clamp(1rem, 10%, 3rem)
 
   background-color: $color-bacground-common
 

@@ -7,7 +7,7 @@
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
     "test": "jest",
-    "lint": "eslint **/*.ts",
+    "lint": "npx eslint **/*.ts",
     "format": "npx prettier . --write",
     "ci:format": "npx prettier . --check"
   },

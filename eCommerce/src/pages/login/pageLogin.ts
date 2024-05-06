@@ -1,6 +1,6 @@
 import './pageLogin.sass';
 import { Dispatch } from '../../modules/login/types';
-import { BaseComponent } from '../../BaseComponent/BaseComponent';
+import { BaseComponent } from '../../components/baseComponent';
 import { LoginForm } from './loginForm/loginForm';
 
 export class PageLogin extends BaseComponent {

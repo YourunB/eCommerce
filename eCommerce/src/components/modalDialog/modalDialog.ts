@@ -1,6 +1,6 @@
 import './modalDialog.sass';
 import { Button } from '../button/button';
-import { BaseComponent } from './../../BaseComponent/BaseComponent';
+import { BaseComponent } from '../baseComponent';
 
 export class Dialog extends BaseComponent {
   // eslint-disable-next-line no-use-before-define

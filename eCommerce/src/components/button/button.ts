@@ -1,5 +1,5 @@
 import './button.sass';
-import { BaseComponent, TaggedElementProps } from '../../BaseComponent/BaseComponent';
+import { BaseComponent, TaggedElementProps } from '../baseComponent';
 
 export class Button extends BaseComponent<HTMLButtonElement> {
   constructor(props: TaggedElementProps) {

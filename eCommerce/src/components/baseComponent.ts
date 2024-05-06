@@ -1,3 +1,8 @@
+interface AttributeElement {
+  name: string;
+  value: string;
+}
+
 export interface BaseComponentProps {
   tagName: string;
   classNames?: string | string[];
@@ -7,11 +12,6 @@ export interface BaseComponentProps {
 }
 
 export type TaggedElementProps = Omit<BaseComponentProps, 'tagName'>;
-
-interface AttributeElement {
-  name: string;
-  value: string;
-}
 
 interface RemovedAttribute {
   name: string;

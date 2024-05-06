@@ -15,7 +15,7 @@ import {
 import { Dispatch } from '../../../modules/login/types';
 import { Input } from '../../../components/input/input';
 import { Button } from '../../../components/button/button';
-import { BaseComponent } from '../../../BaseComponent/BaseComponent';
+import { BaseComponent } from '../../../components/baseComponent';
 import { InputWithNotice } from '../inputWithNotice/inputWithNotice';
 
 export class LoginForm extends BaseComponent {

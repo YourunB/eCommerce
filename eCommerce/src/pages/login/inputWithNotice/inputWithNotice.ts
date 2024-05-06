@@ -1,5 +1,5 @@
 import './inputWithNotice.sass';
-import { BaseComponent, TaggedElementProps } from '../../../BaseComponent/BaseComponent';
+import { BaseComponent, TaggedElementProps } from '../../../components/baseComponent';
 import { Input } from '../../../components/input/input';
 
 export class InputWithNotice extends Input {

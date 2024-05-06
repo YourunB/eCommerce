@@ -1,4 +1,4 @@
-import { BaseComponent, TaggedElementProps } from '../../BaseComponent/BaseComponent';
+import { BaseComponent, TaggedElementProps } from '../baseComponent';
 import './input.sass';
 
 export class Input extends BaseComponent<HTMLInputElement> {

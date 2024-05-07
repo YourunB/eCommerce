@@ -1,4 +1,4 @@
-import './button.sass';
+import './baseButton.sass';
 import { BaseComponent, TaggedElementProps } from '../baseComponent';
 
 export class Button extends BaseComponent<HTMLButtonElement> {

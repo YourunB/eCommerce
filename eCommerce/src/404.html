@@ -7,5 +7,24 @@
     <link rel="icon" href="./assets/images/favicon.png" />
     <title>404</title>
   </head>
-  <body></body>
+  <body>
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 2;
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+      );
+    </script>
+  </body>
 </html>

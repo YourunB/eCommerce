@@ -1,0 +1,16 @@
+@use './src/variables' as *
+
+.input-base
+  font-size: 1rem
+  color: $color-text-common
+
+  padding: 0.63rem 1rem
+  border-radius: 5px
+  border: 1px solid $color-border-common
+
+  &:focus-visible
+    border-color: $color-border-selected
+    outline: none
+
+  &::placeholder
+    color: $color-input-placeholder

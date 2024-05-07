@@ -1,0 +1,85 @@
+@use './src/variables' as *
+
+.page-login-container
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  align-content: center
+
+  width: 100%
+  height: 100dvh
+
+  background-color: #0000003e
+
+.form__conteiner
+  position: relative
+  width: clamp(10rem, 100%, 30rem)
+
+  &::after
+    content: ''
+    position: absolute
+    display: block
+    width: 100%
+    height: 0.5rem
+    bottom: 0
+    left: 0
+
+    background-color: $color-button-background
+
+.login-form
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  width: clamp(10rem, 100%, 30rem)
+
+  gap: 1rem
+  padding: clamp(1rem, 10%, 5rem) clamp(1rem, 10%, 3rem)
+
+  font-family: Arial, Helvetica, sans-serif
+  background-color: $color-bacground-common
+
+.login-email__label,
+.login-email__input,
+.login-password__input,
+.login__btn-submit,
+.password__conteiner
+  width: 100%
+
+.login-email__label
+  letter-spacing: 0.03rem
+  color: $color-text-common
+  font-size: 0.9rem
+
+.password__conteiner
+  position: relative
+  display: flex
+  flex-direction: column
+  align-items: center
+
+input.login-password__input
+  padding-right: 2rem
+
+.password-checkbox__label
+  position: absolute
+  display: inline-block
+
+  right: 0
+  width: 1.5rem
+  height: 1.5rem
+  transform: translate(0rem, 45%)
+
+  background-image: url("../../assets/icons/hide.svg")
+  background-position: center center
+  background-repeat: no-repeat
+  object-fit: cover
+  filter: opacity(0.3)
+
+.password-checkbox__label:has(input:checked)
+  filter: opacity(0.7)
+  background-image: url("../../assets/icons/show.svg")
+
+@media (hover: hover)
+  .password-checkbox__label:hover
+    cursor: pointer
+    filter: opacity(0.5)

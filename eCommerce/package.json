@@ -7,14 +7,14 @@
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
     "test": "jest",
-    "lint": "eslint **/*.ts",
+    "lint": "npx eslint **/*.ts",
     "format": "npx prettier . --write",
     "ci:format": "npx prettier . --check"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier --check .",
-      "pre-push": "eslint ."
+      "pre-commit": "npx prettier . --check",
+      "pre-push": "npx eslint **/*.ts"
     }
   },
   "lint-staged": {
@@ -32,6 +32,7 @@
   "license": "ISC",
   "homepage": "",
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
@@ -55,6 +56,7 @@
     "sass-loader": "^14.1.1",
     "style-loader": "^3.3.4",
     "svgo-loader": "^4.0.0",
+    "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "typescript-eslint": "^7.0.2",

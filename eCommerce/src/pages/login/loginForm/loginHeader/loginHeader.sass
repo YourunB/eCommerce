@@ -1,0 +1,31 @@
+@use './src/variables' as *
+
+.login__header
+  display: flex
+  justify-content: center
+  align-items: center
+
+  width: 100%
+  min-height: 3rem
+  padding-bottom: 2rem
+  gap: 1rem
+
+  font-size: 1.25rem
+  font-weight: 700
+  letter-spacing: 0.05rem
+
+.header__login
+  color: $color-button-background
+  text-shadow: 1px 5px 5px #ababab
+
+.header_line
+  font-weight: normal
+  color: $color-input-placeholder
+
+.header_link
+  color: $color-text-common
+  cursor: pointer
+
+@media (hover: hover)
+  .header_link:hover
+    color: $color-button-background

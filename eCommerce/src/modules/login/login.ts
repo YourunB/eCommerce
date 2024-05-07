@@ -1,10 +1,10 @@
+import state from '../../state/state';
 import { Actions, AuthResponse } from './types';
+import { isAuthResponse } from './helpers/predicates';
 import { PageLogin } from '../../pages/login/pageLogin';
 import { getAccessToken, getCustomer } from './api/login';
 import { AuthErrorResponse } from '@commercetools/platform-sdk';
-import { isAuthResponse } from './helpers/predicates';
 import { Dialog } from '../../components/modalDialog/modalDialog';
-import state from '../../state/state';
 
 const dialog = Dialog.getInstance();
 
@@ -33,6 +33,9 @@ export class Login {
           .then(this.processResponse)
           .then(this.saveAccessToken, this.handleErrorAccessToken)
           .catch((error) => dialog.show(`${error}`));
+        break;
+      case 'register':
+        dialog.show('Will be redirect to Register');
         break;
     }
   };

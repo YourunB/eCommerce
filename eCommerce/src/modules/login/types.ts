@@ -1,5 +1,5 @@
 export type Actions = {
-  type: 'login';
+  type: 'login' | 'register';
   payload: {
     email: string;
     password: string;

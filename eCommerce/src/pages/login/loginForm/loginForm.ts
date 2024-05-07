@@ -13,9 +13,10 @@ import {
   Validation,
 } from '../helpers/validation-rules';
 import { Dispatch } from '../../../modules/login/types';
-import { Input } from '../../../components/input/input';
-import { Button } from '../../../components/button/button';
+import { LoginHeader } from './loginHeader/loginHeader';
+import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
+import { Button } from '../../../components/basebutton/baseButton';
 import { InputWithNotice } from '../inputWithNotice/inputWithNotice';
 
 export class LoginForm extends BaseComponent {
@@ -29,6 +30,12 @@ export class LoginForm extends BaseComponent {
   constructor(dispatch: Dispatch) {
     super({ tagName: 'div', classNames: 'form__conteiner' });
     this.dispatch = dispatch;
+    const header = new LoginHeader(dispatch);
+    const labelEmail = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Enter your email and password to login.',
+      classNames: 'login-email__label',
+    });
     this.inputEmail = new InputWithNotice({
       attribute: { name: 'name', value: 'email' },
       classNames: 'login-email__input',
@@ -43,20 +50,22 @@ export class LoginForm extends BaseComponent {
     const form = new BaseComponent({ tagName: 'form', classNames: 'login-form' });
     const button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
 
-    // подставляются данные на время разработки
+    // данные подставляются на время разработки
     this.inputEmail.value = 'seb@example.com';
     this.inputPass.value = 'test12345TEST';
 
     this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
+    this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
+    this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.showPassword.setAttribute({ name: 'hidden', value: '' });
     const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
     labelCheckbox.insertChild(this.showPassword);
     const passwordContainer = new BaseComponent({ tagName: 'div', classNames: 'password__conteiner' });
     passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
-    form.insertChildren([this.inputEmail, passwordContainer, button]);
+    form.insertChildren([header, labelEmail, this.inputEmail, passwordContainer, button]);
 
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());

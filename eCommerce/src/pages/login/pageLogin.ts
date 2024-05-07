@@ -1,7 +1,7 @@
 import './pageLogin.sass';
+import { LoginForm } from './loginForm/loginForm';
 import { Dispatch } from '../../modules/login/types';
 import { BaseComponent } from '../../components/baseComponent';
-import { LoginForm } from './loginForm/loginForm';
 
 export class PageLogin extends BaseComponent {
   constructor(dispatch: Dispatch) {

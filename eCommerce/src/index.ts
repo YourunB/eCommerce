@@ -1,3 +1,4 @@
+import './modules/routingScript';
 import './index.sass';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';

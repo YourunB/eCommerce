@@ -1,6 +1,8 @@
 import { BaseComponent } from '../../../components/baseComponent';
+import { Button } from '../../../components/basebutton/baseButton';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import { InputWithNotice } from '../../login/inputWithNotice/inputWithNotice';
+import { AddressForm } from './adressForm/adressForm';
 
 import './registrationForm.sass';
 
@@ -10,11 +12,9 @@ export class RegistrationForm extends BaseComponent {
   public inputFirstName: InputWithNotice;
   public inputLastName: InputWithNotice;
   public inputDateOfBirth: InputWithNotice;
-  public addressForm: BaseComponent;
-  public inputStreet: InputWithNotice;
-  public inputCity: InputWithNotice;
-  public inputPostalCode: InputWithNotice;
-  public inputCountry: InputWithNotice;
+  public addressForm: AddressForm;
+  public button: Button;
+
   constructor(props: PageRegistrationPropsType) {
     super({ tagName: 'div', classNames: 'registration-form-container', ...props });
 
@@ -58,35 +58,19 @@ export class RegistrationForm extends BaseComponent {
       parentNode: this.element,
     });
     this.inputDateOfBirth.setAttribute({ name: 'placeholder', value: 'date of birth' });
-    this.inputDateOfBirth.setAttribute({ name: 'type', value: 'date' });
-
-    this.addressForm = new BaseComponent({ tagName: 'form', classNames: 'address-form', parentNode: this.element });
-    this.inputStreet = new InputWithNotice({
-      attribute: { name: 'name', value: 'street' },
-      classNames: 'registration-street__input',
-      parentNode: this.addressForm.getElement(),
+    this.inputDateOfBirth.getElement().addEventListener('focus', () => {
+      this.inputDateOfBirth.setAttribute({ name: 'type', value: 'date' });
     });
-    this.inputStreet.setAttribute({ name: 'placeholder', value: 'street' });
-
-    this.inputCity = new InputWithNotice({
-      attribute: { name: 'name', value: 'city' },
-      classNames: 'registration-city__input',
-      parentNode: this.addressForm.getElement(),
+    this.inputDateOfBirth.getElement().addEventListener('blur', () => {
+      this.inputDateOfBirth.removeAttribute({ name: 'type' });
     });
-    this.inputCity.setAttribute({ name: 'placeholder', value: 'city' });
 
-    this.inputPostalCode = new InputWithNotice({
-      attribute: { name: 'name', value: 'postal code' },
-      classNames: 'registration-postalCode__input',
-      parentNode: this.addressForm.getElement(),
-    });
-    this.inputPostalCode.setAttribute({ name: 'placeholder', value: 'postal code' });
+    this.addressForm = new AddressForm({ parentNode: this.element });
 
-    this.inputCountry = new InputWithNotice({
-      attribute: { name: 'name', value: 'country' },
-      classNames: 'registration-country__input',
-      parentNode: this.addressForm.getElement(),
+    this.button = new Button({
+      textContent: 'register',
+      classNames: 'registration__btn-submit',
+      parentNode: this.element,
     });
-    this.inputCountry.setAttribute({ name: 'placeholder', value: 'country' });
   }
 }

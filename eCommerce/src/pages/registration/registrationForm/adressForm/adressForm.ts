@@ -30,26 +30,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'address__label',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.useAsDefaultLabel = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Use as default address',
-      classNames: 'UseAsDefault__label',
-      parentNode: this.addressFormShipping.getElement(),
-    });
-    this.useAsDefault = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsDefaultLabel.getElement(),
-    });
-    this.useAsBillingLabel = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Use as billing address',
-      classNames: 'UseAsDefault__label',
-      parentNode: this.addressFormShipping.getElement(),
-    });
-    this.useAsBilling = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsBillingLabel.getElement(),
-    });
+
     this.inputStreet = new InputWithNotice({
       attribute: { name: 'name', value: 'street' },
       classNames: 'registration-street__input',
@@ -116,5 +97,26 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormBilling.getElement(),
     });
     this.inputCountry.setAttribute({ name: 'placeholder', value: 'country' });
+
+    this.useAsDefaultLabel = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Use as default address',
+      classNames: 'UseAsDefault__label',
+      parentNode: this.addressFormShipping.getElement(),
+    });
+    this.useAsDefault = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+      parentNode: this.useAsDefaultLabel.getElement(),
+    });
+    this.useAsBillingLabel = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Use as billing address',
+      classNames: 'UseAsDefault__label',
+      parentNode: this.addressFormShipping.getElement(),
+    });
+    this.useAsBilling = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+      parentNode: this.useAsBillingLabel.getElement(),
+    });
   }
 }

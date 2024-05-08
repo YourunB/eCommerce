@@ -1,4 +1,5 @@
 import { BaseComponent } from '../../../components/baseComponent';
+
 import { Button } from '../../../components/basebutton/baseButton';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import { InputWithNotice } from '../../login/inputWithNotice/inputWithNotice';

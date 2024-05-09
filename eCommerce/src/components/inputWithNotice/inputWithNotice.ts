@@ -1,6 +1,6 @@
 import './inputWithNotice.sass';
-import { Input } from '../../../components/baseInput/baseInput';
-import { BaseComponent, TaggedElementProps } from '../../../components/baseComponent';
+import { Input } from '../baseInput/baseInput';
+import { BaseComponent, TaggedElementProps } from '../baseComponent';
 
 export class InputWithNotice extends Input {
   notice: BaseComponent<HTMLElement>;

@@ -20,6 +20,7 @@ import { InputWithNotice } from '../../login/inputWithNotice/inputWithNotice';
 import { AddressForm } from './adressForm/adressForm';
 
 import './registrationForm.sass';
+import { isEnoughOlder, isNotContainSpecialCharactersAndNumbers } from './validationRules/validationRules';
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
@@ -113,8 +114,15 @@ export class RegistrationForm extends BaseComponent {
   private validateForm(): boolean {
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidPassword = this.validatePassword(this.inputPass.value);
+    const isValidFirstName = this.validateNames(this.inputFirstName.value);
+    const isValidLastName = this.validateNames(this.inputLastName.value);
+    const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
     this.inputEmail.showNotice(isValidLogin.errors);
     this.inputPass.showNotice(isValidPassword.errors);
+    this.inputFirstName.showNotice(isValidFirstName.errors);
+    this.inputLastName.showNotice(isValidLastName.errors);
+    this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
+
     return isValidLogin.validate && isValidPassword.validate;
   }
 
@@ -138,5 +146,12 @@ export class RegistrationForm extends BaseComponent {
       isNotEmpty,
       isToLong33
     )({ subject: input, validate: true, errors: [] });
+  }
+
+  private validateNames(input: string): Validation {
+    return compose(isNotEmpty, isNotContainSpecialCharactersAndNumbers)({ subject: input, validate: true, errors: [] });
+  }
+  private validateDateOfBirth(input: string): Validation {
+    return compose(isNotEmpty, isEnoughOlder)({ subject: input, validate: true, errors: [] });
   }
 }

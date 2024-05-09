@@ -97,10 +97,9 @@ export class RegistrationForm extends BaseComponent {
     e.preventDefault();
     this.isSubmitted = true;
     if (!this.validateForm()) {
-      alert('NOT VALID');
       return;
     }
-    alert('VALID');
+
     // this.dispatch({
     //   type: 'register',
     //   payload: {
@@ -117,11 +116,15 @@ export class RegistrationForm extends BaseComponent {
     const isValidFirstName = this.validateNames(this.inputFirstName.value);
     const isValidLastName = this.validateNames(this.inputLastName.value);
     const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
+    const isValidCityShipping = this.validateCity(this.addressForm.inputCityShipping.value);
+    const isValidCityBilling = this.validateCity(this.addressForm.inputCityBilling.value);
     this.inputEmail.showNotice(isValidLogin.errors);
     this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
     this.inputLastName.showNotice(isValidLastName.errors);
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
+    this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
+    this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
 
     return isValidLogin.validate && isValidPassword.validate;
   }
@@ -153,5 +156,8 @@ export class RegistrationForm extends BaseComponent {
   }
   private validateDateOfBirth(input: string): Validation {
     return compose(isNotEmpty, isEnoughOlder)({ subject: input, validate: true, errors: [] });
+  }
+  private validateCity(input: string): Validation {
+    return compose(isNotEmpty, isNotContainSpecialCharactersAndNumbers)({ subject: input, validate: true, errors: [] });
   }
 }

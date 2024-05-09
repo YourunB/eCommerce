@@ -12,7 +12,7 @@ type Rule = {
 export const isNotEmpty: Rule = (target) => {
   const result = { ...target };
   if (result.subject.length === 0) {
-    result.errors.push('must not be empty');
+    result.errors.push('Must contain at least one character');
     result.validate = false;
     return result;
   }

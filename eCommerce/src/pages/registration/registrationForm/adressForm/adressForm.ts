@@ -7,10 +7,14 @@ import '../registrationForm.sass';
 export class AddressForm extends BaseComponent {
   public addressFormShipping: BaseComponent;
   public addressFormBilling: BaseComponent;
-  public inputStreet: InputWithNotice;
-  public inputCity: InputWithNotice;
-  public inputPostalCode: InputWithNotice;
-  public inputCountry: InputWithNotice;
+  public inputStreetShipping: InputWithNotice;
+  public inputCityShipping: InputWithNotice;
+  public inputPostalCodeShipping: InputWithNotice;
+  public inputCountryShipping: InputWithNotice;
+  public inputStreetBilling: InputWithNotice;
+  public inputCityBilling: InputWithNotice;
+  public inputPostalCodeBilling: InputWithNotice;
+  public inputCountryBilling: InputWithNotice;
   public addressLabel: BaseComponent;
   public useAsDefault: Input;
   public useAsDefaultLabel: BaseComponent;
@@ -32,33 +36,33 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
 
-    this.inputStreet = new InputWithNotice({
+    this.inputStreetShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'street' },
       classNames: 'registration-street__input',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.inputStreet.setAttribute({ name: 'placeholder', value: 'street' });
+    this.inputStreetShipping.setAttribute({ name: 'placeholder', value: 'street' });
 
-    this.inputCity = new InputWithNotice({
+    this.inputCityShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'city' },
       classNames: 'registration-city__input',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.inputCity.setAttribute({ name: 'placeholder', value: 'city' });
+    this.inputCityShipping.setAttribute({ name: 'placeholder', value: 'city' });
 
-    this.inputPostalCode = new InputWithNotice({
+    this.inputPostalCodeShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'postal code' },
       classNames: 'registration-postalCode__input',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.inputPostalCode.setAttribute({ name: 'placeholder', value: 'postal code' });
+    this.inputPostalCodeShipping.setAttribute({ name: 'placeholder', value: 'postal code' });
 
-    this.inputCountry = new InputWithNotice({
+    this.inputCountryShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'country' },
       classNames: 'registration-country__input',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.inputCountry.setAttribute({ name: 'placeholder', value: 'country' });
+    this.inputCountryShipping.setAttribute({ name: 'placeholder', value: 'country' });
 
     this.addressFormBilling = new BaseComponent({
       tagName: 'form',
@@ -71,33 +75,33 @@ export class AddressForm extends BaseComponent {
       classNames: 'address__label',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputStreet = new InputWithNotice({
+    this.inputStreetBilling = new InputWithNotice({
       attribute: { name: 'name', value: 'street' },
       classNames: 'registration-street__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputStreet.setAttribute({ name: 'placeholder', value: 'street' });
+    this.inputStreetBilling.setAttribute({ name: 'placeholder', value: 'street' });
 
-    this.inputCity = new InputWithNotice({
+    this.inputCityBilling = new InputWithNotice({
       attribute: { name: 'name', value: 'city' },
       classNames: 'registration-city__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputCity.setAttribute({ name: 'placeholder', value: 'city' });
+    this.inputCityBilling.setAttribute({ name: 'placeholder', value: 'city' });
 
-    this.inputPostalCode = new InputWithNotice({
+    this.inputPostalCodeBilling = new InputWithNotice({
       attribute: { name: 'name', value: 'postal code' },
       classNames: 'registration-postalCode__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputPostalCode.setAttribute({ name: 'placeholder', value: 'postal code' });
+    this.inputPostalCodeBilling.setAttribute({ name: 'placeholder', value: 'postal code' });
 
-    this.inputCountry = new InputWithNotice({
+    this.inputCountryBilling = new InputWithNotice({
       attribute: { name: 'name', value: 'country' },
       classNames: 'registration-country__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputCountry.setAttribute({ name: 'placeholder', value: 'country' });
+    this.inputCountryBilling.setAttribute({ name: 'placeholder', value: 'country' });
 
     this.useAsDefaultLabel = new BaseComponent({
       tagName: 'label',

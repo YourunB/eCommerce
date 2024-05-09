@@ -20,7 +20,11 @@ import { InputWithNotice } from '../../login/inputWithNotice/inputWithNotice';
 import { AddressForm } from './adressForm/adressForm';
 
 import './registrationForm.sass';
-import { isEnoughOlder, isNotContainSpecialCharactersAndNumbers } from './validationRules/validationRules';
+import {
+  isEnoughOlder,
+  isNotContainSpecialCharactersAndNumbers,
+  isRightPostalCode,
+} from './validationRules/validationRules';
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
@@ -120,6 +124,10 @@ export class RegistrationForm extends BaseComponent {
     const isValidCityBilling = this.validateCity(this.addressForm.inputCityBilling.value);
     const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
     const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
+    const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
+    const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
+    const isValidCountryShipping = this.validateStreet(this.addressForm.inputCountryShipping.value);
+    const isValidCountryBilling = this.validateStreet(this.addressForm.inputCountryBilling.value);
     this.inputEmail.showNotice(isValidLogin.errors);
     this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
@@ -129,6 +137,10 @@ export class RegistrationForm extends BaseComponent {
     this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
     this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
     this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
+    this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
+    this.addressForm.inputPostalCodeBilling.showNotice(isValidPostalCodeBilling.errors);
+    this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
+    this.addressForm.inputCountryBilling.showNotice(isValidCountryBilling.errors);
 
     return isValidLogin.validate && isValidPassword.validate;
   }
@@ -166,5 +178,8 @@ export class RegistrationForm extends BaseComponent {
   }
   private validateStreet(input: string): Validation {
     return compose(isNotEmpty)({ subject: input, validate: true, errors: [] });
+  }
+  private validatePostalCode(input: string): Validation {
+    return compose(isRightPostalCode)({ subject: input, validate: true, errors: [] });
   }
 }

@@ -56,3 +56,14 @@ export const isEnoughOlder: Rule = (target) => {
   }
   return result;
 };
+
+export const isRightPostalCode: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /^[\d]{5}$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Postal code must follow the format for the country (e.g., 12345)');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};

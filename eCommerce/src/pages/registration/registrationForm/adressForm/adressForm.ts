@@ -63,6 +63,17 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputCountryShipping.setAttribute({ name: 'placeholder', value: 'country' });
+    const countryList = new BaseComponent({ tagName: 'datalist', classNames: 'countryList' });
+    countryList.getElement().id = 'countries';
+
+    ['Italy', 'Germany', 'Spain', 'Finland', 'United States'].forEach((country) => {
+      const option = new BaseComponent({ tagName: 'option' });
+      (option.getElement() as HTMLOptionElement).value = country;
+      countryList.insertChild(option);
+    });
+
+    this.inputCountryShipping.insertChild(countryList);
+    this.inputCountryShipping.getElement().setAttribute('list', 'countries');
 
     this.addressFormBilling = new BaseComponent({
       tagName: 'form',
@@ -102,6 +113,8 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormBilling.getElement(),
     });
     this.inputCountryBilling.setAttribute({ name: 'placeholder', value: 'country' });
+    this.inputCountryBilling.insertChild(countryList);
+    this.inputCountryBilling.getElement().setAttribute('list', 'countries');
 
     this.useAsDefaultLabel = new BaseComponent({
       tagName: 'label',

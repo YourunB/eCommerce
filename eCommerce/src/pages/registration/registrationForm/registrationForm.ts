@@ -118,6 +118,8 @@ export class RegistrationForm extends BaseComponent {
     const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
     const isValidCityShipping = this.validateCity(this.addressForm.inputCityShipping.value);
     const isValidCityBilling = this.validateCity(this.addressForm.inputCityBilling.value);
+    const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
+    const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
     this.inputEmail.showNotice(isValidLogin.errors);
     this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
@@ -125,6 +127,8 @@ export class RegistrationForm extends BaseComponent {
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
     this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
     this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
+    this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
+    this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
 
     return isValidLogin.validate && isValidPassword.validate;
   }
@@ -159,5 +163,8 @@ export class RegistrationForm extends BaseComponent {
   }
   private validateCity(input: string): Validation {
     return compose(isNotEmpty, isNotContainSpecialCharactersAndNumbers)({ subject: input, validate: true, errors: [] });
+  }
+  private validateStreet(input: string): Validation {
+    return compose(isNotEmpty)({ subject: input, validate: true, errors: [] });
   }
 }

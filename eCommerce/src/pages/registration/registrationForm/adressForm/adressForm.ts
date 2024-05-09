@@ -29,6 +29,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'address-form',
       parentNode: this.element,
     });
+
     this.addressLabel = new BaseComponent({
       tagName: 'label',
       textContent: 'Shipping address',
@@ -135,6 +136,27 @@ export class AddressForm extends BaseComponent {
     this.useAsBilling = new Input({
       attribute: { name: 'type', value: 'checkbox' },
       parentNode: this.useAsBillingLabel.getElement(),
+    });
+    this.useAsBilling.getElement().addEventListener('change', (event) => {
+      const checkbox = event.target as HTMLInputElement;
+      if (checkbox.checked) {
+        const fieldsToUpdate = [
+          { billing: this.inputStreetBilling, shipping: this.inputStreetShipping },
+          { billing: this.inputCityBilling, shipping: this.inputCityShipping },
+          { billing: this.inputPostalCodeBilling, shipping: this.inputPostalCodeShipping },
+          { billing: this.inputCountryBilling, shipping: this.inputCountryShipping },
+        ];
+
+        fieldsToUpdate.forEach((field) => {
+          field.billing.value = field.shipping.value;
+
+          const event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+          });
+          field.billing.getElement().dispatchEvent(event);
+        });
+      }
     });
   }
 }

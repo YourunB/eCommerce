@@ -16,8 +16,10 @@ export class AddressForm extends BaseComponent {
   public inputPostalCodeBilling: InputWithNotice;
   public inputCountryBilling: InputWithNotice;
   public addressLabel: BaseComponent;
-  public useAsDefault: Input;
-  public useAsDefaultLabel: BaseComponent;
+  public useAsDefaultShipping: Input;
+  public useAsDefaultShippingLabel: BaseComponent;
+  public useAsDefaultBilling: Input;
+  public useAsDefaultBillingLabel: BaseComponent;
   public useAsBilling: Input;
   public useAsBillingLabel: BaseComponent;
 
@@ -117,16 +119,28 @@ export class AddressForm extends BaseComponent {
     this.inputCountryBilling.insertChild(countryList);
     this.inputCountryBilling.getElement().setAttribute('list', 'countries');
 
-    this.useAsDefaultLabel = new BaseComponent({
+    this.useAsDefaultShippingLabel = new BaseComponent({
       tagName: 'label',
-      textContent: 'Use as default address',
+      textContent: 'Use as default shipping address',
       classNames: 'UseAsDefault__label',
       parentNode: this.addressFormShipping.getElement(),
     });
-    this.useAsDefault = new Input({
+    this.useAsDefaultShipping = new Input({
       attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsDefaultLabel.getElement(),
+      parentNode: this.useAsDefaultShippingLabel.getElement(),
     });
+
+    this.useAsDefaultBillingLabel = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Use as default billing address',
+      classNames: 'UseAsDefault__label',
+      parentNode: this.addressFormBilling.getElement(),
+    });
+    this.useAsDefaultBilling = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+      parentNode: this.useAsDefaultBillingLabel.getElement(),
+    });
+
     this.useAsBillingLabel = new BaseComponent({
       tagName: 'label',
       textContent: 'Use as billing address',

@@ -1,5 +1,6 @@
 import './header.sass';
 import '../../assets/images/svg/logo.svg';
+import '../../assets/images/svg/basket.svg';
 
 const header = document.createElement('header');
 header.classList.add('header');
@@ -22,6 +23,10 @@ menu.innerHTML = `
   <li class="menu__item">About</li>
 `;
 
-header.append(logo, menu);
+const basket = document.createElement('img');
+basket.src = 'basket.svg';
 
-export { header, menu };
+nav.append(menu, basket);
+header.append(logo, nav);
+
+export { header, nav, menu, basket };

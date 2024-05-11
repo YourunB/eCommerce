@@ -11,13 +11,13 @@ import {
   isPassLeast8,
   isToLong33,
   Validation,
-} from '../helpers/validation-rules';
+} from '../../../components/helpers/validation-rules';
 import { Dispatch } from '../../../modules/login/types';
 import { LoginHeader } from './loginHeader/loginHeader';
 import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
-import { InputWithNotice } from '../inputWithNotice/inputWithNotice';
+import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 
 export class LoginForm extends BaseComponent {
   private dispatch: Dispatch;

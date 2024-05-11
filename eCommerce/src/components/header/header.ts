@@ -27,17 +27,17 @@ menu.innerHTML = `
 const basket = document.createElement('img');
 basket.src = 'basket.svg';
 
-const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] });
+const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] }).getElement();
 const btnLogOut = new Button({
   textContent: 'LogOut',
   classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
-});
+}).getElement();
 const btnReg = new Button({
   textContent: 'Registaration',
   classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
-});
+}).getElement();
 
-nav.append(menu, basket, btnLogIn.getElement(), btnLogIn.getElement(), btnLogOut.getElement(), btnReg.getElement());
+nav.append(menu, basket, btnLogIn, btnLogOut, btnReg);
 header.append(logo, nav);
 
 export { header, nav, menu, basket };

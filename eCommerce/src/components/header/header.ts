@@ -6,15 +6,15 @@ import { Button } from '../../components/basebutton/baseButton';
 const header = document.createElement('header');
 header.classList.add('header');
 
+const nav = document.createElement('nav');
+nav.classList.add('navigation');
+
 const logo = document.createElement('div');
 logo.classList.add('logo-box');
 logo.innerHTML = `
   <img src="logo.svg">
   <span>PLANTSTORE</span>
 `;
-
-const nav = document.createElement('nav');
-nav.classList.add('navigation');
 
 const menu = document.createElement('ul');
 menu.classList.add('menu');
@@ -23,6 +23,9 @@ menu.innerHTML = `
   <li class="menu__item">Products</li>
   <li class="menu__item">About</li>
 `;
+
+const navBtnsBox = document.createElement('div');
+navBtnsBox.classList.add('navigation__btns');
 
 const basket = document.createElement('img');
 basket.src = 'basket.svg';
@@ -37,7 +40,8 @@ const btnReg = new Button({
   classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
 }).getElement();
 
-nav.append(menu, basket, btnLogIn, btnLogOut, btnReg);
-header.append(logo, nav);
+navBtnsBox.append(basket, btnLogIn, btnLogOut, btnReg);
+nav.append(logo, menu, navBtnsBox);
+header.append(nav);
 
 export { header, nav, menu, basket };

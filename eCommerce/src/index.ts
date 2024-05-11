@@ -4,11 +4,10 @@ import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
 import { notFoundPage } from './pages/notFoundPage';
 import { Login } from './modules/login/login';
+import { header } from './components/header/header';
 
-const header = document.createElement('header');
 const main = document.createElement('main');
-const footer = document.createElement('footer');
-document.body.append(header, main, footer);
+document.body.append(header, main);
 
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/',

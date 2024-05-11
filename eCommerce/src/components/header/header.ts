@@ -29,6 +29,7 @@ navBtnsBox.classList.add('navigation__btns');
 
 const basket = document.createElement('img');
 basket.src = 'basket.svg';
+basket.classList.add('basket');
 
 const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] }).getElement();
 const btnLogOut = new Button({

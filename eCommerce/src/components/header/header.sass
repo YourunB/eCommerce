@@ -38,15 +38,18 @@
   display: flex
   gap: 20px
 
-.menu__item
+.menu__item,
+.basket
   transition: 0.7s
 
 @media (hover:hover)
-  .menu__item:hover
+  .menu__item:hover,
+  .basket:hover
     transform: scale(1.1)
     cursor: pointer
 
-.menu__item:active
+.menu__item:active,
+.basket:active
   transform: scale(0.9)
   transition: 0.2s
 

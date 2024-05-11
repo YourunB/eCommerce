@@ -1,3 +1,5 @@
+@import "../../variables"
+
 .header
   padding: 10px
   height: 60px
@@ -6,12 +8,29 @@
   display: flex
   justify-content: space-between
   gap: 10px
+  color: $color-text-common
 
 .logo-box
   font-weight: 700
-  color: #46A358
+  color: $color-button-background
   text-align: center
   display: flex
   flex-wrap: wrap
   align-items: center
   gap: 5px
+
+.menu
+  list-style-type: none
+  display: flex
+  gap: 20px
+
+.menu__item
+  transition: 0.7s
+
+.menu__item:hover
+  transform: scale(1.1)
+  cursor: pointer
+
+.menu__item:active
+  transform: scale(0.9)
+  transition: 0.2s

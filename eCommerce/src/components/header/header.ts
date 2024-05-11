@@ -17,11 +17,11 @@ nav.classList.add('navigation');
 const menu = document.createElement('ul');
 menu.classList.add('menu');
 menu.innerHTML = `
-  <li>Home</li>
-  <li>Products</li>
-  <li>About</li>
+  <li class="menu__item">Home</li>
+  <li class="menu__item">Products</li>
+  <li class="menu__item">About</li>
 `;
 
-header.append(logo);
+header.append(logo, menu);
 
 export { header, menu };

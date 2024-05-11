@@ -71,3 +71,64 @@
   display: flex
   align-items: center
   gap: 10px
+
+.btn-menu
+  opacity: 0.7
+  background: none
+  transition: 1s
+  border: none
+  padding: 0
+  height: 60px
+  width: 60px
+  display: none
+  position: absolute
+  right: 20px
+
+@media (hover:hover)
+  .btn-menu:hover
+    opacity: 1
+    transform: scale(1.1)
+    cursor: pointer
+    overflow: hidden
+    transition: 1s
+
+.btn-menu:active
+  transition: 0.2s
+  transform: scale(0.9)
+
+.btn-menu::before
+  content: ""
+  position: absolute
+  top: 16px
+  left: 0
+  width: 60px
+  height: 10px
+  background: $color-text-common
+  border-radius: 10px
+  transition: 1s
+
+.btn-menu::after
+  content: ""
+  position: absolute
+  top: 30px
+  left: 0
+  width: 60px
+  height: 10px
+  background: $color-text-common
+  border-radius: 10px
+  transition: 1s
+
+.btn-menu_cliked::before
+  top: 23px
+  rotate: 45deg
+
+.btn-menu_cliked::after
+  top: 23px
+  rotate: -45deg
+
+@media (max-width: 768px)
+  .navigation
+    display: none
+  
+  .btn-menu
+    display: block

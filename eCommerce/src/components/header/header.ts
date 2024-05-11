@@ -41,8 +41,11 @@ const btnReg = new Button({
   classNames: ['login__btn-submit', 'header__btn'],
 }).getElement();
 
+const btnMenu = document.createElement('button');
+btnMenu.classList.add('btn-menu');
+
 navBtnsBox.append(basket, btnLogIn, btnLogOut, btnReg);
 nav.append(logo, menu, navBtnsBox);
-header.append(nav);
+header.append(nav, btnMenu);
 
 export { header, nav, menu, navBtnsBox, basket, btnLogIn, btnLogOut, btnReg, logo };

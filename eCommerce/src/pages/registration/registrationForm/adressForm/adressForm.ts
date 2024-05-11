@@ -46,7 +46,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputStreetShipping.setAttribute({ name: 'placeholder', value: 'street' });
-    this.inputStreetShipping.notice.setClassName('registration-notice');
+    this.inputStreetShipping.notice.setClassName('registration-notice_address');
 
     this.inputCityShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'city' },
@@ -54,7 +54,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputCityShipping.setAttribute({ name: 'placeholder', value: 'city' });
-    this.inputCityShipping.notice.setClassName('registration-notice');
+    this.inputCityShipping.notice.setClassName('registration-notice_address');
 
     this.inputPostalCodeShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'postal code' },
@@ -62,7 +62,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputPostalCodeShipping.setAttribute({ name: 'placeholder', value: 'postal code' });
-    this.inputPostalCodeShipping.notice.setClassName('registration-notice');
+    this.inputPostalCodeShipping.notice.setClassName('registration-notice_address');
 
     this.inputCountryShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'country' },
@@ -70,7 +70,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputCountryShipping.setAttribute({ name: 'placeholder', value: 'country' });
-    this.inputCountryShipping.notice.setClassName('registration-notice');
+    this.inputCountryShipping.notice.setClassName('registration-notice_address');
     const countryList = new BaseComponent({ tagName: 'datalist', classNames: 'countryList' });
     countryList.getElement().id = 'countries';
 
@@ -99,7 +99,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-street__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputStreetBilling.notice.setClassName('registration-notice');
+    this.inputStreetBilling.notice.setClassName('registration-notice_address');
     this.inputStreetBilling.setAttribute({ name: 'placeholder', value: 'street' });
 
     this.inputCityBilling = new InputWithNotice({
@@ -107,7 +107,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-city__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputCityBilling.notice.setClassName('registration-notice');
+    this.inputCityBilling.notice.setClassName('registration-notice_address');
     this.inputCityBilling.setAttribute({ name: 'placeholder', value: 'city' });
 
     this.inputPostalCodeBilling = new InputWithNotice({
@@ -115,7 +115,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-postalCode__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputPostalCodeBilling.notice.setClassName('registration-notice');
+    this.inputPostalCodeBilling.notice.setClassName('registration-notice_address');
     this.inputPostalCodeBilling.setAttribute({ name: 'placeholder', value: 'postal code' });
 
     this.inputCountryBilling = new InputWithNotice({
@@ -123,7 +123,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-country__input',
       parentNode: this.addressFormBilling.getElement(),
     });
-    this.inputCountryBilling.notice.setClassName('registration-notice');
+    this.inputCountryBilling.notice.setClassName('registration-notice_address');
     this.inputCountryBilling.setAttribute({ name: 'placeholder', value: 'country' });
     this.inputCountryBilling.insertChild(countryList);
     this.inputCountryBilling.getElement().setAttribute('list', 'countries');

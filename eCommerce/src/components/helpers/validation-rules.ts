@@ -39,6 +39,17 @@ export const isToLong33: Rule = (target) => {
   return result;
 };
 
+export const isCorrectKeyboard: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /^[a-zA-Z0-9~`!@#$%^&*()\-_=+[\]{}\\|;:'",<.>/?]+$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Must contain latin symbols');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
 // password rules
 export const isPassLeast8: Rule = (target) => {
   const result = { ...target };
@@ -117,13 +128,13 @@ export const isEmailContainDog: Rule = (target) => {
   return result;
 };
 
-//first and last name rules
+//first and last names, city rules
 
-export const isNotContainSpecialCharactersAndNumbers: Rule = (target) => {
+export const isContainOnlyLetters: Rule = (target) => {
   const result = { ...target };
-  const regexp = /([0-9]|&[a-z]+;|<|>|"|'|`|~|!|@|#|\$|%|\^|&|\*|\(|\)|-|_|\+|=|\||\\|{|}|\[|\]|:|;|,|\.|<|>|\?|\/)/;
-  if (result.subject.match(regexp)) {
-    result.errors.push('Must not contain special characters or numbers');
+  const regexp = /^[a-zA-Z]+$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Must not contain only letters a-z and no special characters or numbers');
     result.validate = false;
     return result;
   }

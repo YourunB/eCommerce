@@ -17,8 +17,9 @@ import {
   isPassLeast8,
   isToLong33,
   isEnoughOlder,
-  isNotContainSpecialCharactersAndNumbers,
   isRightPostalCode,
+  isContainOnlyLetters,
+  isCorrectKeyboard,
 } from '../../../components/helpers/validation-rules';
 
 import { AddressForm } from './adressForm/adressForm';
@@ -148,11 +149,11 @@ export class RegistrationForm extends BaseComponent {
   private validateForm(): boolean {
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidPassword = this.validatePassword(this.inputPass.value);
-    const isValidFirstName = this.validateNames(this.inputFirstName.value);
-    const isValidLastName = this.validateNames(this.inputLastName.value);
+    const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
+    const isValidLastName = this.validateNamesAndCity(this.inputLastName.value);
     const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
-    const isValidCityShipping = this.validateCity(this.addressForm.inputCityShipping.value);
-    const isValidCityBilling = this.validateCity(this.addressForm.inputCityBilling.value);
+    const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
+    const isValidCityBilling = this.validateNamesAndCity(this.addressForm.inputCityBilling.value);
     const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
     const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
     const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
@@ -212,17 +213,14 @@ export class RegistrationForm extends BaseComponent {
     )({ subject: input, validate: true, errors: [] });
   }
 
-  private validateNames(input: string): Validation {
-    return compose(isNotEmpty, isNotContainSpecialCharactersAndNumbers)({ subject: input, validate: true, errors: [] });
+  private validateNamesAndCity(input: string): Validation {
+    return compose(isNotEmpty, isContainOnlyLetters)({ subject: input, validate: true, errors: [] });
   }
   private validateDateOfBirth(input: string): Validation {
     return compose(isNotEmpty, isEnoughOlder)({ subject: input, validate: true, errors: [] });
   }
-  private validateCity(input: string): Validation {
-    return compose(isNotEmpty, isNotContainSpecialCharactersAndNumbers)({ subject: input, validate: true, errors: [] });
-  }
   private validateStreet(input: string): Validation {
-    return compose(isNotEmpty)({ subject: input, validate: true, errors: [] });
+    return compose(isNotEmpty, isCorrectKeyboard)({ subject: input, validate: true, errors: [] });
   }
   private validatePostalCode(input: string): Validation {
     return compose(isRightPostalCode)({ subject: input, validate: true, errors: [] });

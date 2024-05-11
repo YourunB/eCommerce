@@ -27,12 +27,15 @@ menu.innerHTML = `
 const basket = document.createElement('img');
 basket.src = 'basket.svg';
 
-const btnLogIn = new Button({ textContent: 'LogIn', classNames: 'login__btn-submit' });
-const btnLogOut = new Button({ textContent: 'LogOut', classNames: 'login__btn-submit' });
-const btnReg = new Button({ textContent: 'Registaration', classNames: 'login__btn-submit' });
-
-btnLogOut.getElement().classList.add('header__btn_hide');
-btnReg.getElement().classList.add('header__btn_hide');
+const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] });
+const btnLogOut = new Button({
+  textContent: 'LogOut',
+  classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
+});
+const btnReg = new Button({
+  textContent: 'Registaration',
+  classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
+});
 
 nav.append(menu, basket, btnLogIn.getElement(), btnLogIn.getElement(), btnLogOut.getElement(), btnReg.getElement());
 header.append(logo, nav);

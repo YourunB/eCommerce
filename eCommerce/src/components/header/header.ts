@@ -37,7 +37,7 @@ const btnLogOut = new Button({
 }).getElement();
 const btnReg = new Button({
   textContent: 'Registaration',
-  classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
+  classNames: ['login__btn-submit', 'header__btn'],
 }).getElement();
 
 navBtnsBox.append(basket, btnLogIn, btnLogOut, btnReg);

@@ -5,8 +5,9 @@ import { mainPage } from './pages/mainPage';
 import { notFoundPage } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
+import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, logo, menu } from './components/header/header';
+import { header, btnLogIn, logo, menu, basket } from './components/header/header';
 
 const main = document.createElement('main');
 document.body.append(header, main);
@@ -30,6 +31,13 @@ router.addRoute({
   handler: () => {
     main.innerHTML = '';
     main.append(aboutPage);
+  },
+});
+router.addRoute({
+  path: '/yourunb-JSFE2023Q4/ecommerce/basket',
+  handler: () => {
+    main.innerHTML = '';
+    main.append(basketPage);
   },
 });
 router.addRoute({
@@ -64,6 +72,9 @@ logo.addEventListener('click', () => {
 });
 btnLogIn.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+});
+basket.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
 });
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;

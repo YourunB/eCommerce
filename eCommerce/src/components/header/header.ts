@@ -19,9 +19,9 @@ logo.innerHTML = `
 const menu = document.createElement('ul');
 menu.classList.add('menu');
 menu.innerHTML = `
-  <li class="menu__item">Home</li>
-  <li class="menu__item">Products</li>
-  <li class="menu__item">About</li>
+  <li class="menu__item" title="Open main page">Home</li>
+  <li class="menu__item" title="Open products page">Products</li>
+  <li class="menu__item" title="Open about us page">About</li>
 `;
 
 const navBtnsBox = document.createElement('div');

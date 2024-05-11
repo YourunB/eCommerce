@@ -46,6 +46,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputStreetShipping.setAttribute({ name: 'placeholder', value: 'street' });
+    this.inputStreetShipping.notice.setClassName('registration-notice');
 
     this.inputCityShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'city' },
@@ -53,6 +54,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputCityShipping.setAttribute({ name: 'placeholder', value: 'city' });
+    this.inputCityShipping.notice.setClassName('registration-notice');
 
     this.inputPostalCodeShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'postal code' },
@@ -60,6 +62,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputPostalCodeShipping.setAttribute({ name: 'placeholder', value: 'postal code' });
+    this.inputPostalCodeShipping.notice.setClassName('registration-notice');
 
     this.inputCountryShipping = new InputWithNotice({
       attribute: { name: 'name', value: 'country' },
@@ -67,6 +70,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormShipping.getElement(),
     });
     this.inputCountryShipping.setAttribute({ name: 'placeholder', value: 'country' });
+    this.inputCountryShipping.notice.setClassName('registration-notice');
     const countryList = new BaseComponent({ tagName: 'datalist', classNames: 'countryList' });
     countryList.getElement().id = 'countries';
 
@@ -95,6 +99,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-street__input',
       parentNode: this.addressFormBilling.getElement(),
     });
+    this.inputStreetBilling.notice.setClassName('registration-notice');
     this.inputStreetBilling.setAttribute({ name: 'placeholder', value: 'street' });
 
     this.inputCityBilling = new InputWithNotice({
@@ -102,6 +107,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-city__input',
       parentNode: this.addressFormBilling.getElement(),
     });
+    this.inputCityBilling.notice.setClassName('registration-notice');
     this.inputCityBilling.setAttribute({ name: 'placeholder', value: 'city' });
 
     this.inputPostalCodeBilling = new InputWithNotice({
@@ -109,6 +115,7 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-postalCode__input',
       parentNode: this.addressFormBilling.getElement(),
     });
+    this.inputPostalCodeBilling.notice.setClassName('registration-notice');
     this.inputPostalCodeBilling.setAttribute({ name: 'placeholder', value: 'postal code' });
 
     this.inputCountryBilling = new InputWithNotice({
@@ -116,10 +123,31 @@ export class AddressForm extends BaseComponent {
       classNames: 'registration-country__input',
       parentNode: this.addressFormBilling.getElement(),
     });
+    this.inputCountryBilling.notice.setClassName('registration-notice');
     this.inputCountryBilling.setAttribute({ name: 'placeholder', value: 'country' });
     this.inputCountryBilling.insertChild(countryList);
     this.inputCountryBilling.getElement().setAttribute('list', 'countries');
-
+    this.useAsBillingLabel = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Use as billing address',
+      classNames: 'UseAsDefault__label',
+      parentNode: this.addressFormShipping.getElement(),
+    });
+    this.useAsBilling = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+      parentNode: this.useAsBillingLabel.getElement(),
+    });
+    this.useAsBilling.getElement().addEventListener('change', (event) => {
+      const checkbox = event.target as HTMLInputElement;
+      if (checkbox.checked) {
+        this.addressFormBilling.setClassName('invisible');
+        this.addressFormShipping.insertChild(this.useAsDefaultBillingLabel);
+      }
+      if (!checkbox.checked) {
+        this.addressFormBilling.removeClassName('invisible');
+        this.addressFormBilling.insertChild(this.useAsDefaultBillingLabel);
+      }
+    });
     this.useAsDefaultShippingLabel = new BaseComponent({
       tagName: 'label',
       textContent: 'Use as default shipping address',
@@ -140,38 +168,6 @@ export class AddressForm extends BaseComponent {
     this.useAsDefaultBilling = new Input({
       attribute: { name: 'type', value: 'checkbox' },
       parentNode: this.useAsDefaultBillingLabel.getElement(),
-    });
-
-    this.useAsBillingLabel = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Use as billing address',
-      classNames: 'UseAsDefault__label',
-      parentNode: this.addressFormShipping.getElement(),
-    });
-    this.useAsBilling = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsBillingLabel.getElement(),
-    });
-    this.useAsBilling.getElement().addEventListener('change', (event) => {
-      const checkbox = event.target as HTMLInputElement;
-      if (checkbox.checked) {
-        const fieldsToUpdate = [
-          { billing: this.inputStreetBilling, shipping: this.inputStreetShipping },
-          { billing: this.inputCityBilling, shipping: this.inputCityShipping },
-          { billing: this.inputPostalCodeBilling, shipping: this.inputPostalCodeShipping },
-          { billing: this.inputCountryBilling, shipping: this.inputCountryShipping },
-        ];
-
-        fieldsToUpdate.forEach((field) => {
-          field.billing.value = field.shipping.value;
-
-          const event = new Event('input', {
-            bubbles: true,
-            cancelable: true,
-          });
-          field.billing.getElement().dispatchEvent(event);
-        });
-      }
     });
   }
 }

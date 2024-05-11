@@ -45,6 +45,7 @@ export class RegistrationForm extends BaseComponent {
       classNames: 'registration-email__input',
       parentNode: this.element,
     });
+    this.inputEmail.notice.setClassName('registration-notice');
     this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
     this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
@@ -56,6 +57,7 @@ export class RegistrationForm extends BaseComponent {
       classNames: 'registration-password__input',
       parentNode: this.element,
     });
+    this.inputPass.notice.setClassName('registration-notice');
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
     this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
@@ -67,6 +69,7 @@ export class RegistrationForm extends BaseComponent {
       classNames: 'registration-firstName__input',
       parentNode: this.element,
     });
+    this.inputFirstName.notice.setClassName('registration-notice');
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
     this.inputFirstName.setAttribute({ name: 'autocomplete', value: '' });
     this.inputFirstName.getElement().addEventListener('input', () => this.clearNotice(this.inputFirstName));
@@ -77,6 +80,7 @@ export class RegistrationForm extends BaseComponent {
       classNames: 'registration-lastName__input',
       parentNode: this.element,
     });
+    this.inputLastName.notice.setClassName('registration-notice');
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
     this.inputLastName.setAttribute({ name: 'autocomplete', value: '' });
     this.inputLastName.getElement().addEventListener('input', () => this.clearNotice(this.inputLastName));
@@ -87,6 +91,7 @@ export class RegistrationForm extends BaseComponent {
       classNames: 'registration-dateOfBirth__input',
       parentNode: this.element,
     });
+    this.inputDateOfBirth.notice.setClassName('registration-notice');
     this.inputDateOfBirth.setAttribute({ name: 'placeholder', value: 'date of birth' });
     this.inputDateOfBirth.getElement().addEventListener('focus', () => {
       this.inputDateOfBirth.setAttribute({ name: 'type', value: 'date' });

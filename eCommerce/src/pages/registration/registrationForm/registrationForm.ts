@@ -1,6 +1,7 @@
 import { BaseComponent } from '../../../components/baseComponent';
 
 import { Button } from '../../../components/basebutton/baseButton';
+import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import {
   Validation,
@@ -15,16 +16,14 @@ import {
   isPassContainUppercase,
   isPassLeast8,
   isToLong33,
-} from '../../login/helpers/validation-rules';
-import { InputWithNotice } from '../../login/inputWithNotice/inputWithNotice';
-import { AddressForm } from './adressForm/adressForm';
-
-import './registrationForm.sass';
-import {
   isEnoughOlder,
   isNotContainSpecialCharactersAndNumbers,
   isRightPostalCode,
-} from './validationRules/validationRules';
+} from '../../../components/helpers/validation-rules';
+
+import { AddressForm } from './adressForm/adressForm';
+
+import './registrationForm.sass';
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;

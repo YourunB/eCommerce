@@ -1,7 +1,8 @@
 import { BaseComponent } from '../../../../components/baseComponent';
 import { Input } from '../../../../components/baseInput/baseInput';
+import { InputWithNotice } from '../../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../../modules/registration/helpers/types';
-import { InputWithNotice } from '../../../login/inputWithNotice/inputWithNotice';
+
 import '../registrationForm.sass';
 
 export class AddressForm extends BaseComponent {

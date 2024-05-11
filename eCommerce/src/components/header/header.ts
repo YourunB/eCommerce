@@ -1,6 +1,7 @@
 import './header.sass';
 import '../../assets/images/svg/logo.svg';
 import '../../assets/images/svg/basket.svg';
+import { Button } from '../../components/basebutton/baseButton';
 
 const header = document.createElement('header');
 header.classList.add('header');
@@ -26,7 +27,14 @@ menu.innerHTML = `
 const basket = document.createElement('img');
 basket.src = 'basket.svg';
 
-nav.append(menu, basket);
+const btnLogIn = new Button({ textContent: 'LogIn', classNames: 'login__btn-submit' });
+const btnLogOut = new Button({ textContent: 'LogOut', classNames: 'login__btn-submit' });
+const btnReg = new Button({ textContent: 'Registaration', classNames: 'login__btn-submit' });
+
+btnLogOut.getElement().classList.add('header__btn_hide');
+btnReg.getElement().classList.add('header__btn_hide');
+
+nav.append(menu, basket, btnLogIn.getElement(), btnLogIn.getElement(), btnLogOut.getElement(), btnReg.getElement());
 header.append(logo, nav);
 
 export { header, nav, menu, basket };

@@ -60,6 +60,18 @@ window.onload = () => {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
+  if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/products');
+    return;
+  }
+  if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/about');
+    return;
+  }
+  if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/basket') {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
+    return;
+  }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/login');
     return;

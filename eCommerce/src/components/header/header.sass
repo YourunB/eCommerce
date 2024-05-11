@@ -37,6 +37,7 @@
   list-style-type: none
   display: flex
   gap: 5px
+  padding: 0
 
 .menu__item
   padding: 0.63rem 1rem
@@ -66,6 +67,7 @@
   justify-content: space-between
   align-items: center
   gap: 10px
+  transition: 1s
 
 .navigation__btns
   display: flex
@@ -82,6 +84,8 @@
   width: 60px
   display: none
   position: absolute
+  z-index: 200
+  top: 20px
   right: 20px
 
 @media (hover:hover)
@@ -128,7 +132,24 @@
 
 @media (max-width: 768px)
   .navigation
-    display: none
+    display: block
+    padding: 10px
+    position: relative
+    width: 100%
+    transform: translateX(-180%)
+    z-index: 100
+    border-radius: 5px
+    background: white
+
+    .menu
+      display: block
+      text-align: center
+
+    .navigation__btns
+      justify-content: flex-end
   
   .btn-menu
     display: block
+
+.navigation_show
+   transform: translateX(0)

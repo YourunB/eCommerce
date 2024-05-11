@@ -44,6 +44,17 @@ const btnReg = new Button({
 const btnMenu = document.createElement('button');
 btnMenu.classList.add('btn-menu');
 
+btnMenu.addEventListener('click', () => {
+  nav.classList.toggle('navigation_show');
+  checkBtnMenuCondition();
+});
+
+function checkBtnMenuCondition() {
+  if (btnMenu.classList.value === 'btn-menu btn-menu_cliked') {
+    btnMenu.classList.remove('btn-menu_cliked');
+  } else btnMenu.classList.add('btn-menu_cliked');
+}
+
 navBtnsBox.append(basket, btnLogIn, btnLogOut, btnReg);
 nav.append(logo, menu, navBtnsBox);
 header.append(nav, btnMenu);

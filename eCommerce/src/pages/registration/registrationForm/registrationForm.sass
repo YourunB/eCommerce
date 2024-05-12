@@ -1,0 +1,75 @@
+@use './src/variables' as *
+
+.registration-form-container  
+  display: flex
+  flex-direction: column
+  flex-wrap: wrap
+  justify-content: center
+  align-items: center
+  width: 100%
+  margin-bottom: 1%
+
+.registration-email__input,
+.registration-password__input,
+.registration-firstName__input,
+.registration-lastName__input,
+.registration-dateOfBirth__input
+  width: 40%
+  margin: 0.5%
+
+.registration-street__input,
+.registration-country__input,
+.registration-city__input,
+.registration-postalCode__input
+  width: 70%
+  margin: 0.5%
+
+.address-container
+  display: flex
+  width: 100%
+  margin-top:3%
+  align-items: flex-start
+  justify-content: center
+
+.address-form
+  display: flex
+  flex-direction: column
+  width: 55%
+  justify-content: center
+  align-items: center
+
+.address__label
+  
+  color: $color-text-common
+  font-size: 0.9rem
+  font-weight: 700
+  letter-spacing: 0.05rem
+
+.registration__btn-submit
+  margin-top:3%
+
+.UseAsDefault__label
+  color: $color-text-common
+  font-size: 0.75rem
+  font-weight: 700
+  letter-spacing: 0.05rem
+
+.registration-notice
+  display: flex
+  align-items: center
+  justify-content: start
+  width: 40%
+  text-align: start
+
+.registration-notice_address
+  display: flex
+  align-items: center
+  justify-content: start
+  width: 70%
+  text-align: start
+
+.invisible
+  display: none
+ 
+
+

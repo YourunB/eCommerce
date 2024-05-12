@@ -39,6 +39,17 @@ export const isToLong33: Rule = (target) => {
   return result;
 };
 
+export const isCorrectKeyboard: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /^[a-zA-Z0-9~`!@#$%^&*()\-_=+[\]{}\\|;:'",<.>/?]+$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Must contain latin symbols');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
 // password rules
 export const isPassLeast8: Rule = (target) => {
   const result = { ...target };
@@ -111,6 +122,52 @@ export const isEmailContainDog: Rule = (target) => {
   const regexp = /\w+@\w+/gi;
   if (!result.subject.match(regexp)) {
     result.errors.push('Email address must contain an `@` symbol separating local part and domain name');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
+//first and last names, city rules
+
+export const isContainOnlyLetters: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /^[a-zA-Z]+$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Must not contain only letters a-z and no special characters or numbers');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
+//date of birth rules
+
+export const isEnoughOlder: Rule = (target) => {
+  const result = { ...target };
+  const birthDate = new Date(result.subject);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+  if (age < 13) {
+    result.errors.push('User should be at least 13 years old');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
+//postal code rules
+
+export const isRightPostalCode: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /^[\d]{5}$/;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Postal code must follow the format for the country (e.g., 12345)');
     result.validate = false;
     return result;
   }

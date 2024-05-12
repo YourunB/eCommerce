@@ -1,6 +1,7 @@
-import { State, Subscribers, StateKey, StateValue, Callback } from './types';
+import { State, Subscribers, StateKey, StateValue, Callback, AuthState } from './types';
 
 const initialState: State = {
+  authState: AuthState.notLogged,
   access_token: {},
   customer: {},
 };

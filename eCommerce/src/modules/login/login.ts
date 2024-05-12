@@ -1,5 +1,6 @@
 import { router } from '../router';
 import state from '../../state/state';
+import { AuthState } from '../../state/types';
 import { Actions, AuthResponse } from './types';
 import { isAuthResponse } from './helpers/predicates';
 import { LStorage } from '../localStorage/localStorage';
@@ -78,6 +79,7 @@ export class Login {
     this.saveAccessToken(response);
     this.saveCredential();
     this.saveClient(response);
+    state.authState = AuthState.logged;
     return this;
   };
 

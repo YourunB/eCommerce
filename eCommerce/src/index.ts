@@ -58,10 +58,7 @@ router.addRoute({
   handler: () => {
     main.innerHTML = '';
     login.isLogined().then(
-      () => {
-        main.innerHTML = '';
-        main.append(mainPage);
-      },
+      () => main.append(mainPage),
       () => main.append(login.getPage())
     );
   },

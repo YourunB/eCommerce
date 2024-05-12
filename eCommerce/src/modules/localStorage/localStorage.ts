@@ -2,6 +2,11 @@ type Props = {
   email: string;
   password: string;
 };
+type Credential = {
+  email: string;
+  password: string;
+};
+
 const LS_CREDENTIAL_KEY = '202405062139';
 const MSG_ERR_NO_KEY = 'check for ".env" file and "LS_CREDENTIAL_KEY" key';
 const MSG_ERR_NO_DATA = 'no data';
@@ -20,7 +25,7 @@ export class LStorage {
     }
   }
 
-  public getCredentials(): Promise<string> {
+  public getCredentials(): Promise<Credential | string> {
     try {
       if (!LS_CREDENTIAL_KEY) return Promise.reject(MSG_ERR_NO_KEY);
       const encData = localStorage.getItem(LS_CREDENTIAL_KEY);

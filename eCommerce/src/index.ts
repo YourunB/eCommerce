@@ -10,6 +10,8 @@ import { Login } from './modules/login/login';
 import { header, btnLogIn, logo, menu, basket } from './components/header/header';
 
 const main = document.createElement('main');
+main.style.flex = '1 1 auto'; // FIX временно, пока отсутствует страница со стилями
+
 document.body.append(header, main);
 
 function setActivePage() {

@@ -14,8 +14,14 @@ export type Subscribers = {
 };
 
 export type StateKey = string;
+export enum AuthState {
+  notLogged = 'notlogged',
+  logged = 'logged',
+  anonymous = 'anonymous',
+}
 
 export interface State {
+  authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
   customer: Customer | Record<string, never>;
   [index: string]: unknown;

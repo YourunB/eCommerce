@@ -10,6 +10,9 @@ import { Login } from './modules/login/login';
 import { header, btnLogIn, logo, menu, basket } from './components/header/header';
 
 const main = document.createElement('main');
+main.style.flex = '1 1 auto'; // FIX временно, пока отсутствует страница со стилями
+const login = new Login();
+
 document.body.append(header, main);
 
 function setActivePage() {
@@ -54,7 +57,10 @@ router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/login',
   handler: () => {
     main.innerHTML = '';
-    main.append(new Login().getPage());
+    login.isLogined().then(
+      () => main.append(mainPage),
+      () => main.append(login.getPage())
+    );
   },
 });
 router.addRoute({

@@ -1,44 +1,71 @@
+import { router } from '../router';
 import state from '../../state/state';
+import { AuthState } from '../../state/types';
 import { Actions, AuthResponse } from './types';
 import { isAuthResponse } from './helpers/predicates';
+import { LStorage } from '../localStorage/localStorage';
 import { PageLogin } from '../../pages/login/pageLogin';
 import { getAccessToken, getCustomer } from './api/login';
 import { AuthErrorResponse } from '@commercetools/platform-sdk';
 import { Dialog } from '../../components/modalDialog/modalDialog';
 
 const dialog = Dialog.getInstance();
+const lstorage = new LStorage();
 
 export class Login {
-  access_token: string | undefined;
+  private page: PageLogin;
+  private email = '';
+  private password = '';
+
+  constructor() {
+    this.page = new PageLogin(this.dispatch);
+  }
+
+  public isLogined() {
+    return new Promise((resolve, reject) => {
+      lstorage
+        .getCredentials()
+        .then((credential) => {
+          if (typeof credential !== 'string') {
+            this.email = credential.email;
+            this.password = credential.password;
+            getAccessToken(this.email, this.password)
+              .then(this.processResponse)
+              .then(this.saveResponse, this.handleError)
+              .then(() => resolve(state.access_token.access_token))
+              .catch((e) => reject(e));
+          } else reject(credential);
+        })
+        .catch((e) => reject(e));
+    });
+  }
 
   public getPage() {
-    // ---
-    //   здесь должна быть проверка, может быть пользователь уже авторизован,
-    //   - авторизован: редирект на main page
-    //   - не авторизован: отдаем страницу логина
-    // ---
-    const pageLogin = new PageLogin(this.dispatch);
-    return pageLogin.getElement();
+    return this.page.getElement();
   }
 
   public dispatch = (action: Actions) => {
-    const {
-      type,
-      payload: { email, password },
-    } = action;
+    const { type } = action;
+    this.email = action.payload.email;
+    this.password = action.payload.password;
 
     switch (type) {
       case 'login':
-        getAccessToken(email, password)
+        getAccessToken(this.email, this.password)
           .then(this.processResponse)
-          .then(this.saveAccessToken, this.handleErrorAccessToken)
+          .then(this.saveResponse, this.handleError)
+          .then(this.redirect)
           .catch((error) => dialog.show(`${error}`));
         break;
       case 'register':
-        dialog.show('Will be redirect to Register');
+        router.route('/yourunb-JSFE2023Q4/ecommerce/404');
         break;
     }
   };
+
+  private redirect() {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/');
+  }
 
   private processResponse(response: AuthResponse | AuthErrorResponse) {
     if (isAuthResponse(response)) {
@@ -48,18 +75,29 @@ export class Login {
     }
   }
 
+  private saveResponse = (response: AuthResponse) => {
+    this.saveAccessToken(response);
+    this.saveCredential();
+    this.saveClient(response);
+    state.authState = AuthState.logged;
+    return this;
+  };
+
   private saveAccessToken(response: AuthResponse) {
     state.access_token = response;
-    dialog.show(`Token: ${response.access_token}`);
+  }
 
+  private saveCredential() {
+    lstorage.saveCredentials({ email: this.email, password: this.password });
+  }
+
+  private saveClient(response: AuthResponse) {
     getCustomer(response.access_token).then((customer) => {
       state.customer = customer;
-      dialog.show(`Client: ${customer.firstName} ${customer.lastName}`);
-      console.log(state);
     });
   }
 
-  private handleErrorAccessToken(response: AuthErrorResponse) {
+  private handleError(response: AuthErrorResponse) {
     let msg;
     switch (response.statusCode) {
       case 400:
@@ -79,6 +117,6 @@ export class Login {
         msg = response.message;
         break;
     }
-    dialog.show(msg, 'warning');
+    throw new Error(msg);
   }
 }

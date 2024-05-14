@@ -5,7 +5,7 @@ footer.classList.add('footer');
 
 footer.innerHTML = `
   <span>2024</span>
-  <a class="developers__link" href="https://rs.school/">&copy; RS School</a>
+  <a class="developers__link" target="_blank" rel="noopener" href="https://rs.school/">&copy; RS School</a>
 `;
 
 export { footer };

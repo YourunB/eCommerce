@@ -37,7 +37,7 @@ export class RegistrationForm extends BaseComponent {
   public button: Button;
 
   constructor(props: PageRegistrationPropsType) {
-    super({ tagName: 'div', classNames: 'registration-form-container', ...props });
+    super({ tagName: 'form', classNames: 'registration-form-container', ...props });
     this.isSubmitted = false;
 
     // email

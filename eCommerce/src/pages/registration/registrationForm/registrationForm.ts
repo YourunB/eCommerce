@@ -1,5 +1,4 @@
 import { BaseComponent } from '../../../components/baseComponent';
-
 import { Button } from '../../../components/basebutton/baseButton';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
@@ -21,10 +20,17 @@ import {
   isContainOnlyLetters,
   isCorrectKeyboard,
 } from '../../../components/helpers/validation-rules';
-
-import { AddressForm } from './adressForm/adressForm';
-
 import './registrationForm.sass';
+import { router } from '../../../modules/router';
+import { AddressForm } from './adressForm/adressForm';
+import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { Dialog } from '../../../components/modalDialog/modalDialog';
+import { LStorage } from '../../../modules/localStorage/localStorage';
+import { createAnonymous, createCustomer } from '../../../modules/api/auth';
+import { isAuthResponse, isCustomerSignInResult } from '../../../components/helpers/predicates';
+
+const dialog = Dialog.getInstance();
+const lstorage = new LStorage();
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
@@ -138,12 +144,40 @@ export class RegistrationForm extends BaseComponent {
     this.button.getElement().addEventListener('click', this.handleSubmit);
   }
 
+  private createJSONfromForm(): MyCustomerDraft {
+    // FIX - only email and pass fills now!
+    const customerDraft: MyCustomerDraft = {
+      email: this.inputEmail.value,
+      password: this.inputPass.value,
+    };
+
+    return customerDraft;
+  }
+
   handleSubmit = (e: MouseEvent): void => {
     e.preventDefault();
     this.isSubmitted = true;
     if (!this.validateForm()) {
       return;
     }
+
+    const newCustomerData = this.createJSONfromForm();
+    createAnonymous() // TODO in Sprint3 createAnonymous should move to index.ts
+      .then((result) => {
+        if (isAuthResponse(result)) {
+          const tokenAnonymous = result.access_token;
+          createCustomer(newCustomerData, tokenAnonymous).then((result) => {
+            if (isCustomerSignInResult(result)) {
+              dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
+              lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
+              router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        dialog.show(error, 'warning');
+      });
   };
 
   private validateForm(): boolean {

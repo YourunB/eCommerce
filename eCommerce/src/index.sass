@@ -1,7 +1,6 @@
 html
   scroll-behavior: smooth
   box-sizing: border-box
-  height: 100dvh
 
 *,
 *:before,
@@ -9,8 +8,6 @@ html
   box-sizing: inherit
 
 body
-  display: flex
-  flex-direction: column
   margin: 0
   padding: 0
   max-width: 1440px
@@ -23,3 +20,6 @@ body
 a
   color: inherit
   text-decoration: inherit
+
+.main
+  min-height: calc(100vh - 180px)

@@ -11,7 +11,7 @@ import { header, btnLogIn, logo, menu, basket } from './components/header/header
 import { footer } from './components/footer/footer';
 
 const main = document.createElement('main');
-main.style.flex = '1 1 auto'; // FIX временно, пока отсутствует страница со стилями
+main.classList.add('main');
 const login = new Login();
 
 document.body.append(header, main, footer);

@@ -8,12 +8,13 @@ import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
 import { header, btnLogIn, logo, menu, basket } from './components/header/header';
+import { footer } from './components/footer/footer';
 
 const main = document.createElement('main');
 main.style.flex = '1 1 auto'; // FIX временно, пока отсутствует страница со стилями
 const login = new Login();
 
-document.body.append(header, main);
+document.body.append(header, main, footer);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;

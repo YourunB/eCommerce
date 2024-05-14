@@ -2,18 +2,20 @@ import './modules/routingScript';
 import './index.sass';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
-import { notFoundPage } from './pages/notFoundPage';
+import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, logo, menu, basket } from './components/header/header';
+import { header, btnLogIn, btnReg, logo, menu, basket } from './components/header/header';
+import { footer } from './components/footer/footer';
+import { PageRegistration } from './pages/registration/pageRegistration';
 
 const main = document.createElement('main');
-main.style.flex = '1 1 auto'; // FIX временно, пока отсутствует страница со стилями
+main.classList.add('main');
 const login = new Login();
 
-document.body.append(header, main);
+document.body.append(header, main, footer);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;
@@ -64,6 +66,13 @@ router.addRoute({
   },
 });
 router.addRoute({
+  path: '/yourunb-JSFE2023Q4/ecommerce/registration',
+  handler: () => {
+    main.innerHTML = '';
+    main.append(new PageRegistration({}).getElement());
+  },
+});
+router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/404',
   handler: () => {
     main.innerHTML = '';
@@ -97,6 +106,11 @@ window.onload = () => {
     setActivePage();
     return;
   }
+  if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration') {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
+    setActivePage();
+    return;
+  }
   router.route('/yourunb-JSFE2023Q4/ecommerce/404');
   setActivePage();
 };
@@ -105,8 +119,16 @@ logo.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
   setActivePage();
 });
+btnBackHome.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/');
+  setActivePage();
+});
 btnLogIn.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+  setActivePage();
+});
+btnReg.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
   setActivePage();
 });
 basket.addEventListener('click', () => {

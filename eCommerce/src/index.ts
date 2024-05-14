@@ -2,7 +2,7 @@ import './modules/routingScript';
 import './index.sass';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
-import { notFoundPage } from './pages/notFoundPage';
+import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
@@ -116,6 +116,10 @@ window.onload = () => {
 };
 
 logo.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/');
+  setActivePage();
+});
+btnBackHome.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
   setActivePage();
 });

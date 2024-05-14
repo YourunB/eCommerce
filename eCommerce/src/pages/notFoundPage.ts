@@ -18,4 +18,4 @@ boxNotFoundPage.append(btnBackHome);
 
 notFoundPage.append(boxNotFoundPage);
 
-export { notFoundPage };
+export { notFoundPage, btnBackHome };

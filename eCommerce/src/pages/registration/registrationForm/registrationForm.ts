@@ -1,7 +1,3 @@
-import { BaseComponent } from '../../../components/baseComponent';
-import { Button } from '../../../components/basebutton/baseButton';
-import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
-import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import {
   Validation,
   compose,
@@ -19,15 +15,20 @@ import {
   isRightPostalCode,
   isContainOnlyLetters,
   isCorrectKeyboard,
+  isContainAtLeastOneLetters,
 } from '../../../components/helpers/validation-rules';
 import './registrationForm.sass';
 import { router } from '../../../modules/router';
 import { AddressForm } from './adressForm/adressForm';
 import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { BaseComponent } from '../../../components/baseComponent';
+import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { LStorage } from '../../../modules/localStorage/localStorage';
 import { createAnonymous, createCustomer } from '../../../modules/api/auth';
-import { isAuthResponse, isCustomerSignInResult } from '../../../components/helpers/predicates';
+import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
+import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
+import { isAuthResponse, isCustomerSignInResult, isErrorResponse } from '../../../components/helpers/predicates';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
@@ -56,7 +57,7 @@ export class RegistrationForm extends BaseComponent {
     this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
     this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
-    this.inputEmail.getElement().addEventListener('input', () => this.clearNotice(this.inputEmail));
+    this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // password
     this.inputPass = new InputWithNotice({
@@ -68,7 +69,7 @@ export class RegistrationForm extends BaseComponent {
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
     this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
-    this.inputPass.getElement().addEventListener('input', () => this.clearNotice(this.inputPass));
+    this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // first name
     this.inputFirstName = new InputWithNotice({
@@ -79,7 +80,7 @@ export class RegistrationForm extends BaseComponent {
     this.inputFirstName.notice.setClassName('registration-notice');
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
     this.inputFirstName.setAttribute({ name: 'autocomplete', value: '' });
-    this.inputFirstName.getElement().addEventListener('input', () => this.clearNotice(this.inputFirstName));
+    this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // last name
     this.inputLastName = new InputWithNotice({
@@ -90,7 +91,7 @@ export class RegistrationForm extends BaseComponent {
     this.inputLastName.notice.setClassName('registration-notice');
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
     this.inputLastName.setAttribute({ name: 'autocomplete', value: '' });
-    this.inputLastName.getElement().addEventListener('input', () => this.clearNotice(this.inputLastName));
+    this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // date of birth
     this.inputDateOfBirth = new InputWithNotice({
@@ -106,34 +107,18 @@ export class RegistrationForm extends BaseComponent {
     this.inputDateOfBirth.getElement().addEventListener('blur', () => {
       this.inputDateOfBirth.removeAttribute({ name: 'type' });
     });
-    this.inputDateOfBirth.getElement().addEventListener('input', () => this.clearNotice(this.inputDateOfBirth));
+    this.inputDateOfBirth.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // address
     this.addressForm = new AddressForm({ parentNode: this.element });
-    this.addressForm.inputCityBilling
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputCityBilling));
-    this.addressForm.inputCityShipping
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputCityShipping));
-    this.addressForm.inputStreetBilling
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputStreetBilling));
-    this.addressForm.inputStreetShipping
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputStreetShipping));
-    this.addressForm.inputPostalCodeBilling
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputPostalCodeBilling));
-    this.addressForm.inputPostalCodeShipping
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputPostalCodeShipping));
-    this.addressForm.inputCountryBilling
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputCountryBilling));
-    this.addressForm.inputCountryShipping
-      .getElement()
-      .addEventListener('input', () => this.clearNotice(this.addressForm.inputCountryShipping));
+    this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     this.button = new Button({
       textContent: 'register',
@@ -144,13 +129,38 @@ export class RegistrationForm extends BaseComponent {
     this.button.getElement().addEventListener('click', this.handleSubmit);
   }
 
+  private handleChangeInput(): void {
+    if (this.isSubmitted) this.validateForm();
+  }
+
   private createJSONfromForm(): MyCustomerDraft {
-    // FIX - only email and pass fills now!
-    const customerDraft: MyCustomerDraft = {
+    let customerDraft: MyCustomerDraft = {
       email: this.inputEmail.value,
       password: this.inputPass.value,
+      firstName: this.inputFirstName.value,
+      lastName: this.inputLastName.value,
+      dateOfBirth: this.inputDateOfBirth.value,
+      addresses: [
+        {
+          country: this.addressForm.inputCountryShipping.value,
+          streetName: this.addressForm.inputStreetShipping.value,
+          postalCode: this.addressForm.inputPostalCodeShipping.value,
+          city: this.addressForm.inputCityShipping.value,
+        },
+        {
+          country: this.addressForm.inputCountryBilling.value,
+          streetName: this.addressForm.inputStreetBilling.value,
+          postalCode: this.addressForm.inputPostalCodeBilling.value,
+          city: this.addressForm.inputCityBilling.value,
+        },
+      ],
     };
-
+    if (this.addressForm.useAsDefaultShipping.getElement().checked) {
+      customerDraft = { ...customerDraft, defaultShippingAddress: 0 };
+    }
+    if (this.addressForm.useAsDefaultBilling.getElement().checked) {
+      customerDraft = { ...customerDraft, defaultBillingAddress: 1 };
+    }
     return customerDraft;
   }
 
@@ -166,21 +176,39 @@ export class RegistrationForm extends BaseComponent {
       .then((result) => {
         if (isAuthResponse(result)) {
           const tokenAnonymous = result.access_token;
-          createCustomer(newCustomerData, tokenAnonymous).then((result) => {
-            if (isCustomerSignInResult(result)) {
-              dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
-              lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
-              router.route('/yourunb-JSFE2023Q4/ecommerce/login');
-            }
-          });
+          createCustomer(newCustomerData, tokenAnonymous)
+            .then((result) => {
+              if (isCustomerSignInResult(result)) {
+                dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
+                lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
+                router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+              } else {
+                this.showErrorMessage(result);
+              }
+            })
+            .catch(this.showErrorMessage);
         }
       })
-      .catch((error) => {
-        dialog.show(error, 'warning');
-      });
+      .catch(this.showErrorMessage);
   };
 
+  private showErrorMessage(error: unknown): void {
+    if (isErrorResponse(error)) {
+      const detailedErrorMessage = error.errors ? error.errors[0].detailedErrorMessage : '';
+      dialog.show(`${error.message} ${detailedErrorMessage}`, 'warning');
+    }
+  }
+
+  private copyShippingToBilling(): void {
+    this.addressForm.inputCountryBilling.value = this.addressForm.inputCountryShipping.value;
+    this.addressForm.inputStreetBilling.value = this.addressForm.inputStreetShipping.value;
+    this.addressForm.inputPostalCodeBilling.value = this.addressForm.inputPostalCodeShipping.value;
+    this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;
+  }
+
   private validateForm(): boolean {
+    if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
+
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidPassword = this.validatePassword(this.inputPass.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
@@ -248,13 +276,23 @@ export class RegistrationForm extends BaseComponent {
   }
 
   private validateNamesAndCity(input: string): Validation {
-    return compose(isNotEmpty, isContainOnlyLetters)({ subject: input, validate: true, errors: [] });
+    return compose(
+      isNotEmpty,
+      isNotContainWhitespaces,
+      isContainAtLeastOneLetters,
+      isContainOnlyLetters
+    )({ subject: input, validate: true, errors: [] });
   }
   private validateDateOfBirth(input: string): Validation {
     return compose(isNotEmpty, isEnoughOlder)({ subject: input, validate: true, errors: [] });
   }
   private validateStreet(input: string): Validation {
-    return compose(isNotEmpty, isCorrectKeyboard)({ subject: input, validate: true, errors: [] });
+    return compose(
+      isNotEmpty,
+      isNotContainWhitespaces,
+      isContainAtLeastOneLetters,
+      isCorrectKeyboard
+    )({ subject: input, validate: true, errors: [] });
   }
   private validatePostalCode(input: string): Validation {
     return compose(isRightPostalCode)({ subject: input, validate: true, errors: [] });

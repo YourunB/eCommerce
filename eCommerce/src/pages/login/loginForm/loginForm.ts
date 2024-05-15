@@ -24,13 +24,12 @@ export class LoginForm extends BaseComponent {
   private inputEmail: InputWithNotice;
   private inputPass: InputWithNotice;
   private showPassword: Input;
-  // после первого сабмита начнется валидация при каждом изменении инпутов
   private isSubmitted = false;
 
   constructor(dispatch: Dispatch) {
     super({ tagName: 'div', classNames: 'form__conteiner' });
     this.dispatch = dispatch;
-    const header = new LoginHeader(dispatch);
+    const header = new LoginHeader();
     const labelEmail = new BaseComponent({
       tagName: 'label',
       textContent: 'Enter your email and password to login.',
@@ -50,11 +49,6 @@ export class LoginForm extends BaseComponent {
     const form = new BaseComponent({ tagName: 'form', classNames: 'login-form' });
     const button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
 
-    // данные подставляются на время разработки
-    this.inputEmail.value = 'seb@example.com';
-    this.inputPass.value = 'test12345TEST';
-
-    this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
     this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });

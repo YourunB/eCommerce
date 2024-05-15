@@ -14,3 +14,9 @@
 
   &::placeholder
     color: $color-input-placeholder
+
+.input-base:has(+div.notice)
+  outline: 1px solid red
+
+  &:focus-visible
+    border-color: red

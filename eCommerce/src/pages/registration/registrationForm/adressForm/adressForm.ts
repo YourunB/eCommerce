@@ -74,9 +74,15 @@ export class AddressForm extends BaseComponent {
     const countryList = new BaseComponent({ tagName: 'datalist', classNames: 'countryList' });
     countryList.getElement().id = 'countries';
 
-    ['Italy', 'Germany', 'Spain', 'Finland', 'United States'].forEach((country) => {
-      const option = new BaseComponent({ tagName: 'option' });
-      (option.getElement() as HTMLOptionElement).value = country;
+    [
+      ['Italy', 'IT'],
+      ['Germany', 'DE'],
+      ['Spain', 'ES'],
+      ['Finland', 'FI'],
+      ['United States of America', 'US'],
+    ].forEach(([country, code]) => {
+      const option = new BaseComponent<HTMLOptionElement>({ tagName: 'option', textContent: country });
+      option.getElement().value = code;
       countryList.insertChild(option);
     });
 

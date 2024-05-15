@@ -27,7 +27,7 @@ import { MyCustomerDraft } from '@commercetools/platform-sdk';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { LStorage } from '../../../modules/localStorage/localStorage';
 import { createAnonymous, createCustomer } from '../../../modules/api/auth';
-import { isAuthResponse, isCustomerSignInResult } from '../../../components/helpers/predicates';
+import { isAuthResponse, isCustomerSignInResult, isErrorResponse } from '../../../components/helpers/predicates';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
@@ -145,12 +145,33 @@ export class RegistrationForm extends BaseComponent {
   }
 
   private createJSONfromForm(): MyCustomerDraft {
-    // FIX - only email and pass fills now!
-    const customerDraft: MyCustomerDraft = {
+    let customerDraft: MyCustomerDraft = {
       email: this.inputEmail.value,
       password: this.inputPass.value,
+      firstName: this.inputFirstName.value,
+      lastName: this.inputLastName.value,
+      dateOfBirth: this.inputDateOfBirth.value,
+      addresses: [
+        {
+          country: this.addressForm.inputCountryShipping.value,
+          streetName: this.addressForm.inputStreetShipping.value,
+          postalCode: this.addressForm.inputPostalCodeShipping.value,
+          city: this.addressForm.inputCityShipping.value,
+        },
+        {
+          country: this.addressForm.inputCountryBilling.value,
+          streetName: this.addressForm.inputStreetBilling.value,
+          postalCode: this.addressForm.inputPostalCodeBilling.value,
+          city: this.addressForm.inputCityBilling.value,
+        },
+      ],
     };
-
+    if (this.addressForm.useAsDefaultShipping.getElement().checked) {
+      customerDraft = { ...customerDraft, defaultShippingAddress: 0 };
+    }
+    if (this.addressForm.useAsDefaultBilling.getElement().checked) {
+      customerDraft = { ...customerDraft, defaultBillingAddress: 1 };
+    }
     return customerDraft;
   }
 
@@ -166,21 +187,39 @@ export class RegistrationForm extends BaseComponent {
       .then((result) => {
         if (isAuthResponse(result)) {
           const tokenAnonymous = result.access_token;
-          createCustomer(newCustomerData, tokenAnonymous).then((result) => {
-            if (isCustomerSignInResult(result)) {
-              dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
-              lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
-              router.route('/yourunb-JSFE2023Q4/ecommerce/login');
-            }
-          });
+          createCustomer(newCustomerData, tokenAnonymous)
+            .then((result) => {
+              if (isCustomerSignInResult(result)) {
+                dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
+                lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
+                router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+              } else {
+                this.showErrorMessage(result);
+              }
+            })
+            .catch(this.showErrorMessage);
         }
       })
-      .catch((error) => {
-        dialog.show(error, 'warning');
-      });
+      .catch(this.showErrorMessage);
   };
 
+  private showErrorMessage(error: unknown): void {
+    if (isErrorResponse(error)) {
+      const detailedErrorMessage = error.errors ? error.errors[0].detailedErrorMessage : '';
+      dialog.show(`${error.message} ${detailedErrorMessage}`, 'warning');
+    }
+  }
+
+  private copyShippingToBilling(): void {
+    this.addressForm.inputCountryBilling.value = this.addressForm.inputCountryShipping.value;
+    this.addressForm.inputStreetBilling.value = this.addressForm.inputStreetShipping.value;
+    this.addressForm.inputPostalCodeBilling.value = this.addressForm.inputPostalCodeShipping.value;
+    this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;
+  }
+
   private validateForm(): boolean {
+    if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
+
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidPassword = this.validatePassword(this.inputPass.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);

@@ -2,10 +2,10 @@ import { router } from '../router';
 import state from '../../state/state';
 import { AuthState } from '../../state/types';
 import { Actions, AuthResponse } from './types';
-import { isAuthResponse } from './helpers/predicates';
+import { isAuthResponse, isCustomer } from '../../components/helpers/predicates';
 import { LStorage } from '../localStorage/localStorage';
 import { PageLogin } from '../../pages/login/pageLogin';
-import { getAccessToken, getCustomer } from './api/login';
+import { getAccessToken, getCustomer } from '../api/auth';
 import { AuthErrorResponse } from '@commercetools/platform-sdk';
 import { Dialog } from '../../components/modalDialog/modalDialog';
 
@@ -37,7 +37,7 @@ export class Login {
           } else reject(credential);
         })
         .catch((e) => reject(e));
-    });
+    }).finally(() => console.log('global state', state));
   }
 
   public getPage() {
@@ -92,9 +92,11 @@ export class Login {
   }
 
   private saveClient(response: AuthResponse) {
-    getCustomer(response.access_token).then((customer) => {
-      state.customer = customer;
-    });
+    getCustomer(response.access_token)
+      .then((customer) => {
+        if (isCustomer(customer)) state.customer = customer;
+      })
+      .catch((error) => dialog.show(error, 'warning'));
   }
 
   private handleError(response: AuthErrorResponse) {

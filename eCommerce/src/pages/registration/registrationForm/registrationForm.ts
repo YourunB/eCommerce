@@ -290,6 +290,7 @@ export class RegistrationForm extends BaseComponent {
     return compose(
       isNotEmpty,
       isNotContainWhitespaces,
+      isContainAtLeastOneLetters,
       isCorrectKeyboard
     )({ subject: input, validate: true, errors: [] });
   }

@@ -26,6 +26,7 @@ export class InputWithNotice extends Input {
 
     this.notice.getElement().innerHTML = msg;
     this.element.after(this.notice.getElement());
+    setTimeout(() => this.notice.setClassName('notice_show'));
   }
 
   private isEmptyMessages(messages: string | string[]): boolean {

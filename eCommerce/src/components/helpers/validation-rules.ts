@@ -22,7 +22,7 @@ export const isNotEmpty: Rule = (target) => {
 export const isNotContainWhitespaces: Rule = (target) => {
   const result = { ...target };
   if (result.subject.trim().length !== result.subject.length) {
-    result.errors.push('Email address must not contain leading or trailing whitespace');
+    result.errors.push('must not contain leading or trailing whitespace');
     result.validate = false;
     return result;
   }
@@ -41,7 +41,7 @@ export const isToLong33: Rule = (target) => {
 
 export const isCorrectKeyboard: Rule = (target) => {
   const result = { ...target };
-  const regexp = /^[a-zA-Z0-9~`!@#$%^&*()\-_=+[\]{}\\|;:'",<.>/?]+$/;
+  const regexp = /^[a-zA-Z0-9~`!@#$%^&*()\-_=+[\]{}\\|;:'",<.>/? ]+$/;
   if (!result.subject.match(regexp)) {
     result.errors.push('Must contain latin symbols');
     result.validate = false;
@@ -132,9 +132,20 @@ export const isEmailContainDog: Rule = (target) => {
 
 export const isContainOnlyLetters: Rule = (target) => {
   const result = { ...target };
-  const regexp = /^[a-zA-Z]+$/;
+  const regexp = /^[a-zA-Z ]+$/;
   if (!result.subject.match(regexp)) {
-    result.errors.push('Must not contain only letters a-z and no special characters or numbers');
+    result.errors.push('Must contain only letters a-z and no special characters or numbers');
+    result.validate = false;
+    return result;
+  }
+  return result;
+};
+
+export const isContainAtLeastOneLetters: Rule = (target) => {
+  const result = { ...target };
+  const regexp = /[a-z]/gi;
+  if (!result.subject.match(regexp)) {
+    result.errors.push('Must contain at least one character a-z or A-Z');
     result.validate = false;
     return result;
   }

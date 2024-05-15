@@ -32,12 +32,11 @@ export class Login {
             getAccessToken(this.email, this.password)
               .then(this.processResponse)
               .then(this.saveResponse, this.handleError)
-              .then(() => resolve(state.access_token.access_token))
               .catch((e) => reject(e));
           } else reject(credential);
         })
         .catch((e) => reject(e));
-    }).finally(() => console.log('global state', state));
+    });
   }
 
   public getPage() {

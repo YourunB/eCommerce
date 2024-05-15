@@ -49,7 +49,6 @@ export class LoginForm extends BaseComponent {
     const form = new BaseComponent({ tagName: 'form', classNames: 'login-form' });
     const button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
 
-    this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
     this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });

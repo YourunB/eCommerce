@@ -1,4 +1,10 @@
-import { AuthErrorResponse, Customer, CustomerSignInResult, MyCustomerDraft } from '@commercetools/platform-sdk';
+import {
+  AuthErrorResponse,
+  Customer,
+  CustomerSignInResult,
+  ErrorResponse,
+  MyCustomerDraft,
+} from '@commercetools/platform-sdk';
 import {
   AUTH_BASIC,
   AUTH_PARAMS,
@@ -71,7 +77,7 @@ export function createAnonymous<T = AuthResponse>(): Promise<T | AuthErrorRespon
 export function createCustomer<T = MyCustomerDraft, C = CustomerSignInResult>(
   customer: T,
   token: string
-): Promise<AuthErrorResponse | C> {
+): Promise<ErrorResponse | C> {
   const options = {
     method: 'POST',
     headers: {

@@ -16,6 +16,7 @@ import {
   isContainOnlyLetters,
   isCorrectKeyboard,
   isContainAtLeastOneLetters,
+  isRightCountry,
 } from '../../../components/helpers/validation-rules';
 import './registrationForm.sass';
 import { router } from '../../../modules/router';
@@ -29,19 +30,21 @@ import { createAnonymous, createCustomer } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import { isAuthResponse, isCustomerSignInResult, isErrorResponse } from '../../../components/helpers/predicates';
+import { Input } from '../../../components/baseInput/baseInput';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
-  public inputEmail: InputWithNotice;
-  public inputPass: InputWithNotice;
-  public inputFirstName: InputWithNotice;
-  public inputLastName: InputWithNotice;
-  public inputDateOfBirth: InputWithNotice;
-  public addressForm: AddressForm;
-  public button: Button;
+  private inputEmail: InputWithNotice;
+  private inputPass: InputWithNotice;
+  private inputFirstName: InputWithNotice;
+  private inputLastName: InputWithNotice;
+  private inputDateOfBirth: InputWithNotice;
+  private addressForm: AddressForm;
+  private button: Button;
+  private showPassword: BaseComponent;
 
   constructor(props: PageRegistrationPropsType) {
     super({ tagName: 'form', classNames: 'registration-form-container', ...props });
@@ -64,13 +67,25 @@ export class RegistrationForm extends BaseComponent {
     this.inputPass = new InputWithNotice({
       attribute: { name: 'name', value: 'password' },
       classNames: 'registration-password__input',
-      parentNode: this.element,
     });
-    this.inputPass.notice.setClassName('registration-notice');
+    this.inputPass.notice.setClassName('registration-notice_password');
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
     this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.showPassword = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+    });
+    this.showPassword.setAttribute({ name: 'hidden', value: '' });
+    const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
+    labelCheckbox.insertChild(this.showPassword);
+    const passwordContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: 'password__container',
+      parentNode: this.element,
+    });
+    passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
+    labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
 
     // first name
     this.inputFirstName = new InputWithNotice({
@@ -120,15 +135,15 @@ export class RegistrationForm extends BaseComponent {
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.addressFormBilling.getElement().addEventListener('submit', () => console.log('hello'));
-    this.addressForm.addressFormBilling.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-    this.addressForm.addressFormShipping.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
 
     this.button = new Button({
       textContent: 'register',
       classNames: 'registration__btn-submit',
       parentNode: this.element,
     });
+  }
+  private handleCheckbox(): void {
+    this.inputPass.type = this.inputPass.type === 'password' ? 'text' : 'password';
   }
 
   private handleChangeInput(): void {
@@ -167,7 +182,6 @@ export class RegistrationForm extends BaseComponent {
   }
 
   handleSubmit = (e: SubmitEvent): void => {
-    // console.log('enter');
     e.preventDefault();
     this.isSubmitted = true;
     if (!this.validateForm()) {
@@ -223,8 +237,8 @@ export class RegistrationForm extends BaseComponent {
     const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
     const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
     const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
-    const isValidCountryShipping = this.validateStreet(this.addressForm.inputCountryShipping.value);
-    const isValidCountryBilling = this.validateStreet(this.addressForm.inputCountryBilling.value);
+    const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
+    const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
     this.inputEmail.showNotice(isValidLogin.errors);
     this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
@@ -261,8 +275,7 @@ export class RegistrationForm extends BaseComponent {
       isEmailProperlyFormatted,
       isNotContainWhitespaces,
       isEmailContainDomainName,
-      isEmailContainDog,
-      isNotEmpty
+      isEmailContainDog
     )({ subject: input, validate: true, errors: [] });
   }
 
@@ -273,14 +286,12 @@ export class RegistrationForm extends BaseComponent {
       isPassContainLowercase,
       isPassContainNumber,
       isNotContainWhitespaces,
-      isNotEmpty,
       isToLong33
     )({ subject: input, validate: true, errors: [] });
   }
 
   private validateNamesAndCity(input: string): Validation {
     return compose(
-      isNotEmpty,
       isNotContainWhitespaces,
       isContainAtLeastOneLetters,
       isContainOnlyLetters
@@ -291,18 +302,15 @@ export class RegistrationForm extends BaseComponent {
   }
   private validateStreet(input: string): Validation {
     return compose(
-      isNotEmpty,
       isNotContainWhitespaces,
       isContainAtLeastOneLetters,
       isCorrectKeyboard
     )({ subject: input, validate: true, errors: [] });
   }
   private validatePostalCode(input: string): Validation {
-    return compose(isRightPostalCode)({ subject: input, validate: true, errors: [] });
+    return isRightPostalCode({ subject: input, validate: true, errors: [] });
   }
-  private clearNotice(input: InputWithNotice) {
-    if (input.notice.getTextContent()) {
-      input.notice.setTextContent('');
-    }
+  private validateCountry(input: string): Validation {
+    return compose(isNotEmpty, isRightCountry)({ subject: input, validate: true, errors: [] });
   }
 }

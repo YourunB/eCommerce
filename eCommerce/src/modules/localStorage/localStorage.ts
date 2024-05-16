@@ -19,6 +19,7 @@ export class LStorage {
       const str = JSON.stringify({ email, password });
       const encryptedStr = this.encode(str);
       localStorage.setItem(LS_CREDENTIAL_KEY, encryptedStr);
+      localStorage.setItem('logged', 'true');
       return Promise.resolve(MSG_OK);
     } catch (error) {
       return Promise.reject(error);

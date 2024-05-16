@@ -163,6 +163,10 @@ btnBackHome.addEventListener('click', () => {
 btnLogIn.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/login');
 });
+btnLogOut.addEventListener('click', () => {
+  localStorage.clear();
+  router.route('/yourunb-JSFE2023Q4/ecommerce/');
+});
 btnReg.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
 });

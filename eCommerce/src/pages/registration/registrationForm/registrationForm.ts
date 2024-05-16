@@ -46,6 +46,7 @@ export class RegistrationForm extends BaseComponent {
   constructor(props: PageRegistrationPropsType) {
     super({ tagName: 'form', classNames: 'registration-form-container', ...props });
     this.isSubmitted = false;
+    this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
 
     // email
     this.inputEmail = new InputWithNotice({
@@ -119,14 +120,15 @@ export class RegistrationForm extends BaseComponent {
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.addressFormBilling.getElement().addEventListener('submit', () => console.log('hello'));
+    this.addressForm.addressFormBilling.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
+    this.addressForm.addressFormShipping.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
 
     this.button = new Button({
       textContent: 'register',
       classNames: 'registration__btn-submit',
       parentNode: this.element,
     });
-
-    this.button.getElement().addEventListener('click', this.handleSubmit);
   }
 
   private handleChangeInput(): void {
@@ -164,7 +166,8 @@ export class RegistrationForm extends BaseComponent {
     return customerDraft;
   }
 
-  handleSubmit = (e: MouseEvent): void => {
+  handleSubmit = (e: SubmitEvent): void => {
+    // console.log('enter');
     e.preventDefault();
     this.isSubmitted = true;
     if (!this.validateForm()) {

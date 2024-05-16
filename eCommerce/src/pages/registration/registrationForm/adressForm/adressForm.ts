@@ -28,7 +28,7 @@ export class AddressForm extends BaseComponent {
     super({ tagName: 'div', classNames: 'address-container', ...props });
 
     this.addressFormShipping = new BaseComponent({
-      tagName: 'form',
+      tagName: 'fieldset',
       classNames: 'address-form',
       parentNode: this.element,
     });
@@ -90,7 +90,7 @@ export class AddressForm extends BaseComponent {
     this.inputCountryShipping.getElement().setAttribute('list', 'countries');
 
     this.addressFormBilling = new BaseComponent({
-      tagName: 'form',
+      tagName: 'fieldset',
       classNames: 'address-form',
       parentNode: this.element,
     });

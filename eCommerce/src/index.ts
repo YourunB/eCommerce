@@ -10,10 +10,14 @@ import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
+import state from './state/state';
 
 const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
+
+login.isLogined();
+setTimeout(() => checkAuthorization(), 2000);
 
 document.body.append(header, main, footer);
 
@@ -28,7 +32,7 @@ function setActivePage() {
 }
 
 function checkAuthorization() {
-  if (localStorage.length > 0) {
+  if (state.authState === 'logged') {
     btnLogOut.classList.remove('header__btn_hide');
     btnLogIn.classList.add('header__btn_hide');
     btnReg.classList.add('header__btn_hide');
@@ -38,8 +42,6 @@ function checkAuthorization() {
     btnReg.classList.remove('header__btn_hide');
   }
 }
-
-checkAuthorization();
 
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/',
@@ -105,7 +107,7 @@ router.addRoute({
   },
 });
 
-window.onload = () => {
+function checkRoute() {
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
@@ -123,17 +125,20 @@ window.onload = () => {
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
-    if (localStorage.length === 0) router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    if (state.authState !== 'logged') router.route('/yourunb-JSFE2023Q4/ecommerce/login');
     else router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration') {
-    if (localStorage.length === 0) router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
+    if (state.authState !== 'logged') router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
     else router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   router.route('/yourunb-JSFE2023Q4/ecommerce/404');
-};
+}
+
+window.onload = () => checkRoute();
+window.addEventListener('popstate', () => checkRoute());
 
 logo.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');

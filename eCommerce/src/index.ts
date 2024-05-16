@@ -21,9 +21,7 @@ document.body.append(header, main, footer);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;
-  for (let i = 0; i < menuItems.length; i += 1) {
-    menuItems[i].classList.remove('menu__item_active');
-  }
+  for (let i = 0; i < menuItems.length; i += 1) menuItems[i].classList.remove('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/') menuItems[0].classList.add('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') menuItems[1].classList.add('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') menuItems[2].classList.add('menu__item_active');
@@ -46,6 +44,7 @@ checkAuthorization();
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/',
   handler: () => {
+    document.title = 'Plan Store';
     main.innerHTML = '';
     main.append(mainPage);
     setActivePage();
@@ -55,6 +54,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/products',
   handler: () => {
+    document.title = 'Products';
     main.innerHTML = '';
     main.append(productsPage);
     setActivePage();
@@ -64,6 +64,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/about',
   handler: () => {
+    document.title = 'About Us';
     main.innerHTML = '';
     main.append(aboutPage);
     setActivePage();
@@ -73,6 +74,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/basket',
   handler: () => {
+    document.title = 'Basket';
     main.innerHTML = '';
     main.append(basketPage);
     setActivePage();
@@ -82,6 +84,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/login',
   handler: () => {
+    document.title = 'Login';
     main.innerHTML = '';
     main.append(login.getPage());
     setActivePage();
@@ -91,6 +94,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
   handler: () => {
+    document.title = 'Registration';
     main.innerHTML = '';
     main.append(new PageRegistration({}).getElement());
     setActivePage();
@@ -100,6 +104,7 @@ router.addRoute({
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/404',
   handler: () => {
+    document.title = '404';
     main.innerHTML = '';
     main.append(notFoundPage);
     setActivePage();

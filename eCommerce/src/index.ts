@@ -59,10 +59,7 @@ router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/login',
   handler: () => {
     main.innerHTML = '';
-    login.isLogined().then(
-      () => main.append(mainPage),
-      () => main.append(login.getPage())
-    );
+    main.append(login.getPage());
   },
 });
 router.addRoute({
@@ -102,12 +99,18 @@ window.onload = () => {
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    login.isLogined().then(
+      () => router.route('/yourunb-JSFE2023Q4/ecommerce/'),
+      () => router.route('/yourunb-JSFE2023Q4/ecommerce/login')
+    );
     setActivePage();
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
+    login.isLogined().then(
+      () => router.route('/yourunb-JSFE2023Q4/ecommerce/'),
+      () => router.route('/yourunb-JSFE2023Q4/ecommerce/registration')
+    );
     setActivePage();
     return;
   }

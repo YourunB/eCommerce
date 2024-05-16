@@ -212,7 +212,10 @@ export class RegistrationForm extends BaseComponent {
   private showErrorMessage(error: unknown): void {
     if (isErrorResponse(error)) {
       const detailedErrorMessage = error.errors ? error.errors[0].detailedErrorMessage : '';
-      dialog.show(`${error.message} ${detailedErrorMessage}`, 'warning');
+      if (detailedErrorMessage) {
+        dialog.show(`${error.message} ${detailedErrorMessage}`, 'warning');
+      }
+      dialog.show(`${error.message}`, 'warning');
     }
   }
 

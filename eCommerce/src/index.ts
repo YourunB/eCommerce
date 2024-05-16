@@ -7,7 +7,7 @@ import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnReg, logo, menu, basket } from './components/header/header';
+import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 
@@ -15,141 +15,176 @@ const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
 
+login.isLogined();
+
 document.body.append(header, main, footer);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;
-  for (let i = 0; i < menuItems.length; i += 1) {
-    menuItems[i].classList.remove('menu__item_active');
-  }
+  for (let i = 0; i < menuItems.length; i += 1) menuItems[i].classList.remove('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/') menuItems[0].classList.add('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') menuItems[1].classList.add('menu__item_active');
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') menuItems[2].classList.add('menu__item_active');
 }
 
+function checkAuthorization() {
+  if (localStorage.logged !== undefined) {
+    btnLogOut.classList.remove('header__btn_hide');
+    btnLogIn.classList.add('header__btn_hide');
+    btnReg.classList.add('header__btn_hide');
+  } else {
+    btnLogOut.classList.add('header__btn_hide');
+    btnLogIn.classList.remove('header__btn_hide');
+    btnReg.classList.remove('header__btn_hide');
+  }
+}
+
+checkAuthorization();
+
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/',
   handler: () => {
+    document.title = 'Plant Store';
     main.innerHTML = '';
     main.append(mainPage);
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/products',
   handler: () => {
+    document.title = 'Products';
     main.innerHTML = '';
     main.append(productsPage);
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/about',
   handler: () => {
+    document.title = 'About Us';
     main.innerHTML = '';
     main.append(aboutPage);
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/basket',
   handler: () => {
+    document.title = 'Basket';
     main.innerHTML = '';
     main.append(basketPage);
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/login',
   handler: () => {
+    document.title = 'Login';
     main.innerHTML = '';
-    login.isLogined().then(
-      () => main.append(mainPage),
-      () => main.append(login.getPage())
-    );
+    main.append(login.getPage());
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
   handler: () => {
+    document.title = 'Registration';
     main.innerHTML = '';
     main.append(new PageRegistration({}).getElement());
+    setActivePage();
+    checkAuthorization();
   },
 });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/404',
   handler: () => {
+    document.title = '404';
     main.innerHTML = '';
     main.append(notFoundPage);
+    setActivePage();
+    checkAuthorization();
   },
 });
 
 window.onload = () => {
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
-    setActivePage();
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
-    setActivePage();
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
-    setActivePage();
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/basket') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
-    setActivePage();
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/login');
-    setActivePage();
+    if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    else router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
-    setActivePage();
+    if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
+    else router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   router.route('/yourunb-JSFE2023Q4/ecommerce/404');
-  setActivePage();
+};
+
+window.onpopstate = () => {
+  if (
+    localStorage.logged !== undefined &&
+    (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login' ||
+      location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration')
+  ) {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/', false);
+    window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/');
+    setActivePage();
+  }
 };
 
 logo.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
-  setActivePage();
 });
 btnBackHome.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
-  setActivePage();
 });
 btnLogIn.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/login');
-  setActivePage();
+});
+btnLogOut.addEventListener('click', () => {
+  localStorage.clear();
+  router.route('/yourunb-JSFE2023Q4/ecommerce/');
 });
 btnReg.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
-  setActivePage();
 });
 basket.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
-  setActivePage();
 });
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;
   if (currentTarget.textContent === 'Home') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
-    setActivePage();
     return;
   }
   if (currentTarget.textContent === 'Products') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
-    setActivePage();
     return;
   }
   if (currentTarget.textContent === 'About') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
-    setActivePage();
     return;
   }
 });

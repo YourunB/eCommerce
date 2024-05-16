@@ -44,7 +44,7 @@ checkAuthorization();
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/',
   handler: () => {
-    document.title = 'Plan Store';
+    document.title = 'Plant Store';
     main.innerHTML = '';
     main.append(mainPage);
     setActivePage();
@@ -140,6 +140,18 @@ window.onload = () => {
     return;
   }
   router.route('/yourunb-JSFE2023Q4/ecommerce/404');
+};
+
+window.onpopstate = () => {
+  if (
+    localStorage.logged !== undefined &&
+    (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login' ||
+      location.pathname === '/yourunb-JSFE2023Q4/ecommerce/registration')
+  ) {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/', false);
+    window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/');
+    setActivePage();
+  }
 };
 
 logo.addEventListener('click', () => {

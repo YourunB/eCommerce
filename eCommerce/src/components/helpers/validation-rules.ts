@@ -186,7 +186,7 @@ export const isRightPostalCode: Rule = (target) => {
 };
 export const isRightCountry: Rule = (target) => {
   const result = { ...target };
-  const countries = ['IT', 'DE', 'ES', 'FI', 'US'];
+  const countries = ['IT', 'DE', 'ES', 'FI', 'EE'];
   if (!countries.includes(result.subject)) {
     result.errors.push('choose country-code from given list');
     result.validate = false;

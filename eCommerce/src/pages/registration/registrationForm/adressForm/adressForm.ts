@@ -79,7 +79,7 @@ export class AddressForm extends BaseComponent {
       ['Germany', 'DE'],
       ['Spain', 'ES'],
       ['Finland', 'FI'],
-      ['United States of America', 'US'],
+      ['Estonia', 'EE'],
     ].forEach(([country, code]) => {
       const option = new BaseComponent<HTMLOptionElement>({ tagName: 'option', textContent: country });
       option.getElement().value = code;

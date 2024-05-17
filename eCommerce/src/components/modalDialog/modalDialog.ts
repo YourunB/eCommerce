@@ -28,7 +28,7 @@ export class Dialog extends BaseComponent {
     return Dialog.instance;
   }
 
-  public show(text: string, type?: 'warning') {
+  public show(text: string, type: 'warning' | 'info' = 'info') {
     if (text) this.queue.push(text);
     if (this.dialog.open) return;
     this.dialogContent.setTextContent(this.queue.shift() || '');

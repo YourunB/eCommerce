@@ -15,7 +15,10 @@ const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
 
-login.isLogined();
+login.isLogined().then(
+  () => localStorage.setItem('logged', 'true'),
+  () => localStorage.removeItem('logged')
+);
 
 document.body.append(header, main, footer);
 

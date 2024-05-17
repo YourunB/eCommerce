@@ -60,8 +60,7 @@ export class RegistrationForm extends BaseComponent {
       parentNode: this.element,
     });
     this.inputEmail.notice.setClassName('registration-notice');
-    this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
-    this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
@@ -72,7 +71,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputPass.notice.setClassName('registration-notice_password');
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
-    this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.showPassword = new Input({
@@ -97,7 +96,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputFirstName.notice.setClassName('registration-notice');
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
-    this.inputFirstName.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputFirstName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // last name
@@ -108,7 +107,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputLastName.notice.setClassName('registration-notice');
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
-    this.inputLastName.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputLastName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // date of birth

@@ -50,17 +50,20 @@ export class Login {
 
     switch (type) {
       case 'login':
-        getAccessToken(this.email, this.password)
-          .then(this.processResponse)
-          .then(this.saveResponse, this.handleError)
-          .then(this.redirect)
-          .catch((error) => dialog.show(`${error}`));
-        break;
-      case 'register':
-        router.route('/yourunb-JSFE2023Q4/ecommerce/404');
+        this.execute(this.email, this.password);
         break;
     }
   };
+
+  public execute(email: string, password: string): Promise<void> {
+    this.email = email;
+    this.password = password;
+    return getAccessToken(email, password)
+      .then(this.processResponse)
+      .then(this.saveResponse, this.handleError)
+      .then(this.redirect)
+      .catch((error) => dialog.show(`${error}`));
+  }
 
   private redirect() {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');

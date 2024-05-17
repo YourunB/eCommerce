@@ -1,27 +1,29 @@
 import {
-  Validation,
   compose,
-  isEmailContainDog,
-  isEmailContainDomainName,
-  isEmailProperlyFormatted,
-  isNotContainWhitespaces,
+  Validation,
   isNotEmpty,
-  isPassContainLowercase,
-  isPassContainNumber,
-  isPassContainUppercase,
-  isPassLeast8,
   isToLong33,
+  isPassLeast8,
   isEnoughOlder,
-  isRightPostalCode,
-  isContainOnlyLetters,
-  isCorrectKeyboard,
-  isContainAtLeastOneLetters,
   isRightCountry,
+  isEmailContainDog,
+  isCorrectKeyboard,
+  isRightPostalCode,
+  isPassContainNumber,
+  isContainOnlyLetters,
+  isPassContainUppercase,
+  isPassContainLowercase,
+  isNotContainWhitespaces,
+  isEmailProperlyFormatted,
+  isEmailContainDomainName,
+  isContainAtLeastOneLetters,
 } from '../../../components/helpers/validation-rules';
 import './registrationForm.sass';
 import { router } from '../../../modules/router';
+import { Login } from '../../../modules/login/login';
 import { AddressForm } from './adressForm/adressForm';
 import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
@@ -30,10 +32,10 @@ import { createAnonymous, createCustomer } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import { isAuthResponse, isCustomerSignInResult, isErrorResponse } from '../../../components/helpers/predicates';
-import { Input } from '../../../components/baseInput/baseInput';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
+const login = new Login();
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
@@ -197,8 +199,13 @@ export class RegistrationForm extends BaseComponent {
             .then((result) => {
               if (isCustomerSignInResult(result)) {
                 dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
-                lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
-                router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+                lstorage
+                  .saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value })
+                  .then(() =>
+                    login
+                      .execute(this.inputEmail.value, this.inputPass.value)
+                      .then(() => router.route('/yourunb-JSFE2023Q4/ecommerce/'))
+                  );
               } else {
                 this.showErrorMessage(result);
               }

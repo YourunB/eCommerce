@@ -37,7 +37,7 @@ const btnLogOut = new Button({
   classNames: ['login__btn-submit', 'header__btn', 'header__btn_hide'],
 }).getElement();
 const btnReg = new Button({
-  textContent: 'Registaration',
+  textContent: 'Registration',
   classNames: ['login__btn-submit', 'header__btn'],
 }).getElement();
 

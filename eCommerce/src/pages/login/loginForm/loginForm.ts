@@ -1,16 +1,14 @@
 import {
   compose,
-  isEmailContainDog,
-  isEmailContainDomainName,
-  isEmailProperlyFormatted,
-  isNotContainWhitespaces,
-  isNotEmpty,
-  isPassContainLowercase,
-  isPassContainNumber,
-  isPassContainUppercase,
-  isPassLeast8,
-  isToLong33,
   Validation,
+  isToLong33,
+  isPassLeast8,
+  isPassContainNumber,
+  isPassContainLowercase,
+  isPassContainUppercase,
+  isNotContainWhitespaces,
+  isEmailProperlyFormatted,
+  isEmailContainDomainName,
 } from '../../../components/helpers/validation-rules';
 import { Dispatch } from '../../../modules/login/types';
 import { LoginHeader } from './loginHeader/loginHeader';
@@ -106,9 +104,7 @@ export class LoginForm extends BaseComponent {
     return compose(
       isEmailProperlyFormatted,
       isNotContainWhitespaces,
-      isEmailContainDomainName,
-      isEmailContainDog,
-      isNotEmpty
+      isEmailContainDomainName
     )({ subject: input, validate: true, errors: [] });
   }
 
@@ -119,7 +115,6 @@ export class LoginForm extends BaseComponent {
       isPassContainLowercase,
       isPassContainNumber,
       isNotContainWhitespaces,
-      isNotEmpty,
       isToLong33
     )({ subject: input, validate: true, errors: [] });
   }

@@ -40,6 +40,7 @@ export class Login {
   }
 
   public getPage() {
+    this.page.resetForm();
     return this.page.getElement();
   }
 

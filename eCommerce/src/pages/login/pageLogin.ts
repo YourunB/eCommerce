@@ -15,4 +15,12 @@ export class PageLogin extends BaseComponent {
   public resetForm(): void {
     this.loginForm.resetForm();
   }
+
+  public btnON(): void {
+    this.loginForm.btnON();
+  }
+
+  public btnOFF(): void {
+    this.loginForm.btnOFF();
+  }
 }

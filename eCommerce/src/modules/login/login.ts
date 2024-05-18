@@ -51,7 +51,8 @@ export class Login {
 
     switch (type) {
       case 'login':
-        this.execute(this.email, this.password);
+        this.page.btnOFF();
+        this.execute(this.email, this.password).finally(() => this.page.btnON());
         break;
     }
   };

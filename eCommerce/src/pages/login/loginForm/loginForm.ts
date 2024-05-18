@@ -21,6 +21,7 @@ export class LoginForm extends BaseComponent {
   private dispatch: Dispatch;
   private inputEmail: InputWithNotice;
   private inputPass: InputWithNotice;
+  private button: Button;
   private showPassword: Input;
   private isSubmitted = false;
 
@@ -45,7 +46,7 @@ export class LoginForm extends BaseComponent {
       attribute: { name: 'type', value: 'checkbox' },
     });
     const form = new BaseComponent({ tagName: 'form', classNames: 'login-form' });
-    const button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
+    this.button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
 
     form.setAttribute({ name: 'novalidate', value: '' });
     this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
@@ -58,12 +59,20 @@ export class LoginForm extends BaseComponent {
     labelCheckbox.insertChild(this.showPassword);
     const passwordContainer = new BaseComponent({ tagName: 'div', classNames: 'password__conteiner' });
     passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
-    form.insertChildren([header, labelEmail, this.inputEmail, passwordContainer, button]);
+    form.insertChildren([header, labelEmail, this.inputEmail, passwordContainer, this.button]);
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
     labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
     form.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     this.insertChild(form);
+  }
+
+  public btnON(): void {
+    this.button.on();
+  }
+
+  public btnOFF(): void {
+    this.button.off();
   }
 
   public resetForm(): void {

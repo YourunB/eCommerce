@@ -6,4 +6,12 @@ export class Button extends BaseComponent<HTMLButtonElement> {
     super({ tagName: 'button', ...props });
     this.setClassName('button-base');
   }
+
+  public off(): void {
+    this.setClassName('button_disabled');
+  }
+
+  public on(): void {
+    this.removeClassName('button_disabled');
+  }
 }

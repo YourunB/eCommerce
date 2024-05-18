@@ -143,6 +143,7 @@ export class RegistrationForm extends BaseComponent {
       parentNode: this.element,
     });
   }
+
   private handleCheckbox(): void {
     this.inputPass.type = this.inputPass.type === 'password' ? 'text' : 'password';
   }
@@ -190,6 +191,7 @@ export class RegistrationForm extends BaseComponent {
     }
 
     const newCustomerData = this.createJSONfromForm();
+    this.button.off();
     createAnonymous() // TODO in Sprint3 createAnonymous should move to index.ts
       .then((result) => {
         if (isAuthResponse(result)) {
@@ -212,7 +214,8 @@ export class RegistrationForm extends BaseComponent {
             .catch(this.showErrorMessage);
         }
       })
-      .catch(this.showErrorMessage);
+      .catch(this.showErrorMessage)
+      .finally(() => this.button.on());
   };
 
   private showErrorMessage(error: unknown): void {

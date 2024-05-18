@@ -2,9 +2,10 @@ import './modalDialog.sass';
 import { BaseComponent } from '../baseComponent';
 import { Button } from '../basebutton/baseButton';
 
+type TypeMessage = 'warning' | 'info';
+
 export class Dialog extends BaseComponent {
-  // eslint-disable-next-line no-use-before-define
-  private static instance: Dialog;
+  private static instance: unknown;
   private dialogContent: BaseComponent;
   private dialog: HTMLDialogElement;
   private queue: string[];
@@ -25,10 +26,10 @@ export class Dialog extends BaseComponent {
 
   public static getInstance() {
     if (!Dialog.instance) Dialog.instance = new Dialog();
-    return Dialog.instance;
+    return Dialog.instance as Dialog;
   }
 
-  public show(text: string, type: 'warning' | 'info' = 'info') {
+  public show(text: string, type: TypeMessage = 'info') {
     if (text) this.queue.push(text);
     if (this.dialog.open) return;
     this.dialogContent.setTextContent(this.queue.shift() || '');

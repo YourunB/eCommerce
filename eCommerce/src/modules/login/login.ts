@@ -63,7 +63,7 @@ export class Login {
       .then(this.processResponse)
       .then(this.saveResponse, this.handleError)
       .then(this.redirect)
-      .catch((error) => dialog.show(`${error}`));
+      .catch((error) => dialog.show(`${error}`, 'warning'));
   }
 
   private redirect() {

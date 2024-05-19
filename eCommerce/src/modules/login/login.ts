@@ -40,6 +40,7 @@ export class Login {
   }
 
   public getPage() {
+    this.page.resetForm();
     return this.page.getElement();
   }
 
@@ -50,17 +51,21 @@ export class Login {
 
     switch (type) {
       case 'login':
-        getAccessToken(this.email, this.password)
-          .then(this.processResponse)
-          .then(this.saveResponse, this.handleError)
-          .then(this.redirect)
-          .catch((error) => dialog.show(`${error}`));
-        break;
-      case 'register':
-        router.route('/yourunb-JSFE2023Q4/ecommerce/404');
+        this.page.btnOFF();
+        this.execute(this.email, this.password).finally(() => this.page.btnON());
         break;
     }
   };
+
+  public execute(email: string, password: string): Promise<void> {
+    this.email = email;
+    this.password = password;
+    return getAccessToken(email, password)
+      .then(this.processResponse)
+      .then(this.saveResponse, this.handleError)
+      .then(this.redirect)
+      .catch((error) => dialog.show(`${error}`, 'warning'));
+  }
 
   private redirect() {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');

@@ -1,27 +1,29 @@
 import {
-  Validation,
   compose,
-  isEmailContainDog,
-  isEmailContainDomainName,
-  isEmailProperlyFormatted,
-  isNotContainWhitespaces,
+  Validation,
   isNotEmpty,
-  isPassContainLowercase,
-  isPassContainNumber,
-  isPassContainUppercase,
-  isPassLeast8,
   isToLong33,
+  isPassLeast8,
   isEnoughOlder,
-  isRightPostalCode,
-  isContainOnlyLetters,
-  isCorrectKeyboard,
-  isContainAtLeastOneLetters,
   isRightCountry,
+  isEmailContainDog,
+  isCorrectKeyboard,
+  isRightPostalCode,
+  isPassContainNumber,
+  isContainOnlyLetters,
+  isPassContainUppercase,
+  isPassContainLowercase,
+  isNotContainWhitespaces,
+  isEmailProperlyFormatted,
+  isEmailContainDomainName,
+  isContainAtLeastOneLetters,
 } from '../../../components/helpers/validation-rules';
 import './registrationForm.sass';
 import { router } from '../../../modules/router';
+import { Login } from '../../../modules/login/login';
 import { AddressForm } from './adressForm/adressForm';
 import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
@@ -30,10 +32,10 @@ import { createAnonymous, createCustomer } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../modules/registration/helpers/types';
 import { isAuthResponse, isCustomerSignInResult, isErrorResponse } from '../../../components/helpers/predicates';
-import { Input } from '../../../components/baseInput/baseInput';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
+const login = new Login();
 
 export class RegistrationForm extends BaseComponent {
   private isSubmitted: boolean;
@@ -58,8 +60,7 @@ export class RegistrationForm extends BaseComponent {
       parentNode: this.element,
     });
     this.inputEmail.notice.setClassName('registration-notice');
-    this.inputEmail.setAttribute({ name: 'autofocus', value: '' });
-    this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
@@ -70,7 +71,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputPass.notice.setClassName('registration-notice_password');
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
-    this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.showPassword = new Input({
@@ -95,7 +96,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputFirstName.notice.setClassName('registration-notice');
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
-    this.inputFirstName.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputFirstName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // last name
@@ -106,7 +107,7 @@ export class RegistrationForm extends BaseComponent {
     });
     this.inputLastName.notice.setClassName('registration-notice');
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
-    this.inputLastName.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputLastName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // date of birth
@@ -142,6 +143,7 @@ export class RegistrationForm extends BaseComponent {
       parentNode: this.element,
     });
   }
+
   private handleCheckbox(): void {
     this.inputPass.type = this.inputPass.type === 'password' ? 'text' : 'password';
   }
@@ -189,6 +191,7 @@ export class RegistrationForm extends BaseComponent {
     }
 
     const newCustomerData = this.createJSONfromForm();
+    this.button.off();
     createAnonymous() // TODO in Sprint3 createAnonymous should move to index.ts
       .then((result) => {
         if (isAuthResponse(result)) {
@@ -197,8 +200,13 @@ export class RegistrationForm extends BaseComponent {
             .then((result) => {
               if (isCustomerSignInResult(result)) {
                 dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
-                lstorage.saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value });
-                router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+                lstorage
+                  .saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value })
+                  .then(() =>
+                    login
+                      .execute(this.inputEmail.value, this.inputPass.value)
+                      .then(() => router.route('/yourunb-JSFE2023Q4/ecommerce/'))
+                  );
               } else {
                 this.showErrorMessage(result);
               }
@@ -206,7 +214,8 @@ export class RegistrationForm extends BaseComponent {
             .catch(this.showErrorMessage);
         }
       })
-      .catch(this.showErrorMessage);
+      .catch(this.showErrorMessage)
+      .finally(() => this.button.on());
   };
 
   private showErrorMessage(error: unknown): void {

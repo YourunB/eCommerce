@@ -1,16 +1,14 @@
 import {
   compose,
-  isEmailContainDog,
-  isEmailContainDomainName,
-  isEmailProperlyFormatted,
-  isNotContainWhitespaces,
-  isNotEmpty,
-  isPassContainLowercase,
-  isPassContainNumber,
-  isPassContainUppercase,
-  isPassLeast8,
-  isToLong33,
   Validation,
+  isToLong33,
+  isPassLeast8,
+  isPassContainNumber,
+  isPassContainLowercase,
+  isPassContainUppercase,
+  isNotContainWhitespaces,
+  isEmailProperlyFormatted,
+  isEmailContainDomainName,
 } from '../../../components/helpers/validation-rules';
 import { Dispatch } from '../../../modules/login/types';
 import { LoginHeader } from './loginHeader/loginHeader';
@@ -23,6 +21,7 @@ export class LoginForm extends BaseComponent {
   private dispatch: Dispatch;
   private inputEmail: InputWithNotice;
   private inputPass: InputWithNotice;
+  private button: Button;
   private showPassword: Input;
   private isSubmitted = false;
 
@@ -47,25 +46,38 @@ export class LoginForm extends BaseComponent {
       attribute: { name: 'type', value: 'checkbox' },
     });
     const form = new BaseComponent({ tagName: 'form', classNames: 'login-form' });
-    const button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
+    this.button = new Button({ textContent: 'Login', classNames: 'login__btn-submit' });
 
-    this.inputEmail.setAttribute({ name: 'autocomplete', value: '' });
+    form.setAttribute({ name: 'novalidate', value: '' });
+    this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
-    this.inputPass.setAttribute({ name: 'autocomplete', value: '' });
+    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.showPassword.setAttribute({ name: 'hidden', value: '' });
     const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
     labelCheckbox.insertChild(this.showPassword);
     const passwordContainer = new BaseComponent({ tagName: 'div', classNames: 'password__conteiner' });
     passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
-    form.insertChildren([header, labelEmail, this.inputEmail, passwordContainer, button]);
-
+    form.insertChildren([header, labelEmail, this.inputEmail, passwordContainer, this.button]);
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
     labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
     form.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     this.insertChild(form);
+  }
+
+  public btnON(): void {
+    this.button.on();
+  }
+
+  public btnOFF(): void {
+    this.button.off();
+  }
+
+  public resetForm(): void {
+    this.inputEmail.value = '';
+    this.inputPass.value = '';
   }
 
   private handleCheckbox(): void {
@@ -101,9 +113,7 @@ export class LoginForm extends BaseComponent {
     return compose(
       isEmailProperlyFormatted,
       isNotContainWhitespaces,
-      isEmailContainDomainName,
-      isEmailContainDog,
-      isNotEmpty
+      isEmailContainDomainName
     )({ subject: input, validate: true, errors: [] });
   }
 
@@ -114,7 +124,6 @@ export class LoginForm extends BaseComponent {
       isPassContainLowercase,
       isPassContainNumber,
       isNotContainWhitespaces,
-      isNotEmpty,
       isToLong33
     )({ subject: input, validate: true, errors: [] });
   }

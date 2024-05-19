@@ -1,0 +1,33 @@
+.page-404
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  align-items: center
+  overflow-x: hidden
+  min-height: calc(100vh - 200px)
+
+.page-404__title
+  width: 100%
+  text-align: center
+  font-size: 100px
+  color: #ff6c00
+  margin: 0
+  padding: 0
+
+.page-404__image
+  max-width: 280px
+  width: 100%
+  animation: earth-rotate 10s linear infinite
+
+.page-404__description
+  text-align: center
+  color: #3D3D3D
+  font-weight: 700
+  font-size: 20px
+  width: 100%
+  
+@keyframes earth-rotate
+  0%
+    transform: rotate(0)
+  100%
+    transform: rotate(360deg)

@@ -86,7 +86,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   getChildren(): HTMLElement[] {
-    return Array.from(this.element.children);
+    return Array.from(this.element.children) as HTMLElement[];
   }
 
   destroy() {

@@ -7,7 +7,7 @@ import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket } from './components/header/header';
+import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 
@@ -33,10 +33,12 @@ function setActivePage() {
 function checkAuthorization() {
   if (localStorage.logged !== undefined) {
     btnLogOut.classList.remove('header__btn_hide');
+    btnProfile.classList.remove('header__btn_hide');
     btnLogIn.classList.add('header__btn_hide');
     btnReg.classList.add('header__btn_hide');
   } else {
     btnLogOut.classList.add('header__btn_hide');
+    btnProfile.classList.add('header__btn_hide');
     btnLogIn.classList.remove('header__btn_hide');
     btnReg.classList.remove('header__btn_hide');
   }

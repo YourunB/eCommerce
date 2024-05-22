@@ -28,13 +28,13 @@ menu.innerHTML = `
 const navBtnsBox = document.createElement('div');
 navBtnsBox.classList.add('navigation__btns');
 
-const basket = document.createElement('img');
-basket.src = 'basket.svg';
-basket.classList.add('basket');
+const btnBasket = document.createElement('img');
+btnBasket.src = 'basket.svg';
+btnBasket.classList.add('basket');
 
-const profile = document.createElement('img');
-profile.src = 'user.svg';
-profile.classList.add('profile');
+const btnProfile = document.createElement('img');
+btnProfile.src = 'user.svg';
+btnProfile.classList.add('profile');
 
 const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] }).getElement();
 const btnLogOut = new Button({
@@ -60,8 +60,8 @@ function checkBtnMenuCondition() {
   } else btnMenu.classList.add('btn-menu_cliked');
 }
 
-navBtnsBox.append(basket, profile, btnLogIn, btnLogOut, btnReg);
+navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg);
 nav.append(logo, menu, navBtnsBox);
 header.append(nav, btnMenu);
 
-export { header, nav, menu, navBtnsBox, basket, btnLogIn, btnLogOut, btnReg, logo };
+export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo };

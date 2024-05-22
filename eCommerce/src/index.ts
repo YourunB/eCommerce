@@ -7,7 +7,7 @@ import { aboutPage } from './pages/aboutPage';
 import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
+import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 
@@ -173,7 +173,7 @@ btnLogOut.addEventListener('click', () => {
 btnReg.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
 });
-basket.addEventListener('click', () => {
+btnBasket.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
 });
 menu.addEventListener('click', (event) => {

@@ -47,18 +47,25 @@
   color: white
   background: $color-button-background
 
+.basket,
+.profile
+  width: 30px
+
 .menu__item,
-.basket
+.basket,
+.profile
   transition: 0.7s
 
 @media (hover:hover)
   .menu__item:hover,
-  .basket:hover
+  .basket:hover,
+  .profile:hover
     transform: scale(1.1)
     cursor: pointer
 
 .menu__item:active,
-.basket:active
+.basket:active,
+.profile:active
   transform: scale(0.9)
   transition: 0.2s
 

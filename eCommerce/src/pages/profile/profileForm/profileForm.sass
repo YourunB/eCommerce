@@ -16,6 +16,10 @@
 .profile-dateOfBirth__input
   width: 40%
   margin: 0.5%
+  border: none
+  font-weight: 700
+  pointer-events: none
+  text-align: center
 
 .profile-street__input,
 .profile-country__input,
@@ -23,6 +27,10 @@
 .profile-postalCode__input
   width: 70%
   margin: 0.5%
+  border: none
+  font-weight: 700
+  pointer-events: none
+  text-align: center
 
 .address-container
   display: flex
@@ -110,8 +118,18 @@
   display: flex
   gap: 10px
 
-.uvisible
+.pofile-label
+  color: gray
+
+.unvisible
   display: none
+  pointer-events: none
+
+.edit-mode
+  border: 1px solid gray
+  font-weight: 400
+  pointer-events: auto
+  text-align: left 
 
 @media (hover: hover)
   .password-checkbox__label:hover

@@ -91,7 +91,6 @@ export class ProfileForm extends BaseComponent {
     this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.inputPass.getElement().value = state.customer.password || '';
     this.showPassword = new Input({
       attribute: { name: 'type', value: 'checkbox' },
     });
@@ -182,7 +181,7 @@ export class ProfileForm extends BaseComponent {
 
     this.btnsContainer = new BaseComponent({
       tagName: 'div',
-      classNames: ['profile-btns-container', 'uvisible'],
+      classNames: ['profile-btns-container', 'unvisible'],
       parentNode: this.element,
     });
 
@@ -202,29 +201,72 @@ export class ProfileForm extends BaseComponent {
 
     this.btnEdit.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnEdit.getElement().classList.add('uvisible');
-      this.btnsContainer.getElement().classList.remove('uvisible');
+      this.btnEdit.getElement().classList.add('unvisible');
+      this.btnsContainer.getElement().classList.remove('unvisible');
+      this.openEditMode();
     });
 
     this.btnCancel.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnsContainer.getElement().classList.add('uvisible');
-      this.btnEdit.getElement().classList.remove('uvisible');
+      this.btnsContainer.getElement().classList.add('unvisible');
+      this.btnEdit.getElement().classList.remove('unvisible');
       this.setUserDataFromState();
+      this.closeEditMode();
     });
 
     this.btnSave.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnsContainer.getElement().classList.add('uvisible');
-      this.btnEdit.getElement().classList.remove('uvisible');
+      this.btnsContainer.getElement().classList.add('unvisible');
+      this.btnEdit.getElement().classList.remove('unvisible');
+      this.closeEditMode();
       console.log('save...');
     });
 
     this.setUserDataFromState();
+    this.closeEditMode();
+  }
+
+  private closeEditMode(): void {
+    this.inputEmail.getElement().classList.remove('edit-mode');
+    this.inputPass.getElement().classList.remove('edit-mode');
+    this.inputFirstName.getElement().classList.remove('edit-mode');
+    this.inputLastName.getElement().classList.remove('edit-mode');
+    this.inputDateOfBirth.getElement().classList.remove('edit-mode');
+    this.addressForm.inputStreetShipping.getElement().classList.remove('edit-mode');
+    this.addressForm.inputStreetBilling.getElement().classList.remove('edit-mode');
+    this.addressForm.inputCityShipping.getElement().classList.remove('edit-mode');
+    this.addressForm.inputCityBilling.getElement().classList.remove('edit-mode');
+    this.addressForm.inputPostalCodeShipping.getElement().classList.remove('edit-mode');
+    this.addressForm.inputPostalCodeBilling.getElement().classList.remove('edit-mode');
+    this.addressForm.inputCountryShipping.getElement().classList.remove('edit-mode');
+    this.addressForm.inputCountryBilling.getElement().classList.remove('edit-mode');
+    this.addressForm.useAsBillingLabel.getElement().classList.add('unvisible');
+    this.addressForm.useAsDefaultShippingLabel.getElement().classList.add('unvisible');
+    this.addressForm.useAsDefaultBillingLabel.getElement().classList.add('unvisible');
+  }
+
+  private openEditMode(): void {
+    this.inputEmail.getElement().classList.add('edit-mode');
+    this.inputPass.getElement().classList.add('edit-mode');
+    this.inputFirstName.getElement().classList.add('edit-mode');
+    this.inputLastName.getElement().classList.add('edit-mode');
+    this.inputDateOfBirth.getElement().classList.add('edit-mode');
+    this.addressForm.inputStreetShipping.getElement().classList.add('edit-mode');
+    this.addressForm.inputStreetBilling.getElement().classList.add('edit-mode');
+    this.addressForm.inputCityShipping.getElement().classList.add('edit-mode');
+    this.addressForm.inputCityBilling.getElement().classList.add('edit-mode');
+    this.addressForm.inputPostalCodeShipping.getElement().classList.add('edit-mode');
+    this.addressForm.inputPostalCodeBilling.getElement().classList.add('edit-mode');
+    this.addressForm.inputCountryShipping.getElement().classList.add('edit-mode');
+    this.addressForm.inputCountryBilling.getElement().classList.add('edit-mode');
+    this.addressForm.useAsBillingLabel.getElement().classList.remove('unvisible');
+    this.addressForm.useAsDefaultShippingLabel.getElement().classList.remove('unvisible');
+    this.addressForm.useAsDefaultBillingLabel.getElement().classList.remove('unvisible');
   }
 
   private setUserDataFromState(): void {
     this.inputEmail.getElement().value = state.customer.email || '';
+    this.inputPass.getElement().value = state.customer.password || '';
     this.inputFirstName.getElement().value = state.customer.firstName || '';
     this.inputLastName.getElement().value = state.customer.lastName || '';
     this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';

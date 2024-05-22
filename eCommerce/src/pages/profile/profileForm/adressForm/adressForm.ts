@@ -183,7 +183,7 @@ export class AddressForm extends BaseComponent {
     this.useAsBillingLabel = new BaseComponent({
       tagName: 'label',
       textContent: 'Use as billing address',
-      classNames: 'UseAsDefault__label',
+      classNames: ['UseAsDefault__label'],
       parentNode: this.addressFormShipping.getElement(),
     });
     this.useAsBilling = new Input({

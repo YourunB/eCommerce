@@ -71,6 +71,7 @@ export class AddressForm extends BaseComponent {
     });
     this.inputCountryShipping.setAttribute({ name: 'placeholder', value: 'country' });
     this.inputCountryShipping.setAttribute({ name: 'autocomplete', value: 'off' });
+    this.inputCountryShipping.setClassName('input-country');
     this.inputCountryShipping.notice.setClassName('registration-notice_address');
     const countryList = new BaseComponent({ tagName: 'datalist', classNames: 'countryList' });
     countryList.getElement().id = 'countries';
@@ -131,6 +132,7 @@ export class AddressForm extends BaseComponent {
       parentNode: this.addressFormBilling.getElement(),
     });
     this.inputCountryBilling.notice.setClassName('registration-notice_address');
+    this.inputCountryBilling.setClassName('input-country');
     this.inputCountryBilling.setAttribute({ name: 'placeholder', value: 'country' });
     this.inputCountryBilling.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputCountryBilling.insertChild(countryList);

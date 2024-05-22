@@ -46,7 +46,9 @@ export class ProfileForm extends BaseComponent {
   private inputLastName: InputWithNotice;
   private inputDateOfBirth: InputWithNotice;
   private addressForm: AddressForm;
-  private button: Button;
+  private btnEdit: Button;
+  private btnCancel: Button;
+  private btnSave: Button;
   private showPassword: BaseComponent;
   private label: BaseComponent;
   private btnsContainer: BaseComponent;
@@ -184,7 +186,7 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
 
     //edit btn
-    this.button = new Button({
+    this.btnEdit = new Button({
       textContent: 'Edit',
       classNames: 'profile__btn',
       parentNode: this.element,
@@ -197,17 +199,36 @@ export class ProfileForm extends BaseComponent {
     });
 
     //cancel btn
-    this.button = new Button({
+    this.btnCancel = new Button({
       textContent: 'Cancel',
       classNames: 'profile__btn',
       parentNode: this.btnsContainer.getElement(),
     });
 
     //save btn
-    this.button = new Button({
+    this.btnSave = new Button({
       textContent: 'Save',
       classNames: 'profile__btn',
       parentNode: this.btnsContainer.getElement(),
+    });
+
+    this.btnEdit.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.btnEdit.getElement().classList.add('uvisible');
+      this.btnsContainer.getElement().classList.remove('uvisible');
+    });
+
+    this.btnCancel.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.btnsContainer.getElement().classList.add('uvisible');
+      this.btnEdit.getElement().classList.remove('uvisible');
+    });
+
+    this.btnSave.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.btnsContainer.getElement().classList.add('uvisible');
+      this.btnEdit.getElement().classList.remove('uvisible');
+      console.log('save...');
     });
   }
 

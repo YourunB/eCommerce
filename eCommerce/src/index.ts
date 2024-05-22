@@ -10,7 +10,7 @@ import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
-import { getUserData } from './pages/profile/pageProfile';
+import { getUserData, PageProfile } from './pages/profile/pageProfile';
 
 const main = document.createElement('main');
 main.classList.add('main');
@@ -92,7 +92,7 @@ router.addRoute({
   handler: () => {
     document.title = 'Profile';
     main.innerHTML = '';
-    main.append(new PageRegistration({}).getElement());
+    main.append(new PageProfile({}).getElement());
     setActivePage();
     checkAuthorization();
   },

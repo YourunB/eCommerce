@@ -1,0 +1,135 @@
+@use './src/variables' as *
+
+.registration-form-container
+  display: flex
+  flex-direction: column
+  flex-wrap: wrap
+  justify-content: center
+  align-items: center
+  width: 100%
+  margin-bottom: 1%
+
+.registration-email__input,
+.registration-password__input,
+.registration-firstName__input,
+.registration-lastName__input,
+.registration-dateOfBirth__input
+  width: 40%
+  margin: 0.5%
+
+.registration-street__input,
+.registration-country__input,
+.registration-city__input,
+.registration-postalCode__input
+  width: 70%
+  margin: 0.5%
+
+.address-container
+  display: flex
+  width: 100%
+  margin-top: 3%
+  align-items: flex-start
+  justify-content: center
+
+.address-form
+  display: flex
+  flex-direction: column
+  width: 55%
+  justify-content: center
+  align-items: center
+  border: none
+
+.address__label
+
+  color: $color-text-common
+  font-size: 0.9rem
+  font-weight: 700
+  letter-spacing: 0.05rem
+
+.registration__btn-submit
+  margin-top: 3%
+
+.UseAsDefault__label
+  color: $color-text-common
+  font-size: 0.75rem
+  font-weight: 700
+  letter-spacing: 0.05rem
+
+.registration-notice
+  display: flex
+  align-items: center
+  justify-content: start
+  width: 40%
+  text-align: start
+
+.registration-notice_password
+  display: flex
+  align-items: center
+  justify-content: start
+  width: 100%
+  text-align: start
+
+.registration-notice_address
+  display: flex
+  align-items: center
+  justify-content: start
+  width: 70%
+  text-align: start
+
+.invisible
+  display: none
+
+.registration-password__input
+  width: 100%
+
+.password-checkbox__label
+  position: absolute
+  display: inline-block
+  margin-right: 1%
+  right: 0
+  width: 1.5rem
+  height: 1.5rem
+  transform: translate(0rem, 45%)
+
+  background-image: url("../../../assets/icons/hide.svg")
+  background-position: center center
+  background-repeat: no-repeat
+  object-fit: cover
+  filter: opacity(0.3)
+
+.password-checkbox__label:has(input:checked)
+  filter: opacity(0.7)
+  background-image: url("../../../assets/icons/show.svg")
+
+@media (hover: hover)
+  .password-checkbox__label:hover
+    cursor: pointer
+    filter: opacity(0.5)
+
+.password__container
+  width:40%
+  position: relative
+  display: flex
+  gap: 0.5rem
+  flex-direction: column
+  align-items: center
+
+@media (max-width: 768px)
+  .address-container
+    flex-wrap: wrap
+    gap: 20px
+
+  .registration-email__input,
+  .registration-password__input,
+  .password__container,
+  .registration-firstName__input,
+  .registration-lastName__input,
+  .registration-dateOfBirth__input,
+  .registration-street__input,
+  .registration-country__input,
+  .registration-city__input,
+  .registration-postalCode__input,
+  .address-form,
+  .registration-notice,
+  .registration-notice_address
+    width: 100%

@@ -49,17 +49,17 @@ export class ProfileForm extends BaseComponent {
   private showPassword: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
-    super({ tagName: 'form', classNames: 'registration-form-container', ...props });
+    super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmitted = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
 
     // email
     this.inputEmail = new InputWithNotice({
       attribute: { name: 'name', value: 'email' },
-      classNames: 'registration-email__input',
+      classNames: 'profile-email__input',
       parentNode: this.element,
     });
-    this.inputEmail.notice.setClassName('registration-notice');
+    this.inputEmail.notice.setClassName('profile-notice');
     this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
@@ -67,9 +67,9 @@ export class ProfileForm extends BaseComponent {
     // password
     this.inputPass = new InputWithNotice({
       attribute: { name: 'name', value: 'password' },
-      classNames: 'registration-password__input',
+      classNames: 'profile-password__input',
     });
-    this.inputPass.notice.setClassName('registration-notice_password');
+    this.inputPass.notice.setClassName('profile-notice_password');
     this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
     this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
@@ -91,10 +91,10 @@ export class ProfileForm extends BaseComponent {
     // first name
     this.inputFirstName = new InputWithNotice({
       attribute: { name: 'name', value: 'firstName' },
-      classNames: 'registration-firstName__input',
+      classNames: 'profile-firstName__input',
       parentNode: this.element,
     });
-    this.inputFirstName.notice.setClassName('registration-notice');
+    this.inputFirstName.notice.setClassName('profile-notice');
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
     this.inputFirstName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
@@ -102,10 +102,10 @@ export class ProfileForm extends BaseComponent {
     // last name
     this.inputLastName = new InputWithNotice({
       attribute: { name: 'name', value: 'lastName' },
-      classNames: 'registration-lastName__input',
+      classNames: 'profile-lastName__input',
       parentNode: this.element,
     });
-    this.inputLastName.notice.setClassName('registration-notice');
+    this.inputLastName.notice.setClassName('profile-notice');
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
     this.inputLastName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
@@ -113,10 +113,10 @@ export class ProfileForm extends BaseComponent {
     // date of birth
     this.inputDateOfBirth = new InputWithNotice({
       attribute: { name: 'name', value: 'date of birth' },
-      classNames: 'registration-dateOfBirth__input',
+      classNames: 'profile-dateOfBirth__input',
       parentNode: this.element,
     });
-    this.inputDateOfBirth.notice.setClassName('registration-notice');
+    this.inputDateOfBirth.notice.setClassName('profile-notice');
     this.inputDateOfBirth.setAttribute({ name: 'placeholder', value: 'date of birth' });
     this.inputDateOfBirth.getElement().addEventListener('focus', () => {
       this.inputDateOfBirth.setAttribute({ name: 'type', value: 'date' });
@@ -138,8 +138,8 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     this.button = new Button({
-      textContent: 'register',
-      classNames: 'registration__btn-submit',
+      textContent: 'Edit',
+      classNames: 'profile__btn',
       parentNode: this.element,
     });
   }

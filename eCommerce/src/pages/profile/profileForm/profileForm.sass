@@ -1,6 +1,6 @@
 @use './src/variables' as *
 
-.registration-form-container
+.profile-form-container
   display: flex
   flex-direction: column
   flex-wrap: wrap
@@ -9,18 +9,18 @@
   width: 100%
   margin-bottom: 1%
 
-.registration-email__input,
-.registration-password__input,
-.registration-firstName__input,
-.registration-lastName__input,
-.registration-dateOfBirth__input
+.profile-email__input,
+.profile-password__input,
+.profile-firstName__input,
+.profile-lastName__input,
+.profile-dateOfBirth__input
   width: 40%
   margin: 0.5%
 
-.registration-street__input,
-.registration-country__input,
-.registration-city__input,
-.registration-postalCode__input
+.profile-street__input,
+.profile-country__input,
+.profile-city__input,
+.profile-postalCode__input
   width: 70%
   margin: 0.5%
 
@@ -40,13 +40,12 @@
   border: none
 
 .address__label
-
   color: $color-text-common
   font-size: 0.9rem
   font-weight: 700
   letter-spacing: 0.05rem
 
-.registration__btn-submit
+.profile__btn
   margin-top: 3%
 
 .UseAsDefault__label
@@ -55,21 +54,21 @@
   font-weight: 700
   letter-spacing: 0.05rem
 
-.registration-notice
+.profile-notice
   display: flex
   align-items: center
   justify-content: start
   width: 40%
   text-align: start
 
-.registration-notice_password
+.profile-notice_password
   display: flex
   align-items: center
   justify-content: start
   width: 100%
   text-align: start
 
-.registration-notice_address
+.profile-notice_address
   display: flex
   align-items: center
   justify-content: start
@@ -79,7 +78,7 @@
 .invisible
   display: none
 
-.registration-password__input
+.profile-password__input
   width: 100%
 
 .password-checkbox__label
@@ -119,17 +118,17 @@
     flex-wrap: wrap
     gap: 20px
 
-  .registration-email__input,
-  .registration-password__input,
+  .profile-email__input,
+  .profile-password__input,
   .password__container,
-  .registration-firstName__input,
-  .registration-lastName__input,
-  .registration-dateOfBirth__input,
-  .registration-street__input,
-  .registration-country__input,
-  .registration-city__input,
-  .registration-postalCode__input,
+  .profile-firstName__input,
+  .profile-lastName__input,
+  .profile-dateOfBirth__input,
+  .profile-street__input,
+  .profile-country__input,
+  .profile-city__input,
+  .profile-postalCode__input,
   .address-form,
-  .registration-notice,
-  .registration-notice_address
+  .profile-notice,
+  .profile-notice_address
     width: 100%

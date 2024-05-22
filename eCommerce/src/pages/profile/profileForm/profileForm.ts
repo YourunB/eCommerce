@@ -21,7 +21,7 @@ import {
 import './profileForm.sass';
 import { AddressForm } from './adressForm/adressForm';
 //import { MyCustomerDraft } from '@commercetools/platform-sdk';
-//import { Input } from '../../../components/baseInput/baseInput';
+import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
@@ -38,7 +38,8 @@ const dialog = Dialog.getInstance();
 export class ProfileForm extends BaseComponent {
   private isSubmitted: boolean;
   private inputEmail: InputWithNotice;
-  //private inputPass: InputWithNotice;
+  private inputPassOld: InputWithNotice;
+  private inputPassNew: InputWithNotice;
   private inputFirstName: InputWithNotice;
   private inputLastName: InputWithNotice;
   private inputDateOfBirth: InputWithNotice;
@@ -48,11 +49,16 @@ export class ProfileForm extends BaseComponent {
   private btnSaveProfile: Button;
   private btnEditPass: Button;
   private btnEditAddress: Button;
-  //private showPassword: BaseComponent;
+  private showPassword: BaseComponent;
   private label: BaseComponent;
   private btnsContainerSaveEdit: BaseComponent;
   private btnsContainerOpenEdit: BaseComponent;
   private addressContainer: BaseComponent;
+  private overlay: BaseComponent;
+  private modalEditPass: BaseComponent;
+  private btnsPassContainer: BaseComponent;
+  private btnCancelPass: BaseComponent;
+  private btnSavePass: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
@@ -132,37 +138,107 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
-    // password
-    /*
-    this.label = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Password:',
-      classNames: 'pofile-label',
+    //overlay
+    this.overlay = new BaseComponent({
+      tagName: 'div',
+      classNames: ['overlay'],
       parentNode: this.element,
     });
-    this.inputPass = new InputWithNotice({
-      attribute: { name: 'name', value: 'password' },
-      classNames: 'profile-password__input',
+
+    // password
+    this.modalEditPass = new BaseComponent({
+      tagName: 'div',
+      classNames: ['modal-pass'],
+      parentNode: this.element,
     });
-    this.inputPass.notice.setClassName('profile-notice_password');
-    this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
-    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
-    this.inputPass.setAttribute({ name: 'type', value: 'password' });
-    this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    this.label = new BaseComponent({
+      tagName: 'h3',
+      textContent: 'Edit Password',
+      classNames: 'modal-pass__title',
+      parentNode: this.modalEditPass.getElement(),
+    });
+
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Old password:',
+      classNames: 'pofile-label',
+      parentNode: this.modalEditPass.getElement(),
+    });
+    this.inputPassOld = new InputWithNotice({
+      attribute: { name: 'name', value: 'password' },
+      classNames: ['profile-password__input', 'edit-mode'],
+      parentNode: this.modalEditPass.getElement(),
+    });
+    this.inputPassOld.notice.setClassName('profile-notice_password');
+    this.inputPassOld.setAttribute({ name: 'placeholder', value: 'password' });
+    this.inputPassOld.setAttribute({ name: 'autocomplete', value: 'off' });
+    this.inputPassOld.setAttribute({ name: 'type', value: 'password' });
+    this.inputPassOld.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.showPassword = new Input({
       attribute: { name: 'type', value: 'checkbox' },
     });
     this.showPassword.setAttribute({ name: 'hidden', value: '' });
-    const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
-    labelCheckbox.insertChild(this.showPassword);
-    const passwordContainer = new BaseComponent({
+    const labelCheckboxOld = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
+    labelCheckboxOld.insertChild(this.showPassword);
+    const passwordContainerOld = new BaseComponent({
       tagName: 'div',
       classNames: 'password__container',
-      parentNode: this.element,
+      parentNode: this.modalEditPass.getElement(),
     });
-    passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
-    labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
-    */
+    passwordContainerOld.insertChildren([this.inputPassOld, labelCheckboxOld]);
+    labelCheckboxOld.getElement().addEventListener('change', () => this.handleCheckboxOld());
+
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'New password:',
+      classNames: 'pofile-label',
+      parentNode: this.modalEditPass.getElement(),
+    });
+
+    this.inputPassNew = new InputWithNotice({
+      attribute: { name: 'name', value: 'password' },
+      classNames: ['profile-password__input', 'edit-mode'],
+      parentNode: this.modalEditPass.getElement(),
+    });
+    this.inputPassNew.notice.setClassName('profile-notice_password');
+    this.inputPassNew.setAttribute({ name: 'placeholder', value: 'password' });
+    this.inputPassNew.setAttribute({ name: 'autocomplete', value: 'off' });
+    this.inputPassNew.setAttribute({ name: 'type', value: 'password' });
+    this.inputPassNew.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.showPassword = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+    });
+    this.showPassword.setAttribute({ name: 'hidden', value: '' });
+    const labelCheckboxNew = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
+    labelCheckboxNew.insertChild(this.showPassword);
+    const passwordContainerNew = new BaseComponent({
+      tagName: 'div',
+      classNames: 'password__container',
+      parentNode: this.modalEditPass.getElement(),
+    });
+    passwordContainerNew.insertChildren([this.inputPassNew, labelCheckboxNew]);
+    labelCheckboxNew.getElement().addEventListener('change', () => this.handleCheckboxNew());
+
+    this.btnsPassContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
+      parentNode: this.modalEditPass.getElement(),
+    });
+
+    //cancel edit profile btn
+    this.btnCancelPass = new Button({
+      textContent: 'Cancel',
+      classNames: 'profile__btn',
+      parentNode: this.btnsPassContainer.getElement(),
+    });
+
+    //save edit profile btn
+    this.btnSavePass = new Button({
+      textContent: 'Save',
+      classNames: 'profile__btn',
+      parentNode: this.btnsPassContainer.getElement(),
+    });
 
     // address
     this.addressContainer = new BaseComponent({
@@ -176,6 +252,18 @@ export class ProfileForm extends BaseComponent {
       tagName: 'div',
       classNames: ['addresses-container'],
       parentNode: this.element,
+    });
+
+    this.btnSavePass.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.overlay.getElement().classList.remove('overlay_show');
+      this.modalEditPass.getElement().classList.remove('modal-pass_show');
+    });
+
+    this.btnCancelPass.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.overlay.getElement().classList.remove('overlay_show');
+      this.modalEditPass.getElement().classList.remove('modal-pass_show');
     });
 
     this.addressForm = new AddressForm({ parentNode: this.element });
@@ -243,6 +331,8 @@ export class ProfileForm extends BaseComponent {
     });
 
     this.btnEditPass.getElement().addEventListener('click', (event) => {
+      this.overlay.getElement().classList.add('overlay_show');
+      this.modalEditPass.getElement().classList.add('modal-pass_show');
       event.preventDefault();
     });
 
@@ -325,11 +415,13 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.getElement().value = state.customer.lastName || '';
     this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
   }
-  /*
-  private handleCheckbox(): void {
-    this.inputPass.type = this.inputPass.type === 'password' ? 'text' : 'password';
+
+  private handleCheckboxOld(): void {
+    this.inputPassOld.type = this.inputPassOld.type === 'password' ? 'text' : 'password';
   }
-  */
+  private handleCheckboxNew(): void {
+    this.inputPassNew.type = this.inputPassNew.type === 'password' ? 'text' : 'password';
+  }
   private handleChangeInput(): void {
     if (this.isSubmitted) this.validateEditProfile();
   }

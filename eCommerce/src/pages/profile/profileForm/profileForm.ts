@@ -47,6 +47,7 @@ export class ProfileForm extends BaseComponent {
   private addressForm: AddressForm;
   private button: Button;
   private showPassword: BaseComponent;
+  private label: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
@@ -54,6 +55,12 @@ export class ProfileForm extends BaseComponent {
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
 
     // email
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Email:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
     this.inputEmail = new InputWithNotice({
       attribute: { name: 'name', value: 'email' },
       classNames: 'profile-email__input',
@@ -65,6 +72,12 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // password
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Password:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
     this.inputPass = new InputWithNotice({
       attribute: { name: 'name', value: 'password' },
       classNames: 'profile-password__input',
@@ -89,6 +102,12 @@ export class ProfileForm extends BaseComponent {
     labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
 
     // first name
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'First name:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
     this.inputFirstName = new InputWithNotice({
       attribute: { name: 'name', value: 'firstName' },
       classNames: 'profile-firstName__input',
@@ -100,6 +119,12 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // last name
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Last name:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
     this.inputLastName = new InputWithNotice({
       attribute: { name: 'name', value: 'lastName' },
       classNames: 'profile-lastName__input',
@@ -111,6 +136,12 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // date of birth
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Birthday:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
     this.inputDateOfBirth = new InputWithNotice({
       attribute: { name: 'name', value: 'date of birth' },
       classNames: 'profile-dateOfBirth__input',

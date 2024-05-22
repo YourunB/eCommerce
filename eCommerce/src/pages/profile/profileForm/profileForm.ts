@@ -32,6 +32,7 @@ import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
+import state from '../../../state/state';
 
 const dialog = Dialog.getInstance();
 //const lstorage = new LStorage();
@@ -53,7 +54,7 @@ export class ProfileForm extends BaseComponent {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmitted = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-
+    console.log(state.customer);
     // email
     this.label = new BaseComponent({
       tagName: 'label',
@@ -70,6 +71,7 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputEmail.getElement().value = state.customer.email || '';
 
     // password
     this.label = new BaseComponent({
@@ -87,6 +89,7 @@ export class ProfileForm extends BaseComponent {
     this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputPass.setAttribute({ name: 'type', value: 'password' });
     this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputPass.getElement().value = state.customer.password || '';
     this.showPassword = new Input({
       attribute: { name: 'type', value: 'checkbox' },
     });
@@ -117,6 +120,7 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
     this.inputFirstName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputFirstName.getElement().value = state.customer.firstName || '';
 
     // last name
     this.label = new BaseComponent({
@@ -134,6 +138,7 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
     this.inputLastName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputLastName.getElement().value = state.customer.lastName || '';
 
     // date of birth
     this.label = new BaseComponent({
@@ -156,17 +161,26 @@ export class ProfileForm extends BaseComponent {
       this.inputDateOfBirth.removeAttribute({ name: 'type' });
     });
     this.inputDateOfBirth.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
 
     // address
     this.addressForm = new AddressForm({ parentNode: this.element });
-    this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputStreetShipping.getElement().value = state.customer.addresses[0].streetName || '';
+    this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputStreetBilling.getElement().value = state.customer.addresses[1].streetName || '';
+    this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCityShipping.getElement().value = state.customer.addresses[0].city || '';
+    this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCityBilling.getElement().value = state.customer.addresses[1].city || '';
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputPostalCodeShipping.getElement().value = state.customer.addresses[0].postalCode || '';
+    this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputPostalCodeBilling.getElement().value = state.customer.addresses[1].postalCode || '';
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCountryShipping.getElement().value = state.customer.addresses[0].country || '';
+    this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
 
     //edit btn
     this.button = new Button({
@@ -275,7 +289,7 @@ export class ProfileForm extends BaseComponent {
   }
 
   private copyShippingToBilling(): void {
-    this.addressForm.inputCountryBilling.value = this.addressForm.inputCountryShipping.value;
+    this.addressForm.inputCountryBilling.value = 'this.addressForm.inputCountryShipping.value';
     this.addressForm.inputStreetBilling.value = this.addressForm.inputStreetShipping.value;
     this.addressForm.inputPostalCodeBilling.value = this.addressForm.inputPostalCodeShipping.value;
     this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;

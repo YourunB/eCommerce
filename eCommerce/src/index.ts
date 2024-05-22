@@ -10,7 +10,7 @@ import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
-import { getUserData, PageProfile } from './pages/profile/pageProfile';
+import { PageProfile } from './pages/profile/pageProfile';
 
 const main = document.createElement('main');
 main.classList.add('main');
@@ -195,7 +195,6 @@ btnLogIn.addEventListener('click', () => {
 });
 btnProfile.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
-  getUserData();
 });
 btnReg.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/registration');

@@ -1,0 +1,35 @@
+@use './src/variables' as *
+
+.filters_categories
+  position: sticky
+  top: 0
+
+  list-style: none
+  padding: 0
+  margin: 0
+  font-size: 1.1rem
+  font-weight: 700
+  line-height: 2.5rem
+  user-select: none
+
+.categories_element
+  padding-left: 1rem
+  color: $color-text-common
+  font-size: 1rem
+  font-weight: 400
+  line-height: 2.5rem
+
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.categories_element__active
+  font-weight: 700
+  color: $color-border-selected
+  background-color: color-mix(in srgb, $color-bacground-common 90%, $color-border-selected 10%)
+
+@media (hover: hover)
+.categories_element:hover
+  cursor: pointer
+  color: $color-border-selected
+  background-color: color-mix(in srgb, $color-bacground-common 95%, black 5%)

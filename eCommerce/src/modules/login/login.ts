@@ -2,12 +2,12 @@ import { router } from '../router';
 import state from '../../state/state';
 import { AuthState } from '../../state/types';
 import { Actions, AuthResponse } from './types';
-import { isAuthResponse, isCustomer } from '../../components/helpers/predicates';
 import { LStorage } from '../localStorage/localStorage';
 import { PageLogin } from '../../pages/login/pageLogin';
-import { getAccessToken, getCustomer } from '../api/auth';
 import { AuthErrorResponse } from '@commercetools/platform-sdk';
 import { Dialog } from '../../components/modalDialog/modalDialog';
+import { createAnonymous, getAccessToken, getCustomer } from '../api/auth';
+import { isAuthResponse, isCustomer } from '../../components/helpers/predicates';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
@@ -32,11 +32,30 @@ export class Login {
             getAccessToken(this.email, this.password)
               .then(this.processResponse)
               .then(this.saveResponse, this.handleError)
-              .catch((e) => reject(e));
-          } else reject(credential);
+              .catch((e) => {
+                // if lstorage has credential but login failed
+                this.getAnonymousToken();
+                reject(e);
+              });
+          } else {
+            reject(credential);
+          }
         })
-        .catch((e) => reject(e));
+        .catch((e) => {
+          // if lstorage hasn't credential
+          this.getAnonymousToken();
+          reject(e);
+        });
     });
+  }
+
+  private getAnonymousToken() {
+    createAnonymous()
+      .then(this.processResponse)
+      .then((token) => {
+        state.authState = AuthState.anonymous;
+        this.saveAccessToken(token);
+      });
   }
 
   public getPage() {

@@ -1,0 +1,33 @@
+@use './src/variables' as *
+
+.page-main-container
+  display: grid
+  grid-template-areas: "hero hero" "filters goods"
+  grid-template-rows: 10rem auto
+  grid-template-columns: 12rem auto
+  gap: 1rem
+  min-height: calc(100vh - 200px)
+
+  background-color: $color-bacground-common
+
+.page-main-hero
+  grid-area: hero
+  background-color: rgb(230, 240, 255)
+
+.page-main-filters
+  grid-area: filters
+  background-color: rgb(230, 225, 215)
+
+.page-main-products__container
+  display: grid
+  grid-area: goods
+  gap: 1rem
+  grid-auto-rows: 20rem
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))
+  justify-content: center
+  transition-duration: 1000ms
+
+  background-color: $color-bacground-common
+
+.fadeout
+  opacity: 0

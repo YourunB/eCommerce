@@ -49,6 +49,7 @@ export class ProfileForm extends BaseComponent {
   private button: Button;
   private showPassword: BaseComponent;
   private label: BaseComponent;
+  private btnContainer: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
@@ -189,18 +190,24 @@ export class ProfileForm extends BaseComponent {
       parentNode: this.element,
     });
 
+    this.btnContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container', 'uvisible'],
+      parentNode: this.element,
+    });
+
     //cancel btn
     this.button = new Button({
       textContent: 'Cancel',
       classNames: 'profile__btn',
-      parentNode: this.element,
+      parentNode: this.btnContainer.getElement(),
     });
 
     //save btn
     this.button = new Button({
       textContent: 'Save',
       classNames: 'profile__btn',
-      parentNode: this.element,
+      parentNode: this.btnContainer.getElement(),
     });
   }
 

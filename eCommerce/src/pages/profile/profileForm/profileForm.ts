@@ -19,11 +19,9 @@ import {
   isContainAtLeastOneLetters,
 } from '../../../components/helpers/validation-rules';
 import './profileForm.sass';
-//import { router } from '../../../modules/router';
-//import { Login } from '../../../modules/login/login';
 import { AddressForm } from './adressForm/adressForm';
-import { MyCustomerDraft } from '@commercetools/platform-sdk';
-import { Input } from '../../../components/baseInput/baseInput';
+//import { MyCustomerDraft } from '@commercetools/platform-sdk';
+//import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
@@ -36,28 +34,30 @@ import state from '../../../state/state';
 
 const dialog = Dialog.getInstance();
 //const lstorage = new LStorage();
-//const login = new Login();
 
 export class ProfileForm extends BaseComponent {
   private isSubmitted: boolean;
   private inputEmail: InputWithNotice;
-  private inputPass: InputWithNotice;
+  //private inputPass: InputWithNotice;
   private inputFirstName: InputWithNotice;
   private inputLastName: InputWithNotice;
   private inputDateOfBirth: InputWithNotice;
   private addressForm: AddressForm;
-  private btnEdit: Button;
-  private btnCancel: Button;
-  private btnSave: Button;
-  private showPassword: BaseComponent;
+  private btnEditProfile: Button;
+  private btnCancelProfile: Button;
+  private btnSaveProfile: Button;
+  private btnEditPass: Button;
+  private btnEditAddress: Button;
+  //private showPassword: BaseComponent;
   private label: BaseComponent;
-  private btnsContainer: BaseComponent;
+  private btnsContainerSaveEdit: BaseComponent;
+  private btnsContainerOpenEdit: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmitted = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-
+    console.log(state.customer);
     // first name
     this.label = new BaseComponent({
       tagName: 'label',
@@ -132,6 +132,7 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     // password
+    /*
     this.label = new BaseComponent({
       tagName: 'label',
       textContent: 'Password:',
@@ -160,6 +161,7 @@ export class ProfileForm extends BaseComponent {
     });
     passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
     labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
+    */
 
     // address
     this.addressForm = new AddressForm({ parentNode: this.element });
@@ -172,54 +174,81 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
-    //edit btn
-    this.btnEdit = new Button({
-      textContent: 'Edit',
-      classNames: 'profile__btn',
+    this.btnsContainerOpenEdit = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
       parentNode: this.element,
     });
 
-    this.btnsContainer = new BaseComponent({
+    //edit profile btn
+    this.btnEditProfile = new Button({
+      textContent: 'Edit profile',
+      classNames: 'profile__btn',
+      parentNode: this.btnsContainerOpenEdit.getElement(),
+    });
+
+    //edit pass btn
+    this.btnEditPass = new Button({
+      textContent: 'Edit password',
+      classNames: 'profile__btn',
+      parentNode: this.btnsContainerOpenEdit.getElement(),
+    });
+
+    //edit adresses btn
+    this.btnEditAddress = new Button({
+      textContent: 'Edit address',
+      classNames: 'profile__btn',
+      parentNode: this.btnsContainerOpenEdit.getElement(),
+    });
+
+    this.btnsContainerSaveEdit = new BaseComponent({
       tagName: 'div',
       classNames: ['profile-btns-container', 'unvisible'],
       parentNode: this.element,
     });
 
-    //cancel btn
-    this.btnCancel = new Button({
+    //cancel edit profile btn
+    this.btnCancelProfile = new Button({
       textContent: 'Cancel',
       classNames: 'profile__btn',
-      parentNode: this.btnsContainer.getElement(),
+      parentNode: this.btnsContainerSaveEdit.getElement(),
     });
 
-    //save btn
-    this.btnSave = new Button({
+    //save edit profile btn
+    this.btnSaveProfile = new Button({
       textContent: 'Save',
       classNames: 'profile__btn',
-      parentNode: this.btnsContainer.getElement(),
+      parentNode: this.btnsContainerSaveEdit.getElement(),
     });
 
-    this.btnEdit.getElement().addEventListener('click', (event) => {
+    this.btnEditProfile.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnEdit.getElement().classList.add('unvisible');
-      this.btnsContainer.getElement().classList.remove('unvisible');
+      this.btnsContainerOpenEdit.getElement().classList.add('unvisible');
+      this.btnsContainerSaveEdit.getElement().classList.remove('unvisible');
       this.openEditMode();
     });
 
-    this.btnCancel.getElement().addEventListener('click', (event) => {
+    this.btnEditPass.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnsContainer.getElement().classList.add('unvisible');
-      this.btnEdit.getElement().classList.remove('unvisible');
+    });
+
+    this.btnEditAddress.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+    });
+
+    this.btnCancelProfile.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
+      this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
       this.setUserDataFromState();
       this.closeEditMode();
     });
 
-    this.btnSave.getElement().addEventListener('click', (event) => {
+    this.btnSaveProfile.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnsContainer.getElement().classList.add('unvisible');
-      this.btnEdit.getElement().classList.remove('unvisible');
+      this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
+      this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
       this.closeEditMode();
-      console.log('save...');
     });
 
     this.setUserDataFromState();
@@ -228,7 +257,7 @@ export class ProfileForm extends BaseComponent {
 
   private closeEditMode(): void {
     this.inputEmail.getElement().classList.remove('edit-mode');
-    this.inputPass.getElement().classList.remove('edit-mode');
+    //this.inputPass.getElement().classList.remove('edit-mode');
     this.inputFirstName.getElement().classList.remove('edit-mode');
     this.inputLastName.getElement().classList.remove('edit-mode');
     this.inputDateOfBirth.getElement().classList.remove('edit-mode');
@@ -247,7 +276,7 @@ export class ProfileForm extends BaseComponent {
 
   private openEditMode(): void {
     this.inputEmail.getElement().classList.add('edit-mode');
-    this.inputPass.getElement().classList.add('edit-mode');
+    //this.inputPass.getElement().classList.add('edit-mode');
     this.inputFirstName.getElement().classList.add('edit-mode');
     this.inputLastName.getElement().classList.add('edit-mode');
     this.inputDateOfBirth.getElement().classList.add('edit-mode');
@@ -266,7 +295,7 @@ export class ProfileForm extends BaseComponent {
 
   private setUserDataFromState(): void {
     this.inputEmail.getElement().value = state.customer.email || '';
-    this.inputPass.getElement().value = state.customer.password || '';
+    //this.inputPass.getElement().value = state.customer.password || '';
     this.inputFirstName.getElement().value = state.customer.firstName || '';
     this.inputLastName.getElement().value = state.customer.lastName || '';
     this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
@@ -279,15 +308,15 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCountryShipping.getElement().value = state.customer.addresses[0].country || '';
     this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
   }
-
+  /*
   private handleCheckbox(): void {
     this.inputPass.type = this.inputPass.type === 'password' ? 'text' : 'password';
   }
-
+  */
   private handleChangeInput(): void {
     if (this.isSubmitted) this.validateForm();
   }
-
+  /*
   private createJSONfromForm(): MyCustomerDraft {
     let customerDraft: MyCustomerDraft = {
       email: this.inputEmail.value,
@@ -318,7 +347,7 @@ export class ProfileForm extends BaseComponent {
     }
     return customerDraft;
   }
-  /*
+  
   handleSubmit = (e: SubmitEvent): void => {
     e.preventDefault();
     this.isSubmitted = true;
@@ -375,7 +404,7 @@ export class ProfileForm extends BaseComponent {
     if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
 
     const isValidLogin = this.validateEmail(this.inputEmail.value);
-    const isValidPassword = this.validatePassword(this.inputPass.value);
+    //const isValidPassword = this.validatePassword(this.inputPass.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
     const isValidLastName = this.validateNamesAndCity(this.inputLastName.value);
     const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
@@ -388,7 +417,7 @@ export class ProfileForm extends BaseComponent {
     const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
     const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
     this.inputEmail.showNotice(isValidLogin.errors);
-    this.inputPass.showNotice(isValidPassword.errors);
+    //this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
     this.inputLastName.showNotice(isValidLastName.errors);
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
@@ -403,7 +432,7 @@ export class ProfileForm extends BaseComponent {
 
     return (
       isValidLogin.validate &&
-      isValidPassword.validate &&
+      //isValidPassword.validate &&
       isValidFirstName.validate &&
       isValidLastName.validate &&
       isValidDateOfBirth.validate &&

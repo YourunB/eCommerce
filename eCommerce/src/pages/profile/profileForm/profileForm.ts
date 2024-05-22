@@ -74,7 +74,6 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.inputEmail.getElement().value = state.customer.email || '';
 
     // password
     this.label = new BaseComponent({
@@ -123,7 +122,6 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.setAttribute({ name: 'placeholder', value: 'first name' });
     this.inputFirstName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputFirstName.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.inputFirstName.getElement().value = state.customer.firstName || '';
 
     // last name
     this.label = new BaseComponent({
@@ -141,7 +139,6 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.setAttribute({ name: 'placeholder', value: 'last name' });
     this.inputLastName.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputLastName.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.inputLastName.getElement().value = state.customer.lastName || '';
 
     // date of birth
     this.label = new BaseComponent({
@@ -164,26 +161,17 @@ export class ProfileForm extends BaseComponent {
       this.inputDateOfBirth.removeAttribute({ name: 'type' });
     });
     this.inputDateOfBirth.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
 
     // address
     this.addressForm = new AddressForm({ parentNode: this.element });
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputStreetShipping.getElement().value = state.customer.addresses[0].streetName || '';
     this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputStreetBilling.getElement().value = state.customer.addresses[1].streetName || '';
     this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCityShipping.getElement().value = state.customer.addresses[0].city || '';
     this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCityBilling.getElement().value = state.customer.addresses[1].city || '';
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputPostalCodeShipping.getElement().value = state.customer.addresses[0].postalCode || '';
     this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputPostalCodeBilling.getElement().value = state.customer.addresses[1].postalCode || '';
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCountryShipping.getElement().value = state.customer.addresses[0].country || '';
     this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
 
     //edit btn
     this.btnEdit = new Button({
@@ -222,6 +210,7 @@ export class ProfileForm extends BaseComponent {
       event.preventDefault();
       this.btnsContainer.getElement().classList.add('uvisible');
       this.btnEdit.getElement().classList.remove('uvisible');
+      this.setUserDataFromState();
     });
 
     this.btnSave.getElement().addEventListener('click', (event) => {
@@ -230,6 +219,23 @@ export class ProfileForm extends BaseComponent {
       this.btnEdit.getElement().classList.remove('uvisible');
       console.log('save...');
     });
+
+    this.setUserDataFromState();
+  }
+
+  private setUserDataFromState(): void {
+    this.inputEmail.getElement().value = state.customer.email || '';
+    this.inputFirstName.getElement().value = state.customer.firstName || '';
+    this.inputLastName.getElement().value = state.customer.lastName || '';
+    this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
+    this.addressForm.inputStreetShipping.getElement().value = state.customer.addresses[0].streetName || '';
+    this.addressForm.inputStreetBilling.getElement().value = state.customer.addresses[1].streetName || '';
+    this.addressForm.inputCityShipping.getElement().value = state.customer.addresses[0].city || '';
+    this.addressForm.inputCityBilling.getElement().value = state.customer.addresses[1].city || '';
+    this.addressForm.inputPostalCodeShipping.getElement().value = state.customer.addresses[0].postalCode || '';
+    this.addressForm.inputPostalCodeBilling.getElement().value = state.customer.addresses[1].postalCode || '';
+    this.addressForm.inputCountryShipping.getElement().value = state.customer.addresses[0].country || '';
+    this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
   }
 
   private handleCheckbox(): void {

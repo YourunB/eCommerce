@@ -137,8 +137,23 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
+    //edit btn
     this.button = new Button({
       textContent: 'Edit',
+      classNames: 'profile__btn',
+      parentNode: this.element,
+    });
+
+    //cancel btn
+    this.button = new Button({
+      textContent: 'Cancel',
+      classNames: 'profile__btn',
+      parentNode: this.element,
+    });
+
+    //save btn
+    this.button = new Button({
+      textContent: 'Save',
       classNames: 'profile__btn',
       parentNode: this.element,
     });

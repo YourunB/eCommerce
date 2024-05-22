@@ -57,53 +57,6 @@ export class ProfileForm extends BaseComponent {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmitted = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-    console.log(state.customer);
-    // email
-    this.label = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Email:',
-      classNames: 'pofile-label',
-      parentNode: this.element,
-    });
-    this.inputEmail = new InputWithNotice({
-      attribute: { name: 'name', value: 'email' },
-      classNames: 'profile-email__input',
-      parentNode: this.element,
-    });
-    this.inputEmail.notice.setClassName('profile-notice');
-    this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
-    this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
-    this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
-
-    // password
-    this.label = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Password:',
-      classNames: 'pofile-label',
-      parentNode: this.element,
-    });
-    this.inputPass = new InputWithNotice({
-      attribute: { name: 'name', value: 'password' },
-      classNames: 'profile-password__input',
-    });
-    this.inputPass.notice.setClassName('profile-notice_password');
-    this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
-    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
-    this.inputPass.setAttribute({ name: 'type', value: 'password' });
-    this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.showPassword = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-    });
-    this.showPassword.setAttribute({ name: 'hidden', value: '' });
-    const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
-    labelCheckbox.insertChild(this.showPassword);
-    const passwordContainer = new BaseComponent({
-      tagName: 'div',
-      classNames: 'password__container',
-      parentNode: this.element,
-    });
-    passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
-    labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
 
     // first name
     this.label = new BaseComponent({
@@ -160,6 +113,53 @@ export class ProfileForm extends BaseComponent {
       this.inputDateOfBirth.removeAttribute({ name: 'type' });
     });
     this.inputDateOfBirth.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    // email
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Email:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
+    this.inputEmail = new InputWithNotice({
+      attribute: { name: 'name', value: 'email' },
+      classNames: 'profile-email__input',
+      parentNode: this.element,
+    });
+    this.inputEmail.notice.setClassName('profile-notice');
+    this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
+    this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
+    this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    // password
+    this.label = new BaseComponent({
+      tagName: 'label',
+      textContent: 'Password:',
+      classNames: 'pofile-label',
+      parentNode: this.element,
+    });
+    this.inputPass = new InputWithNotice({
+      attribute: { name: 'name', value: 'password' },
+      classNames: 'profile-password__input',
+    });
+    this.inputPass.notice.setClassName('profile-notice_password');
+    this.inputPass.setAttribute({ name: 'placeholder', value: 'password' });
+    this.inputPass.setAttribute({ name: 'autocomplete', value: 'off' });
+    this.inputPass.setAttribute({ name: 'type', value: 'password' });
+    this.inputPass.getElement().addEventListener('keyup', () => this.handleChangeInput());
+    this.showPassword = new Input({
+      attribute: { name: 'type', value: 'checkbox' },
+    });
+    this.showPassword.setAttribute({ name: 'hidden', value: '' });
+    const labelCheckbox = new BaseComponent({ tagName: 'label', classNames: 'password-checkbox__label' });
+    labelCheckbox.insertChild(this.showPassword);
+    const passwordContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: 'password__container',
+      parentNode: this.element,
+    });
+    passwordContainer.insertChildren([this.inputPass, labelCheckbox]);
+    labelCheckbox.getElement().addEventListener('change', () => this.handleCheckbox());
 
     // address
     this.addressForm = new AddressForm({ parentNode: this.element });

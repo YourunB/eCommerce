@@ -24,7 +24,7 @@ export class AddressForm extends BaseComponent {
   public useAsBillingLabel: BaseComponent;
 
   constructor(props: Omit<PageRegistrationPropsType, 'dispatch'>) {
-    super({ tagName: 'div', classNames: 'address-container', ...props });
+    super({ tagName: 'div', classNames: ['address-container', 'unvisible'], ...props });
 
     this.addressFormShipping = new BaseComponent({
       tagName: 'fieldset',

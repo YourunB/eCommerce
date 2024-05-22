@@ -254,20 +254,30 @@ export class ProfileForm extends BaseComponent {
       event.preventDefault();
       this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
       this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
+      this.deleteNoticeInfo();
       this.setUserDataFromState();
       this.closeEditMode();
     });
 
     this.btnSaveProfile.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
-      this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
-      this.closeEditMode();
+      if (this.validateEditProfile()) {
+        this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
+        this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
+        this.closeEditMode();
+      }
     });
 
     this.setUserDataFromState();
     this.closeEditMode();
     this.addAllAddress();
+  }
+
+  private deleteNoticeInfo() {
+    const arrNotice = this.element.getElementsByClassName('notice');
+    for (let i = arrNotice.length - 1; i >= 0; i -= 1) {
+      arrNotice[i].remove();
+    }
   }
 
   private addAllAddress(): void {
@@ -298,17 +308,6 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.getElement().classList.remove('edit-mode');
     this.inputLastName.getElement().classList.remove('edit-mode');
     this.inputDateOfBirth.getElement().classList.remove('edit-mode');
-    this.addressForm.inputStreetShipping.getElement().classList.remove('edit-mode');
-    this.addressForm.inputStreetBilling.getElement().classList.remove('edit-mode');
-    this.addressForm.inputCityShipping.getElement().classList.remove('edit-mode');
-    this.addressForm.inputCityBilling.getElement().classList.remove('edit-mode');
-    this.addressForm.inputPostalCodeShipping.getElement().classList.remove('edit-mode');
-    this.addressForm.inputPostalCodeBilling.getElement().classList.remove('edit-mode');
-    this.addressForm.inputCountryShipping.getElement().classList.remove('edit-mode');
-    this.addressForm.inputCountryBilling.getElement().classList.remove('edit-mode');
-    this.addressForm.useAsBillingLabel.getElement().classList.add('unvisible');
-    this.addressForm.useAsDefaultShippingLabel.getElement().classList.add('unvisible');
-    this.addressForm.useAsDefaultBillingLabel.getElement().classList.add('unvisible');
   }
 
   private openEditMode(): void {
@@ -317,17 +316,6 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.getElement().classList.add('edit-mode');
     this.inputLastName.getElement().classList.add('edit-mode');
     this.inputDateOfBirth.getElement().classList.add('edit-mode');
-    this.addressForm.inputStreetShipping.getElement().classList.add('edit-mode');
-    this.addressForm.inputStreetBilling.getElement().classList.add('edit-mode');
-    this.addressForm.inputCityShipping.getElement().classList.add('edit-mode');
-    this.addressForm.inputCityBilling.getElement().classList.add('edit-mode');
-    this.addressForm.inputPostalCodeShipping.getElement().classList.add('edit-mode');
-    this.addressForm.inputPostalCodeBilling.getElement().classList.add('edit-mode');
-    this.addressForm.inputCountryShipping.getElement().classList.add('edit-mode');
-    this.addressForm.inputCountryBilling.getElement().classList.add('edit-mode');
-    this.addressForm.useAsBillingLabel.getElement().classList.remove('unvisible');
-    this.addressForm.useAsDefaultShippingLabel.getElement().classList.remove('unvisible');
-    this.addressForm.useAsDefaultBillingLabel.getElement().classList.remove('unvisible');
   }
 
   private setUserDataFromState(): void {
@@ -336,14 +324,6 @@ export class ProfileForm extends BaseComponent {
     this.inputFirstName.getElement().value = state.customer.firstName || '';
     this.inputLastName.getElement().value = state.customer.lastName || '';
     this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
-    this.addressForm.inputStreetShipping.getElement().value = state.customer.addresses[0].streetName || '';
-    this.addressForm.inputStreetBilling.getElement().value = state.customer.addresses[1].streetName || '';
-    this.addressForm.inputCityShipping.getElement().value = state.customer.addresses[0].city || '';
-    this.addressForm.inputCityBilling.getElement().value = state.customer.addresses[1].city || '';
-    this.addressForm.inputPostalCodeShipping.getElement().value = state.customer.addresses[0].postalCode || '';
-    this.addressForm.inputPostalCodeBilling.getElement().value = state.customer.addresses[1].postalCode || '';
-    this.addressForm.inputCountryShipping.getElement().value = state.customer.addresses[0].country || '';
-    this.addressForm.inputCountryBilling.getElement().value = state.customer.addresses[1].country || '';
   }
   /*
   private handleCheckbox(): void {
@@ -351,7 +331,7 @@ export class ProfileForm extends BaseComponent {
   }
   */
   private handleChangeInput(): void {
-    if (this.isSubmitted) this.validateForm();
+    if (this.isSubmitted) this.validateEditProfile();
   }
   /*
   private createJSONfromForm(): MyCustomerDraft {
@@ -437,50 +417,47 @@ export class ProfileForm extends BaseComponent {
     this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;
   }
 
-  private validateForm(): boolean {
+  private validateEditProfile(): boolean {
     if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
 
     const isValidLogin = this.validateEmail(this.inputEmail.value);
-    //const isValidPassword = this.validatePassword(this.inputPass.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
     const isValidLastName = this.validateNamesAndCity(this.inputLastName.value);
     const isValidDateOfBirth = this.validateDateOfBirth(this.inputDateOfBirth.value);
-    const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
-    const isValidCityBilling = this.validateNamesAndCity(this.addressForm.inputCityBilling.value);
-    const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
-    const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
-    const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
-    const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
-    const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
-    const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
-    this.inputEmail.showNotice(isValidLogin.errors);
-    //this.inputPass.showNotice(isValidPassword.errors);
     this.inputFirstName.showNotice(isValidFirstName.errors);
     this.inputLastName.showNotice(isValidLastName.errors);
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
-    this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
-    this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
-    this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
-    this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
-    this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
-    this.addressForm.inputPostalCodeBilling.showNotice(isValidPostalCodeBilling.errors);
-    this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
-    this.addressForm.inputCountryBilling.showNotice(isValidCountryBilling.errors);
+    this.inputEmail.showNotice(isValidLogin.errors);
+    //const isValidPassword = this.validatePassword(this.inputPass.value);
+    //const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
+    //const isValidCityBilling = this.validateNamesAndCity(this.addressForm.inputCityBilling.value);
+    //const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
+    //const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
+    //const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
+    //const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
+    //const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
+    //const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
+    //this.inputPass.showNotice(isValidPassword.errors);
+    //this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
+    //this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
+    //this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
+    //this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
+    //this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
+    //this.addressForm.inputPostalCodeBilling.showNotice(isValidPostalCodeBilling.errors);
+    //this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
+    //this.addressForm.inputCountryBilling.showNotice(isValidCountryBilling.errors);
 
     return (
-      isValidLogin.validate &&
+      isValidLogin.validate && isValidFirstName.validate && isValidLastName.validate && isValidDateOfBirth.validate
       //isValidPassword.validate &&
-      isValidFirstName.validate &&
-      isValidLastName.validate &&
-      isValidDateOfBirth.validate &&
-      isValidCityBilling.validate &&
-      isValidCityShipping.validate &&
-      isValidCountryBilling.validate &&
-      isValidCountryShipping.validate &&
-      isValidPostalCodeBilling.validate &&
-      isValidPostalCodeShipping.validate &&
-      isValidStreetBilling.validate &&
-      isValidStreetShipping.validate
+      //isValidCityBilling.validate &&
+      //isValidCityShipping.validate &&
+      //isValidCountryBilling.validate &&
+      //isValidCountryShipping.validate &&
+      //isValidPostalCodeBilling.validate &&
+      //isValidPostalCodeShipping.validate &&
+      //isValidStreetBilling.validate &&
+      //isValidStreetShipping.validate
     );
   }
 

@@ -21,7 +21,7 @@ import {
 import './profileForm.sass';
 //import { router } from '../../../modules/router';
 //import { Login } from '../../../modules/login/login';
-import { AddressForm } from '../../registration/registrationForm/adressForm/adressForm';
+import { AddressForm } from './adressForm/adressForm';
 import { MyCustomerDraft } from '@commercetools/platform-sdk';
 import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';

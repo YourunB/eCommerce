@@ -52,6 +52,7 @@ export class ProfileForm extends BaseComponent {
   private label: BaseComponent;
   private btnsContainerSaveEdit: BaseComponent;
   private btnsContainerOpenEdit: BaseComponent;
+  private addressContainer: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
@@ -164,6 +165,19 @@ export class ProfileForm extends BaseComponent {
     */
 
     // address
+    this.addressContainer = new BaseComponent({
+      tagName: 'h3',
+      classNames: ['profile-header'],
+      textContent: 'Your addresses',
+      parentNode: this.element,
+    });
+
+    this.addressContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['addresses-container'],
+      parentNode: this.element,
+    });
+
     this.addressForm = new AddressForm({ parentNode: this.element });
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
@@ -253,6 +267,29 @@ export class ProfileForm extends BaseComponent {
 
     this.setUserDataFromState();
     this.closeEditMode();
+    this.addAllAddress();
+  }
+
+  private addAllAddress(): void {
+    const arrAddresses = state.customer.addresses;
+    for (let i = 0; i < arrAddresses.length; i += 1) {
+      const address = document.createElement('p');
+      address.classList.add('addresses-container__address');
+      address.innerHTML = `
+        <span>${i + 1}.</span> Country: ${arrAddresses[i].country}, 
+        City: ${arrAddresses[i].city}, Street: ${arrAddresses[i].streetName}, 
+        Post code: ${arrAddresses[i].postalCode} 
+        ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? '<span> - Billing Address</span>' : ''}
+        ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? '<span> - Shipping Address</span>' : ''}
+      `;
+      this.addressContainer.getElement().append(address);
+    }
+    if (arrAddresses.length === 0) {
+      const address = document.createElement('p');
+      address.classList.add('addresses-container__address');
+      address.textContent = 'No addresses';
+      this.addressContainer.getElement().append(address);
+    }
   }
 
   private closeEditMode(): void {

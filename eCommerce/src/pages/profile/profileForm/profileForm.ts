@@ -36,7 +36,8 @@ const dialog = Dialog.getInstance();
 //const lstorage = new LStorage();
 
 export class ProfileForm extends BaseComponent {
-  private isSubmitted: boolean;
+  private isSubmittedProfile: boolean;
+  private isSubmittedPass: boolean;
   private inputEmail: InputWithNotice;
   private inputPassOld: InputWithNotice;
   private inputPassNew: InputWithNotice;
@@ -63,7 +64,8 @@ export class ProfileForm extends BaseComponent {
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
-    this.isSubmitted = false;
+    this.isSubmittedPass = false;
+    this.isSubmittedProfile = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     console.log(state.customer, state.access_token.access_token);
     // first name
@@ -192,7 +194,7 @@ export class ProfileForm extends BaseComponent {
     labelCheckboxOld.insertChild(this.showPassword);
     const passwordContainerOld = new BaseComponent({
       tagName: 'div',
-      classNames: 'password__container',
+      classNames: 'profile-password__container',
       parentNode: this.modalEditPass.getElement(),
     });
     passwordContainerOld.insertChildren([this.inputPassOld, labelCheckboxOld]);
@@ -223,7 +225,7 @@ export class ProfileForm extends BaseComponent {
     labelCheckboxNew.insertChild(this.showPassword);
     const passwordContainerNew = new BaseComponent({
       tagName: 'div',
-      classNames: 'password__container',
+      classNames: 'profile-password__container',
       parentNode: this.modalEditPass.getElement(),
     });
     passwordContainerNew.insertChildren([this.inputPassNew, labelCheckboxNew]);
@@ -265,14 +267,22 @@ export class ProfileForm extends BaseComponent {
 
     this.btnSavePass.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.overlay.getElement().classList.remove('overlay_show');
-      this.modalEditPass.getElement().classList.remove('modal-pass_show');
+      this.isSubmittedPass = true;
+      if (this.validateEditPass()) {
+        this.overlay.getElement().classList.remove('overlay_show');
+        this.modalEditPass.getElement().classList.remove('modal-pass_show');
+        this.inputPassOld.getElement().value = '';
+        this.inputPassNew.getElement().value = '';
+      }
     });
 
     this.btnCancelPass.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      this.isSubmittedPass = false;
       this.overlay.getElement().classList.remove('overlay_show');
       this.modalEditPass.getElement().classList.remove('modal-pass_show');
+      this.inputPassOld.getElement().value = '';
+      this.inputPassNew.getElement().value = '';
     });
 
     this.addressForm = new AddressForm({ parentNode: this.element });
@@ -351,6 +361,7 @@ export class ProfileForm extends BaseComponent {
 
     this.btnCancelProfile.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      this.isSubmittedProfile = false;
       this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
       this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
       this.deleteNoticeInfo();
@@ -360,6 +371,7 @@ export class ProfileForm extends BaseComponent {
 
     this.btnSaveProfile.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      this.isSubmittedProfile = true;
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
@@ -464,95 +476,10 @@ export class ProfileForm extends BaseComponent {
     this.inputPassNew.type = this.inputPassNew.type === 'password' ? 'text' : 'password';
   }
   private handleChangeInput(): void {
-    if (this.isSubmitted) this.validateEditProfile();
+    if (this.isSubmittedProfile) this.validateEditProfile();
+    if (this.isSubmittedPass) this.validateEditPass();
   }
 
-  /*
-  private createJSONfromForm(): Customer {
-    const customerDraft: Customer = {
-      firstName: this.inputFirstName.value,
-      lastName: this.inputLastName.value,
-      dateOfBirth: this.inputDateOfBirth.value,
-      email: this.inputEmail.value,
-      id: state.customer.id,
-      createdAt: state.customer.createdAt,
-      lastModifiedAt: state.customer.lastModifiedAt,
-      isEmailVerified: false,
-      password: state.customer.password,
-      addresses: [...state.customer.addresses],
-      version: state.customer.version,
-      stores: [...state.customer.stores],
-      authenticationMode: state.customer.authenticationMode,
-    };
-    return customerDraft;
-  }
-
-  private createJSONfromForm(): MyCustomerDraft {
-    let customerDraft: MyCustomerDraft = {
-      email: this.inputEmail.value,
-      password: this.inputPassNew.value,
-      firstName: this.inputFirstName.value,
-      lastName: this.inputLastName.value,
-      dateOfBirth: this.inputDateOfBirth.value,
-      addresses: [
-        {
-          country: this.addressForm.inputCountryShipping.value,
-          streetName: this.addressForm.inputStreetShipping.value,
-          postalCode: this.addressForm.inputPostalCodeShipping.value,
-          city: this.addressForm.inputCityShipping.value,
-        },
-        {
-          country: this.addressForm.inputCountryBilling.value,
-          streetName: this.addressForm.inputStreetBilling.value,
-          postalCode: this.addressForm.inputPostalCodeBilling.value,
-          city: this.addressForm.inputCityBilling.value,
-        },
-      ],
-    };
-    if (this.addressForm.useAsDefaultShipping.getElement().checked) {
-      customerDraft = { ...customerDraft, defaultShippingAddress: 0 };
-    }
-    if (this.addressForm.useAsDefaultBilling.getElement().checked) {
-      customerDraft = { ...customerDraft, defaultBillingAddress: 1 };
-    }
-    return customerDraft;
-  }
-
-  handleSubmit = (e: SubmitEvent): void => {
-    e.preventDefault();
-    this.isSubmitted = true;
-    if (!this.validateForm()) {
-      return;
-    }
-    
-    const newCustomerData = this.createJSONfromForm();
-    this.button.off();
-    createAnonymous()
-      .then((result) => {
-        if (isAuthResponse(result)) {
-          const tokenAnonymous = result.access_token;
-          createCustomer(newCustomerData, tokenAnonymous)
-            .then((result) => {
-              if (isCustomerSignInResult(result)) {
-                dialog.show(`Welcome ${result.customer?.firstName || ''}!`);
-                lstorage
-                  .saveCredentials({ email: this.inputEmail.value, password: this.inputPass.value })
-                  .then(() =>
-                    login
-                      .execute(this.inputEmail.value, this.inputPass.value)
-                      .then(() => router.route('/yourunb-JSFE2023Q4/ecommerce/'))
-                  );
-              } else {
-                this.showErrorMessage(result);
-              }
-            })
-            .catch(this.showErrorMessage);
-        }
-      })
-      .catch(this.showErrorMessage)
-      .finally(() => this.button.on());
-  };
-  */
   private showErrorMessage(error: unknown): void {
     if (isErrorResponse(error)) {
       const detailedErrorMessage = error.errors ? error.errors[0].detailedErrorMessage : '';
@@ -571,7 +498,7 @@ export class ProfileForm extends BaseComponent {
   }
 
   private validateEditProfile(): boolean {
-    if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
+    //if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
 
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
@@ -612,6 +539,14 @@ export class ProfileForm extends BaseComponent {
       //isValidStreetBilling.validate &&
       //isValidStreetShipping.validate
     );
+  }
+
+  private validateEditPass(): boolean {
+    const isValidPasswordOld = this.validatePassword(this.inputPassOld.value);
+    const isValidPasswordNew = this.validatePassword(this.inputPassNew.value);
+    this.inputPassOld.showNotice(isValidPasswordOld.errors);
+    this.inputPassNew.showNotice(isValidPasswordNew.errors);
+    return isValidPasswordOld.validate && isValidPasswordNew.validate;
   }
 
   private validateEmail(input: string): Validation {

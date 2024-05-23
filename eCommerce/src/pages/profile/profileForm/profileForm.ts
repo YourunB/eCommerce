@@ -25,7 +25,7 @@ import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
-//import { LStorage } from '../../../modules/localStorage/localStorage';
+import { LStorage } from '../../../modules/localStorage/localStorage';
 import { updateCustomerApi } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
@@ -33,7 +33,7 @@ import { isErrorResponse } from '../../../components/helpers/predicates'; // rem
 import state from '../../../state/state';
 
 const dialog = Dialog.getInstance();
-//const lstorage = new LStorage();
+const lstorage = new LStorage();
 
 export class ProfileForm extends BaseComponent {
   private isSubmittedProfile: boolean;
@@ -265,14 +265,24 @@ export class ProfileForm extends BaseComponent {
       parentNode: this.element,
     });
 
-    this.btnSavePass.getElement().addEventListener('click', (event) => {
+    this.btnSavePass.getElement().addEventListener('click', async (event) => {
       event.preventDefault();
       this.isSubmittedPass = true;
-      if (this.validateEditPass()) {
-        this.overlay.getElement().classList.remove('overlay_show');
-        this.modalEditPass.getElement().classList.remove('modal-pass_show');
-        this.inputPassOld.getElement().value = '';
-        this.inputPassNew.getElement().value = '';
+      try {
+        const result = await lstorage.getCredentials();
+        const pass = typeof result !== 'string' ? result.password : '';
+        if (this.validateEditPass()) {
+          if (!pass || pass !== this.inputPassOld.getElement().value) {
+            this.showMsg('Old password is not correct!', false);
+            return;
+          }
+          this.overlay.getElement().classList.remove('overlay_show');
+          this.modalEditPass.getElement().classList.remove('modal-pass_show');
+          this.inputPassOld.getElement().value = '';
+          this.inputPassNew.getElement().value = '';
+        }
+      } catch (error) {
+        this.showErrorMessage(error);
       }
     });
 
@@ -399,10 +409,7 @@ export class ProfileForm extends BaseComponent {
         updateCustomerApi(newCustomerData, state.access_token.access_token)
           .then((result) => {
             state.customer = result as Customer;
-            this.msg.getElement().classList.add('modal-pass_show');
-            setTimeout(() => {
-              this.msg.getElement().classList.remove('modal-pass_show');
-            }, 1990);
+            this.showMsg('Succes', true);
           })
           .catch((error) => {
             this.showErrorMessage(error);
@@ -539,6 +546,16 @@ export class ProfileForm extends BaseComponent {
       //isValidStreetBilling.validate &&
       //isValidStreetShipping.validate
     );
+  }
+
+  public showMsg(text: string, succes: boolean): void {
+    this.msg.getElement().textContent = text;
+    if (succes) this.msg.getElement().classList.remove('msg-modal__error');
+    else this.msg.getElement().classList.add('msg-modal__error');
+    this.msg.getElement().classList.add('msg-modal_show');
+    setTimeout(() => {
+      this.msg.getElement().classList.remove('msg-modal_show');
+    }, 1990);
   }
 
   private validateEditPass(): boolean {

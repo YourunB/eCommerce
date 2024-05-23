@@ -147,15 +147,16 @@
   text-align: left
 
 .msg-modal
+  user-select: none
   display: none
   padding: 30px
   border-radius: 5px
   position: fixed
-  z-index: 101
+  z-index: 200
   left: 50%
   top: 50%
   transform: translate(-50%, -50%)
-  max-width: 200px
+  max-width: 300px
   font-size: 20px
   font-weight: 700
   width: 100%
@@ -163,6 +164,9 @@
   background: $color-border-selected
   color: white
   animation: 2s msg
+
+.msg-modal__error
+  background: $color-text-errors
 
 .modal-pass
   display: none

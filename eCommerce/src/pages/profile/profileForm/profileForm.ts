@@ -26,7 +26,7 @@ import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { LStorage } from '../../../modules/localStorage/localStorage';
-import { updateCustomerApi } from '../../../modules/api/auth';
+import { updateCustomerApi, updatePasswordApi } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
@@ -276,6 +276,19 @@ export class ProfileForm extends BaseComponent {
             this.showMsg('Old password is not correct!', false);
             return;
           }
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            currentPassword: pass,
+            newPassword: this.inputPassNew.getElement().value,
+          };
+          updatePasswordApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
           this.overlay.getElement().classList.remove('overlay_show');
           this.modalEditPass.getElement().classList.remove('modal-pass_show');
           this.inputPassOld.getElement().value = '';

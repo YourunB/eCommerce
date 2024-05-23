@@ -1,0 +1,15 @@
+@use './src/variables' as *
+
+.limits__select
+  padding: 0.25rem
+  border-radius: 0.25rem
+
+  color: $color-border-selected
+  font-size: 1.125rem
+
+  &:focus-visible
+    border: 1px solid $color-border-selected
+    outline: 1px solid $color-border-selected
+
+  option
+    color: $color-text-common

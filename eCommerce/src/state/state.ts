@@ -4,6 +4,7 @@ const initialState: State = {
   authState: AuthState.notLogged,
   access_token: {},
   customer: {},
+  limits: ['10', '20', '30', '40', '50'],
 };
 
 const subscribers: Subscribers = {};

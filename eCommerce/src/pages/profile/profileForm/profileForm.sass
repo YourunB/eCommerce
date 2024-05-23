@@ -146,6 +146,24 @@
   pointer-events: auto
   text-align: left
 
+.msg-modal
+  display: none
+  padding: 30px
+  border-radius: 5px
+  position: fixed
+  z-index: 101
+  left: 50%
+  top: 50%
+  transform: translate(-50%, -50%)
+  max-width: 200px
+  font-size: 20px
+  font-weight: 700
+  width: 100%
+  text-align: center
+  background: $color-border-selected
+  color: white
+  animation: 2s msg
+
 .modal-pass
   display: none
   padding: 10px
@@ -159,9 +177,6 @@
   width: 100%
   min-height: 200px
   background: white
-
-.modal-pass_show
-  display: block
 
 .modal-pass__title
   width: 100%
@@ -180,7 +195,9 @@
   height: 100vh
   background: rgba(0, 0, 0, 0.4)
 
-.overlay_show
+.overlay_show,
+.msg-modal_show,
+.modal-pass_show
   display: block
 
 
@@ -216,3 +233,12 @@
   .profile-notice,
   .profile-notice_address
     width: 100%
+
+@keyframes msg
+  0% 
+    opacity: 0.2
+  50%
+    opacity: 1
+  100%
+    opacity: 0.2
+    

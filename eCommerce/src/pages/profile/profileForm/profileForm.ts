@@ -59,6 +59,7 @@ export class ProfileForm extends BaseComponent {
   private btnsPassContainer: BaseComponent;
   private btnCancelPass: BaseComponent;
   private btnSavePass: BaseComponent;
+  private msg: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
@@ -137,6 +138,14 @@ export class ProfileForm extends BaseComponent {
     this.inputEmail.setAttribute({ name: 'autocomplete', value: 'off' });
     this.inputEmail.setAttribute({ name: 'placeholder', value: 'e-mail' });
     this.inputEmail.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    //succes
+    this.msg = new BaseComponent({
+      tagName: 'div',
+      classNames: ['msg-modal'],
+      textContent: 'Succes',
+      parentNode: this.element,
+    });
 
     //overlay
     this.overlay = new BaseComponent({
@@ -378,7 +387,10 @@ export class ProfileForm extends BaseComponent {
         updateCustomerApi(newCustomerData, state.access_token.access_token)
           .then((result) => {
             state.customer = result as Customer;
-            console.log('Запись успешно обновлена:', result);
+            this.msg.getElement().classList.add('modal-pass_show');
+            setTimeout(() => {
+              this.msg.getElement().classList.remove('modal-pass_show');
+            }, 1990);
           })
           .catch((error) => {
             this.showErrorMessage(error);

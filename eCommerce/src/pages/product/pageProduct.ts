@@ -1,4 +1,6 @@
 import { BaseComponent, BaseComponentProps } from '../../components/baseComponent';
+import { getProduct } from '../../modules/api/productItem';
+import state from '../../state/state';
 import './pageProduct.sass';
 
 export class PageProduct extends BaseComponent {
@@ -8,6 +10,7 @@ export class PageProduct extends BaseComponent {
   private productDescription: BaseComponent;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
+    getProduct(state.access_token.access_token);
     this.productImageContainer = new BaseComponent({
       tagName: 'div',
       classNames: 'product-image_container',

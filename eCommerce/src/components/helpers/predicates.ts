@@ -1,4 +1,4 @@
-import { Customer, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
+import { AuthErrorResponse, Customer, CustomerSignInResult, ErrorResponse } from '@commercetools/platform-sdk';
 import { AuthResponse } from '../../modules/login/types';
 
 export function isAuthResponse(data: unknown | AuthResponse): data is AuthResponse {
@@ -15,4 +15,9 @@ export function isCustomerSignInResult(data: unknown | CustomerSignInResult): da
 
 export function isErrorResponse(data: unknown | ErrorResponse): data is ErrorResponse {
   return (data as ErrorResponse).statusCode !== undefined;
+}
+
+export async function responseToJSON<T>(response: Response): Promise<T | AuthErrorResponse> {
+  if (!response.ok) return response.json().then((resp) => resp as AuthErrorResponse);
+  return response.json() as T;
 }

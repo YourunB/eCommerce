@@ -1,5 +1,6 @@
 import './modules/routingScript';
 import './index.sass';
+// import { PageProduct } from './pages/product/pageProduct';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
@@ -191,3 +192,9 @@ menu.addEventListener('click', (event) => {
     return;
   }
 });
+
+// const container = document.querySelector('body');
+// if (container) {
+//   const pageRegistration = new PageProduct({ tagName: 'div', parentNode: container });
+//   pageRegistration.render(container);
+// }

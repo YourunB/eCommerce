@@ -1,4 +1,10 @@
-import { Customer, CustomerSignInResult, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
+import {
+  AuthErrorResponse,
+  Customer,
+  CustomerSignInResult,
+  ErrorResponse,
+  ProductProjection,
+} from '@commercetools/platform-sdk';
 import { AuthResponse } from '../../modules/login/types';
 import { MappedCategories, MappedProducts } from '../../modules/products/types';
 
@@ -30,4 +36,9 @@ export function isMappedProducts(data: unknown | MappedProducts[]): data is Mapp
 export function isMappedCategories(data: unknown | MappedCategories[]): data is MappedCategories[] {
   if (typeof data !== 'object') return false;
   return (data as MappedCategories[])[0]?.name !== undefined && (data as MappedCategories[])[0]?.id !== undefined;
+}
+
+export async function responseToJSON<T>(response: Response): Promise<T | AuthErrorResponse> {
+  if (!response.ok) return response.json().then((resp) => resp as AuthErrorResponse);
+  return response.json() as T;
 }

@@ -20,13 +20,13 @@ import {
 } from '../../../components/helpers/validation-rules';
 import './profileForm.sass';
 import { AddressForm } from './adressForm/adressForm';
-import { Customer } from '@commercetools/platform-sdk';
+//import { Customer } from '@commercetools/platform-sdk';
 import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 //import { LStorage } from '../../../modules/localStorage/localStorage';
-//import { createCustomerApi } from '../../../modules/api/auth';
+import { updateCustomerApi } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
@@ -64,7 +64,7 @@ export class ProfileForm extends BaseComponent {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmitted = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-    console.log(state.customer);
+    console.log(state.customer, state.access_token.access_token);
     // first name
     this.label = new BaseComponent({
       tagName: 'label',
@@ -354,7 +354,28 @@ export class ProfileForm extends BaseComponent {
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
-        const newCustomerData = this.createJSONfromForm();
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: 'setFirstName',
+              firstName: this.inputFirstName.value,
+            },
+            {
+              action: 'setLastName',
+              lastName: this.inputLastName.value,
+            },
+            {
+              action: 'setDateOfBirth',
+              dateOfBirth: this.inputDateOfBirth.value,
+            },
+            {
+              action: 'changeEmail',
+              email: this.inputEmail.value,
+            },
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token);
         console.log(newCustomerData);
         this.closeEditMode();
       }
@@ -427,6 +448,8 @@ export class ProfileForm extends BaseComponent {
   private handleChangeInput(): void {
     if (this.isSubmitted) this.validateEditProfile();
   }
+
+  /*
   private createJSONfromForm(): Customer {
     const customerDraft: Customer = {
       firstName: this.inputFirstName.value,
@@ -446,7 +469,6 @@ export class ProfileForm extends BaseComponent {
     return customerDraft;
   }
 
-  /*
   private createJSONfromForm(): MyCustomerDraft {
     let customerDraft: MyCustomerDraft = {
       email: this.inputEmail.value,

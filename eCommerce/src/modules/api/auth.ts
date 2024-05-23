@@ -95,7 +95,7 @@ export function createCustomer<T = MyCustomerDraft, C = CustomerSignInResult>(
     });
 }
 
-export function updateCustomerApi<T = Customer, C = MyCustomerUpdateAction>(
+export function updateCustomerApi<T = MyCustomerUpdateAction, C = Customer>(
   customer: T,
   token: string
 ): Promise<ErrorResponse | C> {

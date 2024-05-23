@@ -24,5 +24,6 @@ export interface State {
   authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
   customer: Customer | Record<string, never>;
+  limits: string[];
   [index: string]: unknown;
 }

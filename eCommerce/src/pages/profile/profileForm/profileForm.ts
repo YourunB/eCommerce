@@ -20,7 +20,7 @@ import {
 } from '../../../components/helpers/validation-rules';
 import './profileForm.sass';
 import { AddressForm } from './adressForm/adressForm';
-//import { Customer } from '@commercetools/platform-sdk';
+import { Customer } from '@commercetools/platform-sdk';
 import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
@@ -375,8 +375,14 @@ export class ProfileForm extends BaseComponent {
             },
           ],
         };
-        updateCustomerApi(newCustomerData, state.access_token.access_token);
-        console.log(newCustomerData);
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            console.log('Запись успешно обновлена:', result);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
         this.closeEditMode();
       }
     });

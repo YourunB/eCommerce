@@ -1,0 +1,54 @@
+@use './src/variables' as *
+
+.product-card
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  align-items: center
+  overflow: hidden
+  gap: 1rem
+
+  width: 100%
+  height: 100%
+  max-width: 20rem
+  justify-self: center
+
+.product-card__img
+  height: 70%
+  width: 100%
+  align-self: center
+  overflow: hidden
+
+  & img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    transition-delay: 500ms
+    transition-duration: 2s
+
+.product-card__content
+  flex: 0 0 auto
+  width: 100%
+
+.product-card__name,
+.product-card__price
+  margin: 0
+  padding: 0.25rem 0
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.product-card__price
+  font-size: 1.1rem
+  font-weight: 700
+  color: $color-button-background
+
+@media (hover: hover)
+  .product-card:hover
+    transition-duration: 250ms
+    cursor: pointer
+    filter: drop-shadow(5px 5px 5px grey)
+
+  .product-card__img:hover
+    & img
+      transform: scale(1.2)

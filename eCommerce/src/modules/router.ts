@@ -8,6 +8,10 @@ class Router {
 
   constructor() {
     window.addEventListener('popstate', () => {
+      if (window.location.hash) return;
+      this.route(window.location.pathname, false);
+    });
+    window.addEventListener('hashchange', () => {
       this.route(window.location.pathname, false);
     });
   }

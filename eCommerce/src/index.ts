@@ -2,9 +2,9 @@ import './modules/routingScript';
 import './index.sass';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
+import { Products } from './modules/products/products';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
-import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
@@ -14,6 +14,7 @@ import { PageRegistration } from './pages/registration/pageRegistration';
 const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
+const products = new Products();
 
 login.isLogined().then(
   () => localStorage.setItem('logged', 'true'),
@@ -59,7 +60,14 @@ router.addRoute({
   handler: () => {
     document.title = 'Products';
     main.innerHTML = '';
-    main.append(productsPage);
+    const { hash } = window.location;
+
+    if (hash) {
+      // main.append(nadya.getPage(hash));
+    } else {
+      main.append(products.getPage());
+    }
+
     setActivePage();
     checkAuthorization();
   },

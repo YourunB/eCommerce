@@ -4,6 +4,7 @@ import {
   CustomerSignInResult,
   ErrorResponse,
   MyCustomerDraft,
+  MyCustomerUpdateAction,
 } from '@commercetools/platform-sdk';
 import {
   AUTH_BASIC,
@@ -88,6 +89,26 @@ export function createCustomer<T = MyCustomerDraft, C = CustomerSignInResult>(
   };
 
   return fetch(`${API_URL}/${PROJECT_KEY}/me/signup`, options)
+    .then(responseToJSON<C>)
+    .catch(() => {
+      throw new Error(MSG_NETWORK_ERROR);
+    });
+}
+
+export function updateCustomerApi<T = Customer, C = MyCustomerUpdateAction>(
+  customer: T,
+  token: string
+): Promise<ErrorResponse | C> {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': CONTENT_TYPE_APP,
+      Authorization: `${AUTH_BEARER} ${token}`,
+    },
+    body: JSON.stringify(customer),
+  };
+
+  return fetch(`${API_URL}/${PROJECT_KEY}/me`, options)
     .then(responseToJSON<C>)
     .catch(() => {
       throw new Error(MSG_NETWORK_ERROR);

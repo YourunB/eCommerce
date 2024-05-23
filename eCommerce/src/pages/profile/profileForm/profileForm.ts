@@ -20,13 +20,13 @@ import {
 } from '../../../components/helpers/validation-rules';
 import './profileForm.sass';
 import { AddressForm } from './adressForm/adressForm';
-//import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { Customer } from '@commercetools/platform-sdk';
 import { Input } from '../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 //import { LStorage } from '../../../modules/localStorage/localStorage';
-//import { createAnonymous, createCustomer } from '../../../modules/api/auth';
+//import { createCustomerApi } from '../../../modules/api/auth';
 import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNotice';
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
@@ -354,6 +354,8 @@ export class ProfileForm extends BaseComponent {
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
+        const newCustomerData = this.createJSONfromForm();
+        console.log(newCustomerData);
         this.closeEditMode();
       }
     });
@@ -425,11 +427,30 @@ export class ProfileForm extends BaseComponent {
   private handleChangeInput(): void {
     if (this.isSubmitted) this.validateEditProfile();
   }
+  private createJSONfromForm(): Customer {
+    const customerDraft: Customer = {
+      firstName: this.inputFirstName.value,
+      lastName: this.inputLastName.value,
+      dateOfBirth: this.inputDateOfBirth.value,
+      email: this.inputEmail.value,
+      id: state.customer.id,
+      createdAt: state.customer.createdAt,
+      lastModifiedAt: state.customer.lastModifiedAt,
+      isEmailVerified: false,
+      password: state.customer.password,
+      addresses: [...state.customer.addresses],
+      version: state.customer.version,
+      stores: [...state.customer.stores],
+      authenticationMode: state.customer.authenticationMode,
+    };
+    return customerDraft;
+  }
+
   /*
   private createJSONfromForm(): MyCustomerDraft {
     let customerDraft: MyCustomerDraft = {
       email: this.inputEmail.value,
-      password: this.inputPass.value,
+      password: this.inputPassNew.value,
       firstName: this.inputFirstName.value,
       lastName: this.inputLastName.value,
       dateOfBirth: this.inputDateOfBirth.value,
@@ -456,14 +477,14 @@ export class ProfileForm extends BaseComponent {
     }
     return customerDraft;
   }
-  
+
   handleSubmit = (e: SubmitEvent): void => {
     e.preventDefault();
     this.isSubmitted = true;
     if (!this.validateForm()) {
       return;
     }
-
+    
     const newCustomerData = this.createJSONfromForm();
     this.button.off();
     createAnonymous()

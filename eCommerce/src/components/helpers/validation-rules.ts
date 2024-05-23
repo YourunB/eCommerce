@@ -97,7 +97,7 @@ export const isPassContainNumber: Rule = (target) => {
 // email rules
 export const isEmailProperlyFormatted: Rule = (target) => {
   const result = { ...target };
-  const regexp = /^\S+@\S+\.\S+$/;
+  const regexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   if (!result.subject.match(regexp)) {
     result.errors.push('email address must be properly formatted (e.g., user@example.com)');
     result.validate = false;

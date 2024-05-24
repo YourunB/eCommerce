@@ -1,7 +1,51 @@
+@use './src/variables' as *
 .page-product-container
-  border: 1px solid black
+  margin-top: 5%
   display: flex
+
+@media(max-width: 768px) 
+  .page-product-container
+    flex-direction: column
+
 
 .product-text_container
   display: flex
   flex-direction: column
+  width: 50%
+  gap: 2%
+  font-family: sans-serif
+
+.product-swiper
+  width: 50%
+
+.product-swiper_wrapper
+  display: flex
+  align-items: center
+  justify-content: center
+
+.product-swiper_slide
+  width: 300px
+  height: 300px
+  display: flex
+
+.product-name
+  font-size: 25px 
+  font-weight: bold
+  color: $color-text-common
+
+.product-price
+  font-size: 1.4rem
+  font-weight: 700
+  color: #46A358
+  
+
+.product-description
+  font-size: 1rem 
+  color: #646664
+
+.product-description-name
+  font-size: 1rem 
+  font-weight: bold
+  color: $color-text-common
+  padding-top: 2%
+  border-top: 1px solid #97c293

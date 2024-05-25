@@ -72,6 +72,7 @@
     "@commercetools/importapi-sdk": "^5.4.0",
     "@commercetools/platform-sdk": "^7.8.0",
     "@commercetools/sdk-client-v2": "^2.5.0",
+    "nouislider": "^15.7.2",
     "url-loader": "^4.1.1"
   }
 }

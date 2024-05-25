@@ -5,6 +5,7 @@ import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
+import { filterСentAmount } from '../../components/helpers/filterСentAmount';
 import { ActionsMain, FilterRules, MappedCategories, MappedProducts } from './types';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
 import { isMappedCategories, isMappedProducts, isProductProjection } from '../../components/helpers/predicates';
@@ -15,6 +16,7 @@ export class Products {
   private prop2 = '';
   private page: PageProducts;
   private categoriesList: MappedCategories[] | Error;
+  private currentCategory: string | undefined;
 
   constructor() {
     this.categoriesList = new Error();
@@ -29,7 +31,7 @@ export class Products {
       if (isMappedCategories(categories)) {
         this.categoriesList = categories;
         this.page.renderFilters({ categories });
-      } // TODO else показать заглушку "нет карточек"
+      }
     });
 
     return this.page.getElement();
@@ -42,8 +44,9 @@ export class Products {
 
     switch (type) {
       case 'change-category':
+        this.currentCategory = this.prop1;
         this.removeAllCategoryFilters();
-        if (this.prop1) this.addFilter(filterCategory, this.prop1);
+        if (this.currentCategory) this.addFilter(filterCategory, this.currentCategory);
         this.procesProducts(true);
         break;
       case 'click-product':
@@ -53,13 +56,17 @@ export class Products {
         this.addFilter(filterLimit, this.prop1);
         this.procesProducts(true);
         break;
+      case 'change-price-filter':
+        this.addFilter(filterСentAmount, `${+this.prop1 * 100}-${+this.prop2 * 100}`);
+        this.procesProducts(true);
+        break;
     }
   };
 
   private procesProducts(fadeout = false): void {
     this.getProducts().then((products) => {
       if (isMappedProducts(products)) this.page.renderProducts(products, fadeout);
-      // TODO else показать заглушку "нет карточек"
+      //BUG if products === [] page doesn't empty regardless
     });
   }
 
@@ -68,11 +75,10 @@ export class Products {
   }
 
   public async getProducts() {
-    // this.addFilter(filterСentAmountMax, '5000');
-    //TODO добавить фильтр минимальной цены
     url.pruducts.search = '';
     const query = this.applyFilters(url.pruducts);
     const products = await queryProducts(query);
+    console.log('products', products);
     return products instanceof Error ? products : this.mapProducts(products);
   }
 

@@ -33,6 +33,7 @@
   "homepage": "",
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "@types/swiper": "^6.0.0",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",

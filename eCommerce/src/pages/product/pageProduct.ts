@@ -2,7 +2,12 @@ import { ErrorResponse, Product } from '@commercetools/platform-sdk';
 import { BaseComponent, BaseComponentProps } from '../../components/baseComponent';
 import { getProduct } from '../../modules/api/productItem';
 import './pageProduct.sass';
+import 'swiper/scss';
+import 'swiper/scss/pagination';
+import 'swiper/scss/navigation';
 import Swiper from 'swiper';
+import { Pagination } from 'swiper/modules';
+// import Swiper from 'swiper';
 
 export class PageProduct extends BaseComponent {
   private productSwiper: BaseComponent;
@@ -17,12 +22,12 @@ export class PageProduct extends BaseComponent {
     super({ classNames: 'page-product-container', ...props });
     this.productSwiper = new BaseComponent({
       tagName: 'div',
-      classNames: 'product-swiper',
+      classNames: 'swiper',
       parentNode: this.element,
     });
     this.productSwiperWrapper = new BaseComponent({
       tagName: 'div',
-      classNames: 'product-swiper_wrapper',
+      classNames: 'swiper-wrapper',
       parentNode: this.productSwiper.getElement(),
     });
     this.productSwiperPagination = new BaseComponent({
@@ -68,43 +73,105 @@ export class PageProduct extends BaseComponent {
         data.masterData.current.description ? data.masterData.current.description['en-GB'] : ''
       );
       if (data.masterData.staged.masterVariant.images) {
-        const imagePromises = data.masterData.staged.masterVariant.images.map(
-          (image) =>
-            new Promise((resolve) => {
-              const productSwiperSlide = new BaseComponent({
-                tagName: 'div',
-                classNames: 'product-swiper_slide',
-                parentNode: this.productSwiperWrapper.getElement(),
-              });
+        data.masterData.staged.masterVariant.images.forEach((image, index) => {
+          const productSwiperSlide = new BaseComponent({
+            tagName: 'div',
+            classNames: 'swiper-slide',
+            textContent: index.toString(),
+            parentNode: this.productSwiperWrapper.getElement(),
+          });
 
-              const productImg = new BaseComponent({
-                tagName: 'img',
-                classNames: 'product-img',
-                parentNode: productSwiperSlide.getElement(),
-              });
+          const productImg = new BaseComponent({
+            tagName: 'img',
+            classNames: 'product-img',
+            parentNode: productSwiperSlide.getElement(),
+          });
 
-              productImg.setAttribute({
-                name: 'src',
-                value: image.url,
-              });
-
-              productImg.getElement().onload = resolve;
-            })
-        );
-
-        Promise.all(imagePromises).then(() => {
-          setTimeout(() => {
-            new Swiper('.product-swiper', {
-              loop: true,
-              pagination: {
-                el: '.swiper-pagination',
-              },
-            });
-          }, 0);
+          productImg.setAttribute({
+            name: 'src',
+            value: image.url,
+          });
         });
+        // data.masterData.staged.masterVariant.images.forEach((image) => {
+        //   const productSwiperSlide = new BaseComponent({
+        //     tagName: 'div',
+        //     classNames: 'product-swiper_slide',
+        //     parentNode: this.productSwiperWrapper.getElement(),
+        //   });
+
+        //   const productImg = new BaseComponent({
+        //     tagName: 'img',
+        //     classNames: 'product-img',
+        //     parentNode: productSwiperSlide.getElement(),
+        //   });
+
+        //   productImg.setAttribute({
+        //     name: 'src',
+        //     value: image.url,
+        //   });
+        // });
+        this.renderSwiper();
+        // window.addEventListener(
+        //   'load',
+        //   () => {
+        //     console.log('FIRE');
+        //   },
+        //   { once: true }
+        // );
+        // this.productSwiperWrapper.getElement().onloadeddata = this.renderSwiper;
+        // const imagePromises = data.masterData.staged.masterVariant.images.map(
+        //   (image) =>
+        //     new Promise((resolve) => {
+        //       const productSwiperSlide = new BaseComponent({
+        //         tagName: 'div',
+        //         classNames: 'product-swiper_slide',
+        //         parentNode: this.productSwiperWrapper.getElement(),
+        //       });
+
+        //       const productImg = new BaseComponent({
+        //         tagName: 'img',
+        //         classNames: 'product-img',
+        //         parentNode: productSwiperSlide.getElement(),
+        //       });
+
+        //       productImg.setAttribute({
+        //         name: 'src',
+        //         value: image.url,
+        //       });
+
+        //       productImg.getElement().onload = resolve;
+        //     })
+        // );
+
+        // Promise.all(imagePromises).then(() => {
+        //   setTimeout(() => {
+        //     new Swiper('.product-swiper', {
+        //       loop: true,
+        //       pagination: {
+        //         el: '.swiper-pagination',
+        //       },
+        //     });
+        //   }, 1000);
+        // });
       }
 
       return data;
     });
+  }
+  renderSwiper() {
+    // productImg.getElement().onload = () => {
+    // setTimeout(() => {
+    console.log(JSON.stringify(document.querySelector('.swiper')));
+    const swiper = new Swiper('.swiper', {
+      loop: true,
+      modules: [Pagination],
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+
+    console.log(swiper);
+    // }, 3000);
+    // };
   }
 }

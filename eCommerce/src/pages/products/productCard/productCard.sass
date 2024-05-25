@@ -1,6 +1,7 @@
 @use './src/variables' as *
 
 .product-card
+  position: relative
   display: flex
   flex-direction: column
   justify-content: flex-start
@@ -12,6 +13,19 @@
   height: 100%
   max-width: 20rem
   justify-self: center
+
+.product-card[discount]::after
+  content: "" attr(discount)
+  text-align: center
+  font-size: 1.1rem
+  line-height: 2.2rem
+  position: absolute
+  left: 0
+  top: 0.5rem
+  width: 5rem
+  border: 1px solid $color-bacground-common
+  background-color: $color-button-background
+  color: $color-button-common
 
 .product-card__img
   height: 70%
@@ -38,10 +52,19 @@
   text-overflow: ellipsis
   white-space: nowrap
 
-.product-card__price
+.product-card__price-container
+  display: flex
+  flex-wrap: nowrap
+  gap: 1rem
   font-size: 1.1rem
+
+.price-container__actual-price
   font-weight: 700
   color: $color-button-background
+
+.price-container__old-price
+  color: $color-input-placeholder
+  text-decoration: line-through
 
 @media (hover: hover)
   .product-card:hover

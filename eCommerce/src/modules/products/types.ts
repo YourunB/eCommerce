@@ -11,5 +11,15 @@ export type DispatchMain = {
 };
 
 export type MappedCategories = { name: string; id: string };
-export type MappedProducts = { name: string; id: string; centAmount: string; currencyCode: string; photo: string };
+export type MappedProducts = {
+  name: string;
+  id: string;
+  centAmount: string;
+  currencyCode: string;
+  photo: string;
+  discount?: {
+    centAmount: string;
+    percent: string;
+  };
+};
 export type FilterRules = (url: URL, value: string) => URL;

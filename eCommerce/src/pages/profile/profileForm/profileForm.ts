@@ -31,6 +31,7 @@ import { InputWithNotice } from '../../../components/inputWithNotice/inputWithNo
 import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
 import state from '../../../state/state';
+import { Login } from '../../../modules/login/login';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
@@ -63,6 +64,7 @@ export class ProfileForm extends BaseComponent {
   private msg: BaseComponent;
 
   constructor(props: PageProfilePropsType) {
+    const login = new Login();
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmittedPass = false;
     this.isSubmittedProfile = false;
@@ -270,29 +272,33 @@ export class ProfileForm extends BaseComponent {
       this.isSubmittedPass = true;
       try {
         const result = await lstorage.getCredentials();
-        const pass = typeof result !== 'string' ? result.password : '';
+        const currentPass = typeof result !== 'string' ? result.password : '';
+        const currentEmail = typeof result !== 'string' ? result.email : '';
         if (this.validateEditPass()) {
-          if (!pass || pass !== this.inputPassOld.getElement().value) {
+          if (!currentPass || currentPass !== this.inputPassOld.getElement().value) {
             this.showMsg('Old password is not correct!', false);
             return;
           }
           const newCustomerData = {
             version: Number(state.customer.version),
-            currentPassword: pass,
+            currentPassword: currentPass,
             newPassword: this.inputPassNew.getElement().value,
           };
           updatePasswordApi(newCustomerData, state.access_token.access_token)
             .then((result) => {
               state.customer = result as Customer;
+              console.log(currentEmail, this.inputPassNew.getElement().value);
+              lstorage.saveCredentials({ email: currentEmail, password: this.inputPassNew.getElement().value });
               this.showMsg('Succes', true);
+              this.inputPassOld.getElement().value = '';
+              this.inputPassNew.getElement().value = '';
             })
+            .then(() => login.isLogined())
             .catch((error) => {
               this.showErrorMessage(error);
             });
           this.overlay.getElement().classList.remove('overlay_show');
           this.modalEditPass.getElement().classList.remove('modal-pass_show');
-          this.inputPassOld.getElement().value = '';
-          this.inputPassNew.getElement().value = '';
         }
       } catch (error) {
         this.showErrorMessage(error);
@@ -302,6 +308,7 @@ export class ProfileForm extends BaseComponent {
     this.btnCancelPass.getElement().addEventListener('click', (event) => {
       event.preventDefault();
       this.isSubmittedPass = false;
+      this.deleteNoticeInfo();
       this.overlay.getElement().classList.remove('overlay_show');
       this.modalEditPass.getElement().classList.remove('modal-pass_show');
       this.inputPassOld.getElement().value = '';

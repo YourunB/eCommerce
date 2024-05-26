@@ -13,7 +13,6 @@ export class SectionFilters extends BaseComponent {
     super({ tagName: 'section', classNames: 'products__filters' });
     this.categories = new Categories(dispatch);
     this.insertChildren([this.categories, new FilterPrice(dispatch)]);
-    // this.element.append(new FilterPrice().createSlider());
     return this;
   }
 

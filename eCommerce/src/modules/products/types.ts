@@ -1,5 +1,5 @@
 export type ActionsMain = {
-  type: 'change-category' | 'click-product' | 'change-limit' | 'change-price-filter';
+  type: 'change-category' | 'click-product' | 'change-limit' | 'change-price-filter' | 'change-offset';
   payload: {
     prop1: string;
     prop2: string;

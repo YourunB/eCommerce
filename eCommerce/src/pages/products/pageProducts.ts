@@ -8,25 +8,38 @@ import { DispatchMain, MappedProducts } from '../../modules/products/types';
 const TRANSITION_DURATION = 1000;
 
 export class PageProducts extends BaseComponent {
-  sectionProducts: BaseComponent;
-  sectionFilters: SectionFilters;
-  dispatch: DispatchMain;
+  private dispatch: DispatchMain;
+  private footer: ProductsFooter;
+  private sectionProducts: BaseComponent;
+  private sectionFilters: SectionFilters;
 
-  constructor(limits: string[], dispatch: DispatchMain) {
+  constructor(limits: string[], countPages: number, dispatch: DispatchMain) {
     super({ tagName: 'article', classNames: 'page-products-container' });
     this.dispatch = dispatch;
     const sectionHero = new BaseComponent({ tagName: 'section', classNames: 'products__hero', textContent: 'hero' });
     this.sectionProducts = new BaseComponent({ tagName: 'section', classNames: 'products__container' });
     this.sectionFilters = new SectionFilters(dispatch);
-    const footer = new ProductsFooter(limits, dispatch);
+    this.footer = new ProductsFooter(limits, countPages, dispatch);
 
-    this.insertChildren([sectionHero, this.sectionFilters, this.sectionProducts, footer]);
+    this.insertChildren([sectionHero, this.sectionFilters, this.sectionProducts, this.footer]);
+  }
+
+  set countPages(count: number) {
+    this.footer.countPages = count;
+  }
+
+  set currentPage(page: number) {
+    this.footer.currentPage = page;
+  }
+
+  set buttons(status: 'enabled' | 'disabled') {
+    this.footer.buttons = status;
   }
 
   public resetProducts(): void {
     this.sectionProducts.getElement().innerHTML = '';
   }
-
+  // TODO pagination
   public renderProducts(products: MappedProducts[], fadeout: boolean) {
     if (fadeout) this.sectionProducts.setClassName('fadeout');
     setTimeout(() => {

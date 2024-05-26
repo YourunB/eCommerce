@@ -61,7 +61,7 @@ export class Pagination extends BaseComponent {
     const btns: BaseComponent[] = [];
     const frame = Math.ceil(this._currentPage / COUNT_BUTTONS);
     const stop = frame * COUNT_BUTTONS <= this._countPages ? frame * COUNT_BUTTONS : this._countPages;
-    const start = stop - COUNT_BUTTONS + 1;
+    const start = stop - COUNT_BUTTONS + 1 > 0 ? stop - COUNT_BUTTONS + 1 : 1;
 
     if (start > 1) {
       btns.push(this.createCtrlBtn(`${start - 1}`, 'prev')); // Prev button

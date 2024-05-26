@@ -1,6 +1,7 @@
 import './header.sass';
 import '../../assets/images/svg/logo.svg';
 import '../../assets/images/svg/basket.svg';
+import '../../assets/images/svg/user.svg';
 import { Button } from '../../components/basebutton/baseButton';
 
 const header = document.createElement('header');
@@ -27,9 +28,13 @@ menu.innerHTML = `
 const navBtnsBox = document.createElement('div');
 navBtnsBox.classList.add('navigation__btns');
 
-const basket = document.createElement('img');
-basket.src = 'basket.svg';
-basket.classList.add('basket');
+const btnBasket = document.createElement('img');
+btnBasket.src = 'basket.svg';
+btnBasket.classList.add('basket');
+
+const btnProfile = document.createElement('img');
+btnProfile.src = 'user.svg';
+btnProfile.classList.add('profile');
 
 const btnLogIn = new Button({ textContent: 'LogIn', classNames: ['login__btn-submit', 'header__btn'] }).getElement();
 const btnLogOut = new Button({
@@ -55,8 +60,8 @@ function checkBtnMenuCondition() {
   } else btnMenu.classList.add('btn-menu_cliked');
 }
 
-navBtnsBox.append(basket, btnLogIn, btnLogOut, btnReg);
+navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg);
 nav.append(logo, menu, navBtnsBox);
 header.append(nav, btnMenu);
 
-export { header, nav, menu, navBtnsBox, basket, btnLogIn, btnLogOut, btnReg, logo };
+export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo };

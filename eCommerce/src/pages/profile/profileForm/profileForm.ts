@@ -32,6 +32,9 @@ import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
 import state from '../../../state/state';
 import { Login } from '../../../modules/login/login';
+import '../../../assets/images/svg/add.svg';
+import '../../../assets/images/svg/edit.svg';
+import '../../../assets/images/svg/delete.svg';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();

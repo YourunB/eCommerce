@@ -6,8 +6,7 @@ import 'swiper/scss';
 import 'swiper/scss/pagination';
 import 'swiper/scss/navigation';
 import Swiper from 'swiper';
-import { Pagination } from 'swiper/modules';
-// import Swiper from 'swiper';
+import { Navigation } from 'swiper/modules';
 
 export class PageProduct extends BaseComponent {
   private productSwiper: BaseComponent;
@@ -16,8 +15,9 @@ export class PageProduct extends BaseComponent {
   private productName: BaseComponent;
   private productDescription: BaseComponent;
   private productDescriptionName: BaseComponent;
-  private productSwiperPagination: BaseComponent;
   private productSwiperWrapper: BaseComponent;
+  private productSwiperButtonPrev: BaseComponent;
+  private productSwiperButtonNext: BaseComponent;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
     this.productSwiper = new BaseComponent({
@@ -30,9 +30,14 @@ export class PageProduct extends BaseComponent {
       classNames: 'swiper-wrapper',
       parentNode: this.productSwiper.getElement(),
     });
-    this.productSwiperPagination = new BaseComponent({
+    this.productSwiperButtonPrev = new BaseComponent({
       tagName: 'div',
-      classNames: 'swiper-pagination',
+      classNames: 'swiper-button-prev',
+      parentNode: this.productSwiper.getElement(),
+    });
+    this.productSwiperButtonNext = new BaseComponent({
+      tagName: 'div',
+      classNames: 'swiper-button-next',
       parentNode: this.productSwiper.getElement(),
     });
     this.productTextContainer = new BaseComponent({
@@ -92,86 +97,25 @@ export class PageProduct extends BaseComponent {
             value: image.url,
           });
         });
-        // data.masterData.staged.masterVariant.images.forEach((image) => {
-        //   const productSwiperSlide = new BaseComponent({
-        //     tagName: 'div',
-        //     classNames: 'product-swiper_slide',
-        //     parentNode: this.productSwiperWrapper.getElement(),
-        //   });
-
-        //   const productImg = new BaseComponent({
-        //     tagName: 'img',
-        //     classNames: 'product-img',
-        //     parentNode: productSwiperSlide.getElement(),
-        //   });
-
-        //   productImg.setAttribute({
-        //     name: 'src',
-        //     value: image.url,
-        //   });
-        // });
         this.renderSwiper();
-        // window.addEventListener(
-        //   'load',
-        //   () => {
-        //     console.log('FIRE');
-        //   },
-        //   { once: true }
-        // );
-        // this.productSwiperWrapper.getElement().onloadeddata = this.renderSwiper;
-        // const imagePromises = data.masterData.staged.masterVariant.images.map(
-        //   (image) =>
-        //     new Promise((resolve) => {
-        //       const productSwiperSlide = new BaseComponent({
-        //         tagName: 'div',
-        //         classNames: 'product-swiper_slide',
-        //         parentNode: this.productSwiperWrapper.getElement(),
-        //       });
-
-        //       const productImg = new BaseComponent({
-        //         tagName: 'img',
-        //         classNames: 'product-img',
-        //         parentNode: productSwiperSlide.getElement(),
-        //       });
-
-        //       productImg.setAttribute({
-        //         name: 'src',
-        //         value: image.url,
-        //       });
-
-        //       productImg.getElement().onload = resolve;
-        //     })
-        // );
-
-        // Promise.all(imagePromises).then(() => {
-        //   setTimeout(() => {
-        //     new Swiper('.product-swiper', {
-        //       loop: true,
-        //       pagination: {
-        //         el: '.swiper-pagination',
-        //       },
-        //     });
-        //   }, 1000);
-        // });
       }
 
       return data;
     });
   }
   renderSwiper() {
-    // productImg.getElement().onload = () => {
-    // setTimeout(() => {
     console.log(JSON.stringify(document.querySelector('.swiper')));
     const swiper = new Swiper('.swiper', {
+      slidesPerView: 1,
+      centeredSlides: true,
       loop: true,
-      modules: [Pagination],
-      pagination: {
-        el: '.swiper-pagination',
+      modules: [Navigation],
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
       },
     });
 
     console.log(swiper);
-    // }, 3000);
-    // };
   }
 }

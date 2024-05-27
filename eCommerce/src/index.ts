@@ -1,6 +1,5 @@
 import './modules/routingScript';
 import './index.sass';
-// import { PageProduct } from './pages/product/pageProduct';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
@@ -10,11 +9,14 @@ import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
 import { footer } from './components/footer/footer';
-import { PageRegistration } from './pages/registration/pageRegistration';
+// import { PageRegistration } from './pages/registration/pageRegistration';
+import { Products } from './modules/products/products';
+import { PageProduct } from './pages/product/pageProduct';
 
 const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
+const products = new Products();
 
 login.isLogined().then(
   () => localStorage.setItem('logged', 'true'),
@@ -61,6 +63,7 @@ router.addRoute({
     document.title = 'Products';
     main.innerHTML = '';
     main.append(productsPage);
+    main.append(products.getPage());
     setActivePage();
     checkAuthorization();
   },
@@ -95,12 +98,22 @@ router.addRoute({
     checkAuthorization();
   },
 });
+// router.addRoute({
+//   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
+//   handler: () => {
+//     document.title = 'Registration';
+//     main.innerHTML = '';
+//     main.append(new PageRegistration({}).getElement());
+//     setActivePage();
+//     checkAuthorization();
+//   },
+// });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
   handler: () => {
-    document.title = 'Registration';
+    document.title = 'Product';
     main.innerHTML = '';
-    main.append(new PageRegistration({}).getElement());
+    main.append(new PageProduct({ tagName: 'div' }).getElement());
     setActivePage();
     checkAuthorization();
   },
@@ -192,9 +205,3 @@ menu.addEventListener('click', (event) => {
     return;
   }
 });
-
-// const container = document.querySelector('body');
-// if (container) {
-//   const pageRegistration = new PageProduct({ tagName: 'div', parentNode: container });
-//   pageRegistration.render(container);
-// }

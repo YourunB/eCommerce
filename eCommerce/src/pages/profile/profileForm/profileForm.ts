@@ -42,6 +42,7 @@ const lstorage = new LStorage();
 export class ProfileForm extends BaseComponent {
   private isSubmittedProfile: boolean;
   private isSubmittedPass: boolean;
+  private isSubmittedAddress: boolean;
   private inputEmail: InputWithNotice;
   private inputPassOld: InputWithNotice;
   private inputPassNew: InputWithNotice;
@@ -81,6 +82,7 @@ export class ProfileForm extends BaseComponent {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmittedPass = false;
     this.isSubmittedProfile = false;
+    this.isSubmittedAddress = false;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     console.log(state.customer, state.access_token.access_token);
     // first name
@@ -312,6 +314,7 @@ export class ProfileForm extends BaseComponent {
             });
           this.overlay.getElement().classList.remove('overlay_show');
           this.modalEditPass.getElement().classList.remove('modal-pass_show');
+          this.isSubmittedPass = false;
         }
       } catch (error) {
         this.showErrorMessage(error);
@@ -411,32 +414,40 @@ export class ProfileForm extends BaseComponent {
       event.preventDefault();
       this.overlay.getElement().classList.remove('overlay_show');
       this.modalAddressForm.getElement().classList.add('unvisible');
+      this.isSubmittedAddress = false;
+      this.deleteNoticeInfo();
+      this.clearAddressInputs();
     });
 
     this.btnSaveModalAddress.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      const newCustomerData = {
-        version: Number(state.customer.version),
-        actions: [
-          {
-            action: 'addAddress',
-            address: {
-              country: this.addressForm.inputCountryShipping.getElement().value,
-              city: this.addressForm.inputCityShipping.getElement().value,
-              streetName: this.addressForm.inputStreetShipping.getElement().value,
-              postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+      this.isSubmittedAddress = true;
+      if (this.validateEditAddress()) {
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: 'addAddress',
+              address: {
+                country: this.addressForm.inputCountryShipping.getElement().value,
+                city: this.addressForm.inputCityShipping.getElement().value,
+                streetName: this.addressForm.inputStreetShipping.getElement().value,
+                postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+              },
             },
-          },
-        ],
-      };
-      updateCustomerApi(newCustomerData, state.access_token.access_token)
-        .then((result) => {
-          state.customer = result as Customer;
-          this.showMsg('Succes', true);
-        })
-        .catch((error) => {
-          this.showErrorMessage(error);
-        });
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            this.showMsg('Succes', true);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
+        this.clearAddressInputs();
+        this.isSubmittedAddress = false;
+      }
     });
 
     this.btnsContainerOpenEdit = new BaseComponent({
@@ -648,6 +659,7 @@ export class ProfileForm extends BaseComponent {
   private handleChangeInput(): void {
     if (this.isSubmittedProfile) this.validateEditProfile();
     if (this.isSubmittedPass) this.validateEditPass();
+    if (this.isSubmittedAddress) this.validateEditAddress();
   }
 
   private showErrorMessage(error: unknown): void {
@@ -671,36 +683,28 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.showNotice(isValidLastName.errors);
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
     this.inputEmail.showNotice(isValidLogin.errors);
-    //const isValidPassword = this.validatePassword(this.inputPass.value);
-    //const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
-    //const isValidCityBilling = this.validateNamesAndCity(this.addressForm.inputCityBilling.value);
-    //const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
-    //const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
-    //const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
-    //const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
-    //const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
-    //const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
-    //this.inputPass.showNotice(isValidPassword.errors);
-    //this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
-    //this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
-    //this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
-    //this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
-    //this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
-    //this.addressForm.inputPostalCodeBilling.showNotice(isValidPostalCodeBilling.errors);
-    //this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
-    //this.addressForm.inputCountryBilling.showNotice(isValidCountryBilling.errors);
 
     return (
       isValidLogin.validate && isValidFirstName.validate && isValidLastName.validate && isValidDateOfBirth.validate
-      //isValidPassword.validate &&
-      //isValidCityBilling.validate &&
-      //isValidCityShipping.validate &&
-      //isValidCountryBilling.validate &&
-      //isValidCountryShipping.validate &&
-      //isValidPostalCodeBilling.validate &&
-      //isValidPostalCodeShipping.validate &&
-      //isValidStreetBilling.validate &&
-      //isValidStreetShipping.validate
+    );
+  }
+
+  private validateEditAddress() {
+    const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
+    const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
+    const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
+    const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
+
+    this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
+    this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
+    this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
+    this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
+
+    return (
+      isValidCityShipping.validate &&
+      isValidCountryShipping.validate &&
+      isValidPostalCodeShipping.validate &&
+      isValidStreetShipping.validate
     );
   }
 
@@ -712,6 +716,13 @@ export class ProfileForm extends BaseComponent {
     setTimeout(() => {
       this.msg.getElement().classList.remove('msg-modal_show');
     }, 1990);
+  }
+
+  private clearAddressInputs() {
+    this.addressForm.inputCountryShipping.getElement().value = '';
+    this.addressForm.inputCityShipping.getElement().value = '';
+    this.addressForm.inputStreetShipping.getElement().value = '';
+    this.addressForm.inputPostalCodeShipping.getElement().value = '';
   }
 
   private validateEditPass(): boolean {

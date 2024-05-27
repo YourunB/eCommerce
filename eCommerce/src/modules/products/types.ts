@@ -12,6 +12,7 @@ export type DispatchMain = {
 
 export type MappedCategories = { name: string; id: string };
 export type MappedProducts = {
+  description: string;
   name: string;
   id: string;
   centAmount: string;

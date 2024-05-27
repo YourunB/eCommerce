@@ -21,7 +21,7 @@ export class ProductCard extends BaseComponent {
       textContent: `${product.name || ''}`,
     });
 
-    content.insertChildren([productName, this.productPrice(product)]);
+    content.insertChildren([productName, this.productDescription(product), this.productPrice(product)]);
     this.insertChildren([imgConteiner, content]);
 
     const action = { type: 'click-product', payload: { prop1: product.id, prop2: '' } } as const;
@@ -47,6 +47,17 @@ export class ProductCard extends BaseComponent {
       container.insertChild(oldPriceHTML);
     }
 
+    return container;
+  }
+
+  private productDescription(product: MappedProducts): BaseComponent {
+    const container = new BaseComponent({ tagName: 'div', classNames: 'product-card__description-container' });
+    const content = new BaseComponent({
+      tagName: 'p',
+      textContent: product.description,
+      classNames: 'product-card__description-content',
+    });
+    container.insertChild(content);
     return container;
   }
 }

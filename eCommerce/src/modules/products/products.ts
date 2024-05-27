@@ -49,14 +49,20 @@ export class Products {
     this.currentPage = 1;
     this.page.resetProducts();
     this.procesProducts();
-    this.getCategories().then((categories) => {
-      if (isMappedCategories(categories)) {
-        this.categoriesList = categories;
-        this.page.renderFilters({ categories });
-      }
-    });
+    this.getCategories()
+      .then((categories) => {
+        if (isMappedCategories(categories)) {
+          this.categoriesList = categories;
+          this.page.renderFilters({ categories });
+        }
+      })
+      .catch((error) => this.handleError(`${error}`));
 
     return this.page.getElement();
+  }
+
+  private handleError(error: string): void {
+    this.page.showDialog(error);
   }
 
   public dispatch = (action: ActionsMain) => {
@@ -99,6 +105,7 @@ export class Products {
       .then((products) => {
         if (isMappedProducts(products)) this.page.renderProducts(products, fadeout);
       })
+      .catch((error) => this.handleError(`${error}`))
       .finally(() => {
         this.page.buttons = 'enabled';
       });
@@ -108,12 +115,11 @@ export class Products {
     this.filter.delete(filterCategory);
   }
 
-  public async getProducts() {
+  public async getProducts(): Promise<Error | MappedProducts[] | undefined> {
     url.pruducts.search = '';
     const query = this.applyFilters(url.pruducts);
     const products = await queryProducts(query);
 
-    console.log('products', products);
     if (products instanceof Error) {
       return products;
     } else {

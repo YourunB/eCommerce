@@ -78,3 +78,12 @@
   .product-card__img:hover
     & img
       transform: scale(1.2)
+
+.product-card:has(.product-card_empty)
+  background-image: url("../../../assets/images/card/no-data.webp")
+  background-position: center
+  background-repeat: no-repeat
+  background-size: contain
+
+  filter: grayscale(1)
+  pointer-events: none

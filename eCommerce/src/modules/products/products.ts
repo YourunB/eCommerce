@@ -103,7 +103,11 @@ export class Products {
     this.page.buttons = 'disabled';
     this.getProducts()
       .then((products) => {
-        if (isMappedProducts(products)) this.page.renderProducts(products, fadeout);
+        if (isMappedProducts(products)) {
+          this.page.renderProducts(products, fadeout);
+        } else {
+          this.page.renderEmptyCard();
+        }
       })
       .catch((error) => this.handleError(`${error}`))
       .finally(() => {

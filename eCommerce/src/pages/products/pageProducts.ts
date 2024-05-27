@@ -1,4 +1,5 @@
 import './pageProducts.sass';
+import { EmptyCard } from './productCard/emptyCard';
 import { ProductCard } from './productCard/productCard';
 import { BaseComponent } from '../../components/baseComponent';
 import { PropsFilters, SectionFilters } from './filter/filter';
@@ -46,7 +47,7 @@ export class PageProducts extends BaseComponent {
   public resetProducts(): void {
     this.sectionProducts.getElement().innerHTML = '';
   }
-  // TODO pagination
+
   public renderProducts(products: MappedProducts[], fadeout: boolean) {
     if (fadeout) this.sectionProducts.setClassName('fadeout');
     setTimeout(() => {
@@ -56,6 +57,16 @@ export class PageProducts extends BaseComponent {
         []
       );
       this.sectionProducts.insertChildren([...cards]);
+      this.sectionProducts.removeClassName('fadeout');
+    }, TRANSITION_DURATION);
+  }
+
+  public renderEmptyCard() {
+    this.sectionProducts.setClassName('fadeout');
+    setTimeout(() => {
+      this.sectionProducts.getElement().innerHTML = '';
+      const card = new EmptyCard();
+      this.sectionProducts.insertChild(card);
       this.sectionProducts.removeClassName('fadeout');
     }, TRANSITION_DURATION);
   }

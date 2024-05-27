@@ -98,7 +98,6 @@ export class Products {
     this.getProducts()
       .then((products) => {
         if (isMappedProducts(products)) this.page.renderProducts(products, fadeout);
-        //BUG if products === [] page doesn't empty regardless
       })
       .finally(() => {
         this.page.buttons = 'enabled';

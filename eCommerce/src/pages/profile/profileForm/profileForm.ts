@@ -55,6 +55,12 @@ export class ProfileForm extends BaseComponent {
   private label: BaseComponent;
   private btnsContainerSaveEdit: BaseComponent;
   private btnsContainerOpenEdit: BaseComponent;
+  private adressesEditContainer: BaseComponent;
+  private adressesEditContainerTitle: BaseComponent;
+  private adressesControlsContainer: BaseComponent;
+  private btnCloseAddressesContainer: Button;
+  private btnSaveAddressesContainer: Button;
+  private adressesBtnsContainer: BaseComponent;
   private addressContainer: BaseComponent;
   private overlay: BaseComponent;
   private modalEditPass: BaseComponent;
@@ -315,15 +321,52 @@ export class ProfileForm extends BaseComponent {
       this.inputPassNew.getElement().value = '';
     });
 
-    this.addressForm = new AddressForm({ parentNode: this.element });
+    //adress control panel
+    this.adressesEditContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['edit-adresses-container', 'unvisible'],
+      parentNode: this.element,
+    });
+
+    this.adressesEditContainerTitle = new BaseComponent({
+      tagName: 'h3',
+      parentNode: this.adressesEditContainer.getElement(),
+      textContent: 'Address Control Panel',
+    });
+
+    this.adressesControlsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['controls-adresses-container'],
+      parentNode: this.adressesEditContainer.getElement(),
+    });
+
+    this.adressesBtnsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
+      parentNode: this.adressesEditContainer.getElement(),
+    });
+    //btn close addresses container
+    this.btnCloseAddressesContainer = new Button({
+      textContent: 'Cancel',
+      classNames: 'profile__btn',
+      parentNode: this.adressesBtnsContainer.getElement(),
+    });
+
+    this.btnSaveAddressesContainer = new Button({
+      textContent: 'Save',
+      classNames: 'profile__btn',
+      parentNode: this.adressesBtnsContainer.getElement(),
+    });
+    this.btnCloseAddressesContainer.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.adressesEditContainer.getElement().classList.add('unvisible');
+    });
+
+    this.addressForm = new AddressForm({ parentNode: this.adressesEditContainer.getElement() });
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
 
     this.btnsContainerOpenEdit = new BaseComponent({
       tagName: 'div',
@@ -387,6 +430,8 @@ export class ProfileForm extends BaseComponent {
 
     this.btnEditAddress.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      this.createAddressesOnControlPanel();
+      this.adressesEditContainer.getElement().classList.remove('unvisible');
     });
 
     this.btnCancelProfile.getElement().addEventListener('click', (event) => {
@@ -447,6 +492,24 @@ export class ProfileForm extends BaseComponent {
     const arrNotice = this.element.getElementsByClassName('notice');
     for (let i = arrNotice.length - 1; i >= 0; i -= 1) {
       arrNotice[i].remove();
+    }
+  }
+
+  private createAddressesOnControlPanel() {
+    const container = this.adressesControlsContainer.getElement();
+    container.innerHTML = '';
+    const arrAddresses = state.customer.addresses;
+    for (let i = 0; i < arrAddresses.length; i += 1) {
+      const address = document.createElement('p');
+      address.innerHTML = `
+        <button class='btn-edit'>Edit</button>
+        <button class='btn-delete'>Delete</button>
+        Country: ${arrAddresses[i].country}, 
+        City: ${arrAddresses[i].city}, 
+        Street: ${arrAddresses[i].streetName}, 
+        Post code: ${arrAddresses[i].postalCode}
+      `;
+      container.append(address);
     }
   }
 
@@ -515,13 +578,6 @@ export class ProfileForm extends BaseComponent {
       }
       dialog.show(`${error.message}`, 'warning');
     }
-  }
-
-  private copyShippingToBilling(): void {
-    this.addressForm.inputCountryBilling.value = 'this.addressForm.inputCountryShipping.value';
-    this.addressForm.inputStreetBilling.value = this.addressForm.inputStreetShipping.value;
-    this.addressForm.inputPostalCodeBilling.value = this.addressForm.inputPostalCodeShipping.value;
-    this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;
   }
 
   private validateEditProfile(): boolean {

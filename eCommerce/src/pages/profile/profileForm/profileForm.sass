@@ -32,7 +32,6 @@
   margin: 0.5%
   border: none
   font-weight: 700
-  pointer-events: none
   text-align: center
 
 .address-container
@@ -100,7 +99,6 @@
   width: 1.5rem
   height: 1.5rem
   transform: translate(0rem, 45%)
-
   background-image: url("../../../assets/icons/hide.svg")
   background-position: center center
   background-repeat: no-repeat
@@ -115,6 +113,40 @@
   color: $color-border-selected
   font-weight: 700
   margin-bottom: 10px
+
+.edit-adresses-container
+  position: absolute
+  width: 100%
+  height: 100%
+  background: rgba(0, 0, 0, 0.5)
+  backdrop-filter: blur(5px)
+  border-radius: 3px
+
+.edit-adresses-container h3
+  text-align: center
+  color: $color-border-selected
+
+.controls-adresses-container
+  min-height: 300px
+  border: solid 2px $color-border-selected
+  border-radius: 3px
+  padding: 10px
+
+.btn-edit,
+.btn-delete
+  padding: 5px
+  background: none
+  border-radius: 3px
+  padding: 5px
+  font-weight: 700
+  cursor: pointer
+  color: white
+
+.btn-edit
+  border: solid 2px $color-border-selected
+
+.btn-delete
+  border: solid 2px $color-text-errors
 
 .profile-btns-container
   justify-content: center

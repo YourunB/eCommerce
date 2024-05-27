@@ -11,6 +11,7 @@ import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile 
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 import { PageProfile } from './pages/profile/pageProfile';
+import { background } from './components/background/background';
 
 const main = document.createElement('main');
 main.classList.add('main');
@@ -22,7 +23,7 @@ login.isLogined().then(
   () => localStorage.removeItem('logged')
 );
 
-document.body.append(header, main, footer);
+document.body.append(header, main, footer, background);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;

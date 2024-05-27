@@ -500,10 +500,11 @@ export class ProfileForm extends BaseComponent {
     container.innerHTML = '';
     const arrAddresses = state.customer.addresses;
     for (let i = 0; i < arrAddresses.length; i += 1) {
-      const address = document.createElement('p');
+      const address = document.createElement('div');
+      address.classList.add('controls-adresses-container__address-box');
       address.innerHTML = `
-        <button class='btn-edit'>Edit</button>
-        <button class='btn-delete'>Delete</button>
+        <img class="btn-svg" src="/edit.svg" alt="Edit" title="Edit">
+        <img class="btn-svg" src="/delete.svg" alt="Delete" title="Delete">
         Country: ${arrAddresses[i].country}, 
         City: ${arrAddresses[i].city}, 
         Street: ${arrAddresses[i].streetName}, 
@@ -511,6 +512,12 @@ export class ProfileForm extends BaseComponent {
       `;
       container.append(address);
     }
+    const btnAdd = document.createElement('img');
+    btnAdd.className = 'btn-svg btn-svg-add';
+    btnAdd.src = '/add.svg';
+    btnAdd.alt = 'Add address';
+    btnAdd.title = 'Add';
+    container.append(btnAdd);
   }
 
   private addAllAddress(): void {

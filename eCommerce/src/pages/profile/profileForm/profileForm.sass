@@ -132,27 +132,44 @@
   border-radius: 3px
   padding: 10px
 
-.btn-edit,
-.btn-delete
-  padding: 5px
-  background: none
-  border-radius: 3px
-  padding: 5px
-  font-weight: 700
-  cursor: pointer
-  color: white
-
-.btn-edit
-  border: solid 2px $color-border-selected
-
-.btn-delete
-  border: solid 2px $color-text-errors
+.controls-adresses-container__address-box
+  display: flex
+  flex-wrap: wrap
+  gap: 10px
+  align-items: center
+  cursor: default
+  user-select: none
+  transition: 0.7s
+  border-radius: 2px
 
 .profile-btns-container
   justify-content: center
   flex-wrap: wrap
   display: flex
   gap: 10px
+
+.btn-svg
+  width: 35px
+  height: 35px
+  padding: 5px
+  transition: 0.7s
+  border-radius: 3px
+
+.btn-svg-add
+  display: block
+  margin: auto
+
+@media (hover: hover)
+  .controls-adresses-container__address-box:hover
+    background: $color-button-background
+
+  .btn-svg:hover
+    cursor: pointer
+    transform: scale(1.1)
+
+.btn-svg:active
+  transition: 0.2s
+  transform: scale(0.8)
 
 .pofile-label
   color: gray

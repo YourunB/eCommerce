@@ -18,8 +18,33 @@ export class PageProduct extends BaseComponent {
   private productSwiperWrapper: BaseComponent;
   private productSwiperButtonPrev: BaseComponent;
   private productSwiperButtonNext: BaseComponent;
+  private modalSwiperWrapper: BaseComponent;
+  private modalSwiperButtonPrev: BaseComponent;
+  private modalSwiperButtonNext: BaseComponent;
+  private modalSwiper: BaseComponent;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
+
+    this.modalSwiper = new BaseComponent({
+      tagName: 'div',
+      classNames: 'modal',
+      parentNode: this.element,
+    });
+    this.modalSwiperWrapper = new BaseComponent({
+      tagName: 'div',
+      classNames: 'modal-swiper-wrapper',
+      parentNode: this.modalSwiper.getElement(),
+    });
+    this.modalSwiperButtonPrev = new BaseComponent({
+      tagName: 'div',
+      classNames: 'modal-swiper-button-prev',
+      parentNode: this.modalSwiper.getElement(),
+    });
+    this.modalSwiperButtonNext = new BaseComponent({
+      tagName: 'div',
+      classNames: 'modal-swiper-button-next',
+      parentNode: this.modalSwiper.getElement(),
+    });
     this.productSwiper = new BaseComponent({
       tagName: 'div',
       classNames: 'swiper',
@@ -96,6 +121,23 @@ export class PageProduct extends BaseComponent {
             name: 'src',
             value: image.url,
           });
+          // const modalSwiperSlide = new BaseComponent({
+          //   tagName: 'div',
+          //   classNames: 'modal-swiper-slide',
+          //   textContent: index.toString(),
+          //   parentNode: this.modalSwiperWrapper.getElement(),
+          // });
+
+          // const modalProductImg = new BaseComponent({
+          //   tagName: 'img',
+          //   classNames: 'modal-product-img',
+          //   parentNode: modalSwiperSlide.getElement(),
+          // });
+
+          // modalProductImg.setAttribute({
+          //   name: 'src',
+          //   value: image.url,
+          // });
         });
         this.renderSwiper();
       }
@@ -116,6 +158,31 @@ export class PageProduct extends BaseComponent {
       },
     });
 
+    const slides = document.querySelectorAll('.swiper-slide');
+    slides.forEach((slide) => {
+      slide.addEventListener('click', () => {
+        this.openModal();
+      });
+    });
+
     console.log(swiper);
   }
+  openModal = () => {
+    // const modalSwiper = new Swiper('.swiper', {
+    //   initialSlide: index,
+    //   slidesPerView: 1,
+    //   loop: true,
+    //   navigation: {
+    //     nextEl: '.swiper-button-next',
+    //     prevEl: '.swiper-button-prev',
+    //   },
+    //   observer: true,
+    //   observeParents: true,
+    //   observeSlideChildren: true,
+    // });
+    this.modalSwiper.insertChild(this.productSwiper.getElement());
+    this.modalSwiper.setClassName('modal-swiper_active');
+    this.productSwiper.setClassName('swiper_large');
+    // console.log(modalSwiper);
+  };
 }

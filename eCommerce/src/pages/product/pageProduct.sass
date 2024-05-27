@@ -2,6 +2,7 @@
 .page-product-container
   margin-top: 5%
   display: flex
+  min-width: 0
 
 .product-text_container
   display: flex
@@ -9,6 +10,7 @@
   width: 50%
   gap: 2%
   font-family: sans-serif
+
 
 .swiper
   display: flex
@@ -48,6 +50,22 @@
   color: $color-text-common
   padding-top: 2%
   border-top: 1px solid #97c293
+
+.modal-swiper
+  display: none
+
+.modal-swiper_active
+  display: flex
+  z-index:2
+  width: 70vw
+  height: 100vh
+  position: absolute
+  top: 1%
+  left: 10%
+
+.swiper_large
+  max-width: 800px
+  max-height: 800px
 
   
 @media(max-width: 768px) 

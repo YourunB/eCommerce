@@ -60,8 +60,8 @@ function checkBtnMenuCondition() {
   } else btnMenu.classList.add('btn-menu_cliked');
 }
 
-navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg);
-nav.append(logo, menu, navBtnsBox);
-header.append(nav, btnMenu);
+navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, btnMenu);
+nav.append(menu);
+header.append(logo, nav, navBtnsBox);
 
 export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo };

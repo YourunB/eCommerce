@@ -54,11 +54,15 @@ export class ProfileForm extends BaseComponent {
   private btnSaveProfile: Button;
   private btnEditPass: Button;
   private btnEditAddress: Button;
+  private btnCloseModalAddress: Button;
+  private btnSaveModalAddress: Button;
   private showPassword: BaseComponent;
   private label: BaseComponent;
   private btnsContainerSaveEdit: BaseComponent;
   private btnsContainerOpenEdit: BaseComponent;
   private adressesEditContainer: BaseComponent;
+  private modalAddressForm: BaseComponent;
+  private modalAddressFormBtnsContainer: BaseComponent;
   private adressesEditContainerTitle: BaseComponent;
   private adressesControlsContainer: BaseComponent;
   private btnCloseAddressesContainer: Button;
@@ -365,11 +369,53 @@ export class ProfileForm extends BaseComponent {
       this.adressesEditContainer.getElement().classList.add('unvisible');
     });
 
-    this.addressForm = new AddressForm({ parentNode: this.adressesEditContainer.getElement() });
+    this.modalAddressForm = new BaseComponent({
+      tagName: 'div',
+      classNames: ['modal-address', 'unvisible'],
+      parentNode: this.element,
+    });
+
+    this.addressForm = new AddressForm({ parentNode: this.modalAddressForm.getElement() });
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    this.adressesControlsContainer.getElement().addEventListener('click', (event) => {
+      const currentTarget = event.target as HTMLElement;
+      if (currentTarget.classList.contains('btn-svg-add')) {
+        this.overlay.getElement().classList.add('overlay_show');
+        this.modalAddressForm.getElement().classList.remove('unvisible');
+      }
+    });
+
+    this.modalAddressFormBtnsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
+      parentNode: this.modalAddressForm.getElement(),
+    });
+
+    this.btnCloseModalAddress = new Button({
+      textContent: 'Cancel',
+      classNames: 'profile__btn',
+      parentNode: this.modalAddressFormBtnsContainer.getElement(),
+    });
+
+    this.btnSaveModalAddress = new Button({
+      textContent: 'Save',
+      classNames: 'profile__btn',
+      parentNode: this.modalAddressFormBtnsContainer.getElement(),
+    });
+
+    this.btnCloseModalAddress.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.overlay.getElement().classList.remove('overlay_show');
+      this.modalAddressForm.getElement().classList.add('unvisible');
+    });
+
+    this.btnSaveModalAddress.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+    });
 
     this.btnsContainerOpenEdit = new BaseComponent({
       tagName: 'div',
@@ -508,6 +554,8 @@ export class ProfileForm extends BaseComponent {
       address.innerHTML = `
         <img class="btn-svg" src="/edit.svg" alt="Edit" title="Edit">
         <img class="btn-svg" src="/delete.svg" alt="Delete" title="Delete">
+        <label>Shipping<input type="checkbox"></label>
+        <label>Billing<input type="checkbox"></label>
         Country: ${arrAddresses[i].country}, 
         City: ${arrAddresses[i].city}, 
         Street: ${arrAddresses[i].streetName}, 

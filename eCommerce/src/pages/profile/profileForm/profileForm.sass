@@ -28,7 +28,7 @@
 .profile-country__input,
 .profile-city__input,
 .profile-postalCode__input
-  width: 70%
+  width: 100%
   margin: 0.5%
   border: none
   font-weight: 700
@@ -44,7 +44,7 @@
 .address-form
   display: flex
   flex-direction: column
-  width: 55%
+  width: 100%
   justify-content: center
   align-items: center
   border: none
@@ -142,6 +142,15 @@
   transition: 0.7s
   border-radius: 2px
 
+.modal-address
+  position: absolute
+  z-index: 201
+  max-width: 500px
+  width: 100%
+  border: solid 2px $color-border-selected
+  border-radius: 3px
+  padding: 10px
+
 .profile-btns-container
   justify-content: center
   flex-wrap: wrap
@@ -204,7 +213,7 @@
   padding: 30px
   border-radius: 2px
   position: fixed
-  z-index: 200
+  z-index: 300
   left: 50%
   top: 50%
   transform: translate(-50%, -50%)
@@ -225,7 +234,7 @@
   padding: 10px
   border-radius: 2px
   position: fixed
-  z-index: 101
+  z-index: 201
   left: 50%
   top: 50%
   transform: translate(-50%, -50%)
@@ -242,7 +251,7 @@
 .overlay
   display: none
   position: fixed
-  z-index: 100
+  z-index: 200
   left: 0
   top: 0
   backdrop-filter: blur(10px)

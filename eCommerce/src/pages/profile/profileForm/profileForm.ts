@@ -415,6 +415,28 @@ export class ProfileForm extends BaseComponent {
 
     this.btnSaveModalAddress.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      const newCustomerData = {
+        version: Number(state.customer.version),
+        actions: [
+          {
+            action: 'addAddress',
+            address: {
+              country: this.addressForm.inputCountryShipping.getElement().value,
+              city: this.addressForm.inputCityShipping.getElement().value,
+              streetName: this.addressForm.inputStreetShipping.getElement().value,
+              postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+            },
+          },
+        ],
+      };
+      updateCustomerApi(newCustomerData, state.access_token.access_token)
+        .then((result) => {
+          state.customer = result as Customer;
+          this.showMsg('Succes', true);
+        })
+        .catch((error) => {
+          this.showErrorMessage(error);
+        });
     });
 
     this.btnsContainerOpenEdit = new BaseComponent({

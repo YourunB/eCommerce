@@ -43,6 +43,7 @@ export class ProfileForm extends BaseComponent {
   private isSubmittedProfile: boolean;
   private isSubmittedPass: boolean;
   private isSubmittedAddress: boolean;
+  private isAddAddress: boolean;
   private inputEmail: InputWithNotice;
   private inputPassOld: InputWithNotice;
   private inputPassNew: InputWithNotice;
@@ -83,6 +84,7 @@ export class ProfileForm extends BaseComponent {
     this.isSubmittedPass = false;
     this.isSubmittedProfile = false;
     this.isSubmittedAddress = false;
+    this.isAddAddress = true;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     console.log(state.customer, state.access_token.access_token);
     // first name
@@ -387,11 +389,14 @@ export class ProfileForm extends BaseComponent {
     this.adressesControlsContainer.getElement().addEventListener('click', (event) => {
       const currentTarget = event.target as HTMLElement;
       if (currentTarget.classList.contains('btn-svg-add')) {
+        this.isAddAddress = true;
         this.overlay.getElement().classList.add('overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
       if (currentTarget.classList.contains('btn-svg-edit')) {
         this.isSubmittedAddress = true;
+        this.isAddAddress = false;
+        this.btnSaveModalAddress.getElement().dataset.id = currentTarget.dataset.id;
         this.addressForm.inputStreetShipping.getElement().value =
           state.customer.addresses[Number(currentTarget.dataset.index)].streetName || '';
         this.addressForm.inputCityShipping.getElement().value =
@@ -461,37 +466,73 @@ export class ProfileForm extends BaseComponent {
       event.preventDefault();
       this.isSubmittedAddress = true;
       if (this.validateEditAddress()) {
-        const newCustomerData = {
-          version: Number(state.customer.version),
-          actions: [
-            {
-              action: 'addAddress',
-              address: {
-                country: this.addressForm.inputCountryShipping.getElement().value,
-                city: this.addressForm.inputCityShipping.getElement().value,
-                streetName: this.addressForm.inputStreetShipping.getElement().value,
-                postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+        if (this.isAddAddress) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'addAddress',
+                address: {
+                  country: this.addressForm.inputCountryShipping.getElement().value,
+                  city: this.addressForm.inputCityShipping.getElement().value,
+                  streetName: this.addressForm.inputStreetShipping.getElement().value,
+                  postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+                },
               },
-            },
-          ],
-        };
-        updateCustomerApi(newCustomerData, state.access_token.access_token)
-          .then((result) => {
-            state.customer = result as Customer;
-            this.showMsg('Succes', true);
-            this.overlay.getElement().classList.add('overlay_show');
-            setTimeout(() => {
-              this.overlay.getElement().classList.remove('overlay_show');
-              this.modalAddressForm.getElement().classList.add('unvisible');
-              this.createAddressesOnControlPanel();
-              this.addAllAddress();
-            }, 2000);
-          })
-          .catch((error) => {
-            this.showErrorMessage(error);
-          });
-        this.clearAddressInputs();
-        this.isSubmittedAddress = false;
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.modalAddressForm.getElement().classList.add('unvisible');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+          this.clearAddressInputs();
+          this.isSubmittedAddress = false;
+        }
+        if (!this.isAddAddress) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'changeAddress',
+                addressId: this.btnSaveModalAddress.getElement().dataset.id,
+                address: {
+                  country: this.addressForm.inputCountryShipping.getElement().value,
+                  city: this.addressForm.inputCityShipping.getElement().value,
+                  streetName: this.addressForm.inputStreetShipping.getElement().value,
+                  postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+                },
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.modalAddressForm.getElement().classList.add('unvisible');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+          this.clearAddressInputs();
+          this.isSubmittedAddress = false;
+        }
       }
     });
 

@@ -1,13 +1,20 @@
-export type ActionsMain = {
-  type: 'change-category' | 'click-product' | 'change-limit' | 'change-price-filter' | 'change-offset' | 'change-sort';
+export type ActionsProducts = {
+  type:
+    | 'change-category'
+    | 'click-product'
+    | 'change-limit'
+    | 'change-price-filter'
+    | 'change-offset'
+    | 'change-sort'
+    | 'search';
   payload: {
     prop1: string;
     prop2: string;
   };
 };
 
-export type DispatchMain = {
-  (action: ActionsMain): void;
+export type DispatchProducts = {
+  (action: ActionsProducts): void;
 };
 
 export type MappedCategories = { name: string; id: string };

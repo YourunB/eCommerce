@@ -1,5 +1,5 @@
 import './pagination.sass';
-import { DispatchMain } from '../../../modules/products/types';
+import { DispatchProducts } from '../../../modules/products/types';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
 
@@ -7,11 +7,11 @@ const START_PAGE = 1;
 const COUNT_BUTTONS = 4;
 
 export class Pagination extends BaseComponent {
-  private dispatch: DispatchMain;
+  private dispatch: DispatchProducts;
   private _countPages: number;
   private _currentPage: number;
 
-  constructor(countPages: number, dispatch: DispatchMain) {
+  constructor(countPages: number, dispatch: DispatchProducts) {
     super({ tagName: 'div', classNames: 'pagination__container' });
     this.dispatch = dispatch;
     this._currentPage = START_PAGE;

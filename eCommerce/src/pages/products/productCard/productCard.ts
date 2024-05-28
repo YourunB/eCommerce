@@ -1,9 +1,9 @@
 import './productCard.sass';
 import { BaseComponent } from '../../../components/baseComponent';
-import { DispatchMain, MappedProducts } from '../../../modules/products/types';
+import { DispatchProducts, MappedProducts } from '../../../modules/products/types';
 
 export class ProductCard extends BaseComponent {
-  constructor(product: MappedProducts, dispatch: DispatchMain) {
+  constructor(product: MappedProducts, dispatch: DispatchProducts) {
     super({ tagName: 'div', classNames: 'product-card' });
     const imgConteiner = new BaseComponent({ tagName: 'div', classNames: 'product-card__img' });
     const img = new BaseComponent({

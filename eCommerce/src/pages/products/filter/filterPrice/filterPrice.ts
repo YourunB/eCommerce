@@ -1,8 +1,8 @@
 import './filterPrice.sass';
 import noUiSlider, { API } from 'nouislider';
-import { DispatchMain } from '../../../../modules/products/types';
 import { Input } from '../../../../components/baseInput/baseInput';
 import { BaseComponent } from '../../../../components/baseComponent';
+import { DispatchProducts } from '../../../../modules/products/types';
 import { Button } from '../../../../components/basebutton/baseButton';
 
 interface TargetElement extends HTMLElement {
@@ -17,7 +17,7 @@ export class FilterPrice extends BaseComponent {
   sliderObj: API | undefined;
   btnFilter: Button;
 
-  constructor(dispatch: DispatchMain) {
+  constructor(dispatch: DispatchProducts) {
     super({ tagName: 'div' });
     this.min = new Input({ attribute: { name: 'type', value: 'number' } });
     this.max = new Input({ attribute: { name: 'type', value: 'number' } });

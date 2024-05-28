@@ -390,6 +390,19 @@ export class ProfileForm extends BaseComponent {
         this.overlay.getElement().classList.add('overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
+      if (currentTarget.classList.contains('btn-svg-edit')) {
+        this.addressForm.inputStreetShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].streetName || '';
+        this.addressForm.inputCityShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].city || '';
+        this.addressForm.inputPostalCodeShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].postalCode || '';
+        this.addressForm.inputCountryShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].country || '';
+
+        this.overlay.getElement().classList.add('overlay_show');
+        this.modalAddressForm.getElement().classList.remove('unvisible');
+      }
     });
 
     this.modalAddressFormBtnsContainer = new BaseComponent({
@@ -585,8 +598,8 @@ export class ProfileForm extends BaseComponent {
       const address = document.createElement('div');
       address.classList.add('controls-adresses-container__address-box');
       address.innerHTML = `
-        <img class="btn-svg" src="/edit.svg" alt="Edit" title="Edit">
-        <img class="btn-svg" src="/delete.svg" alt="Delete" title="Delete">
+        <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i}>
+        <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i}>
         <label>Shipping<input type="checkbox"></label>
         <label>Billing<input type="checkbox"></label>
         Country: ${arrAddresses[i].country}, 

@@ -1,33 +1,33 @@
 @use './src/variables' as *
 
-.page-main-container
+.page-products-container
   display: grid
-  grid-template-areas: "hero hero" "filters goods"
+  grid-template-areas: "hero hero" "filters products" ".products-footer"
   grid-template-rows: 10rem auto
   grid-template-columns: 12rem auto
   gap: 1rem
   min-height: calc(100vh - 200px)
+  color: white
 
-  background-color: $color-bacground-common
-
-.page-main-hero
+.products__hero
   grid-area: hero
-  background-color: rgb(230, 240, 255)
+  background-color: white
+  color: $color-text-common
+  border-radius: 2px
 
-.page-main-filters
+.products__filters
+  top: 0
+  position: sticky
   grid-area: filters
-  background-color: rgb(230, 225, 215)
 
-.page-main-products__container
+.products__container
   display: grid
-  grid-area: goods
+  grid-area: products
   gap: 1rem
   grid-auto-rows: 20rem
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))
   justify-content: center
   transition-duration: 1000ms
-
-  background-color: $color-bacground-common
 
 .fadeout
   opacity: 0

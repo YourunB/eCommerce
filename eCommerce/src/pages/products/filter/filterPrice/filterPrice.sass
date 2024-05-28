@@ -1,0 +1,55 @@
+@use './src/variables' as *
+@import 'nouislider/dist/nouislider.css'
+
+#price-slider
+  margin-bottom: 1rem
+  padding: 0 7px
+  height: 4px
+
+#price-slider,
+#price-slider .noUi-touch-area
+  cursor: pointer
+
+#price-slider
+  border: none
+  box-shadow: none
+
+#price-slider,
+#price-slider .noUi-base
+  background-color: color-mix(in srgb, $color-button-background 20%, white)
+
+#price-slider .noUi-connect
+  background-color: $color-button-background
+
+#price-slider .noUi-handle
+  height: 18px
+  width: 18px
+  top: -7px
+  right: -9px
+  border-radius: 9px
+  border: 2px solid $color-bacground-common
+  background-color: $color-button-background
+  box-shadow: none
+
+#price-slider .noUi-handle-upper,
+#price-slider .noUi-handle-lower
+  &::before,
+  &::after
+    width: 0
+
+.filter-price__header
+  padding: 0
+  margin: 0 0 1rem 0
+  font-size: 1.1rem
+  font-weight: 700
+  line-height: 2.5rem
+  user-select: none
+
+.filter-price__inputs-container
+  display: flex
+  gap: 1rem
+  margin-bottom: 1rem
+
+  & input
+    width: 100%
+    padding: 0.3rem 0.5rem

@@ -417,6 +417,12 @@ export class ProfileForm extends BaseComponent {
           .then((result) => {
             state.customer = result as Customer;
             this.showMsg('Succes', true);
+            this.overlay.getElement().classList.add('overlay_show');
+            setTimeout(() => {
+              this.overlay.getElement().classList.remove('overlay_show');
+              this.createAddressesOnControlPanel();
+              this.addAllAddress();
+            }, 2000);
           })
           .catch((error) => {
             this.showErrorMessage(error);
@@ -473,6 +479,13 @@ export class ProfileForm extends BaseComponent {
           .then((result) => {
             state.customer = result as Customer;
             this.showMsg('Succes', true);
+            this.overlay.getElement().classList.add('overlay_show');
+            setTimeout(() => {
+              this.overlay.getElement().classList.remove('overlay_show');
+              this.modalAddressForm.getElement().classList.add('unvisible');
+              this.createAddressesOnControlPanel();
+              this.addAllAddress();
+            }, 2000);
           })
           .catch((error) => {
             this.showErrorMessage(error);
@@ -564,6 +577,8 @@ export class ProfileForm extends BaseComponent {
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
+        this.overlay.getElement().classList.add('overlay_show');
+        setTimeout(() => this.overlay.getElement().classList.remove('overlay_show'), 2000);
         const newCustomerData = {
           version: Number(state.customer.version),
           actions: [
@@ -637,6 +652,7 @@ export class ProfileForm extends BaseComponent {
   }
 
   private addAllAddress(): void {
+    this.addressContainer.getElement().innerHTML = '';
     const arrAddresses = state.customer.addresses;
     for (let i = 0; i < arrAddresses.length; i += 1) {
       const address = document.createElement('p');

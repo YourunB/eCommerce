@@ -68,7 +68,6 @@ export class ProfileForm extends BaseComponent {
   private adressesEditContainerTitle: BaseComponent;
   private adressesControlsContainer: BaseComponent;
   private btnCloseAddressesContainer: Button;
-  private btnSaveAddressesContainer: Button;
   private adressesBtnsContainer: BaseComponent;
   private addressContainer: BaseComponent;
   private overlay: BaseComponent;
@@ -359,16 +358,11 @@ export class ProfileForm extends BaseComponent {
     });
     //btn close addresses container
     this.btnCloseAddressesContainer = new Button({
-      textContent: 'Cancel',
+      textContent: 'Back',
       classNames: 'profile__btn',
       parentNode: this.adressesBtnsContainer.getElement(),
     });
 
-    this.btnSaveAddressesContainer = new Button({
-      textContent: 'Save',
-      classNames: 'profile__btn',
-      parentNode: this.adressesBtnsContainer.getElement(),
-    });
     this.btnCloseAddressesContainer.getElement().addEventListener('click', (event) => {
       event.preventDefault();
       this.adressesEditContainer.getElement().classList.add('unvisible');

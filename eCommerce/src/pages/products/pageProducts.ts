@@ -5,20 +5,20 @@ import { ProductCard } from './productCard/productCard';
 import { BaseComponent } from '../../components/baseComponent';
 import { PropsFilters, SectionFilters } from './filter/filter';
 import { ProductsFooter } from './productsFooter/productsFooter';
-import { DispatchMain, MappedProducts } from '../../modules/products/types';
+import { DispatchProducts, MappedProducts } from '../../modules/products/types';
 import { Dialog, TypeMessage } from '../../components/modalDialog/modalDialog';
 
 const TRANSITION_DURATION = 1000;
 
 export class PageProducts extends BaseComponent {
-  private dispatch: DispatchMain;
+  private dispatch: DispatchProducts;
   private footer: ProductsFooter;
   private sectionSort: SectionSort;
   private sectionProducts: BaseComponent;
   private sectionFilters: SectionFilters;
   private dialog: Dialog;
 
-  constructor(limits: string[], countPages: number, dispatch: DispatchMain) {
+  constructor(limits: string[], countPages: number, dispatch: DispatchProducts) {
     super({ tagName: 'article', classNames: 'page-products-container' });
     this.dispatch = dispatch;
     this.dialog = Dialog.getInstance();
@@ -29,6 +29,10 @@ export class PageProducts extends BaseComponent {
     this.footer = new ProductsFooter(limits, countPages, dispatch);
 
     this.insertChildren([sectionHero, this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
+  }
+
+  public setSearchDataList(values: string[]): void {
+    this.sectionSort.setSearchDataList(values);
   }
 
   public showDialog(text: string, type: TypeMessage = 'info'): void {

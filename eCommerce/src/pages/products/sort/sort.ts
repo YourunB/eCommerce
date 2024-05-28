@@ -1,6 +1,7 @@
 import './sort.sass';
+import { SectionSearch } from '../search/search';
 import { BaseComponent } from '../../../components/baseComponent';
-import { ActionsMain, DispatchMain } from '../../../modules/products/types';
+import { ActionsProducts, DispatchProducts } from '../../../modules/products/types';
 
 export type SortDirection = 'asc' | 'desc';
 export type SortField = 'price' | 'name.en-GB' | 'createdAt';
@@ -16,9 +17,10 @@ const options: SortOption[] = [
 ];
 
 export class SectionSort extends BaseComponent {
-  dispatch: DispatchMain;
+  dispatch: DispatchProducts;
+  sectionSearch: SectionSearch;
 
-  constructor(dispatch: DispatchMain) {
+  constructor(dispatch: DispatchProducts) {
     super({ tagName: 'div', classNames: 'products__sort-container' });
     this.dispatch = dispatch;
     const label = new BaseComponent({ tagName: 'label', textContent: 'Sort by:', classNames: 'sort__label' });
@@ -32,16 +34,21 @@ export class SectionSort extends BaseComponent {
       option.setAttribute({ name: 'value', value: `${field}*${direction}` });
       select.insertChild(option);
     });
+    this.sectionSearch = new SectionSearch(dispatch);
 
     select.getElement().addEventListener('change', (e) => this.handleChange(e));
-    this.insertChildren([label, select]);
+    this.insertChildren([label, select, this.sectionSearch]);
+  }
+
+  public setSearchDataList(values: string[]): void {
+    this.sectionSearch.setDataList(values);
   }
 
   private handleChange(e: Event): void {
     const { target } = e;
     if (target instanceof HTMLSelectElement) {
       const [field, direction] = target.value.split('*');
-      const action: ActionsMain = { type: 'change-sort', payload: { prop1: field, prop2: direction } };
+      const action: ActionsProducts = { type: 'change-sort', payload: { prop1: field, prop2: direction } };
       this.dispatch(action);
     }
   }

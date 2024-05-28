@@ -5,11 +5,12 @@ import { filterSort } from '../../components/helpers/filterSort';
 import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
 import { filterOffset } from '../../components/helpers/filterOffset';
+import { filterSearch } from '../../components/helpers/filterSearch';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
 import { SortDirection, SortField } from '../../pages/products/sort/sort';
 import { filterСentAmount } from '../../components/helpers/filterСentAmount';
-import { ActionsMain, FilterRules, MappedCategories, MappedProducts } from './types';
+import { ActionsProducts, FilterRules, MappedCategories, MappedProducts } from './types';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
 import { isMappedCategories, isMappedProducts, isProductProjection } from '../../components/helpers/predicates';
 
@@ -72,7 +73,7 @@ export class Products {
     this.page.showDialog(error);
   }
 
-  public dispatch = (action: ActionsMain) => {
+  public dispatch = (action: ActionsProducts) => {
     const { type } = action;
     this.prop1 = action.payload.prop1;
     this.prop2 = action.payload.prop2;
@@ -107,6 +108,11 @@ export class Products {
         this.addFilter(filterSort, `${this.prop1} ${this.prop2}`);
         this.procesProducts(true);
         break;
+      case 'search':
+        this.currentPage = 1;
+        this.addFilter(filterSearch, `${this.prop1}`);
+        this.procesProducts(true);
+        break;
     }
   };
 
@@ -115,6 +121,7 @@ export class Products {
     this.getProducts()
       .then((products) => {
         if (isMappedProducts(products)) {
+          this.page.setSearchDataList(products.map((product) => product.name));
           this.page.renderProducts(products, fadeout);
         } else {
           this.page.renderEmptyCard();

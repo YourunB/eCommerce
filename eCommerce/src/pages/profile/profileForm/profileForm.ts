@@ -393,6 +393,62 @@ export class ProfileForm extends BaseComponent {
         this.overlay.getElement().classList.add('overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
+      if (currentTarget.classList.contains('billing-address')) {
+        const checkBox = currentTarget as HTMLInputElement;
+        if (checkBox.checked) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'setDefaultBillingAddress',
+                addressId: currentTarget.dataset.id,
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+        }
+      }
+      if (currentTarget.classList.contains('shipping-address')) {
+        const checkBox = currentTarget as HTMLInputElement;
+        if (checkBox.checked) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'setDefaultShippingAddress',
+                addressId: currentTarget.dataset.id,
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+        }
+      }
       if (currentTarget.classList.contains('btn-svg-edit')) {
         this.isSubmittedAddress = true;
         this.isAddAddress = false;
@@ -675,8 +731,8 @@ export class ProfileForm extends BaseComponent {
       address.innerHTML = `
         <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i} data-id=${arrAddresses[i].id}>
         <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
-        <label>Shipping<input type="checkbox"></label>
-        <label>Billing<input type="checkbox"></label>
+        <label>Shipping<input class="shipping-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? 'checked' : null} type="checkbox"></label>
+        <label>Billing<input class="billing-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? 'checked' : null} type="checkbox"></label>
         Country: ${arrAddresses[i].country}, 
         City: ${arrAddresses[i].city}, 
         Street: ${arrAddresses[i].streetName}, 

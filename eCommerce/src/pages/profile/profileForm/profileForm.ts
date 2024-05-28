@@ -391,6 +391,7 @@ export class ProfileForm extends BaseComponent {
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
       if (currentTarget.classList.contains('btn-svg-edit')) {
+        this.isSubmittedAddress = true;
         this.addressForm.inputStreetShipping.getElement().value =
           state.customer.addresses[Number(currentTarget.dataset.index)].streetName || '';
         this.addressForm.inputCityShipping.getElement().value =
@@ -399,9 +400,27 @@ export class ProfileForm extends BaseComponent {
           state.customer.addresses[Number(currentTarget.dataset.index)].postalCode || '';
         this.addressForm.inputCountryShipping.getElement().value =
           state.customer.addresses[Number(currentTarget.dataset.index)].country || '';
-
         this.overlay.getElement().classList.add('overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
+      }
+      if (currentTarget.classList.contains('btn-svg-delete')) {
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: 'removeAddress',
+              addressId: currentTarget.dataset.id,
+            },
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            this.showMsg('Succes', true);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
       }
     });
 
@@ -598,8 +617,8 @@ export class ProfileForm extends BaseComponent {
       const address = document.createElement('div');
       address.classList.add('controls-adresses-container__address-box');
       address.innerHTML = `
-        <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i}>
-        <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i}>
+        <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i} data-id=${arrAddresses[i].id}>
+        <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
         <label>Shipping<input type="checkbox"></label>
         <label>Billing<input type="checkbox"></label>
         Country: ${arrAddresses[i].country}, 

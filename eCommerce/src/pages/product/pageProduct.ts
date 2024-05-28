@@ -18,33 +18,29 @@ export class PageProduct extends BaseComponent {
   private productSwiperWrapper: BaseComponent;
   private productSwiperButtonPrev: BaseComponent;
   private productSwiperButtonNext: BaseComponent;
-  private modalSwiperWrapper: BaseComponent;
-  private modalSwiperButtonPrev: BaseComponent;
-  private modalSwiperButtonNext: BaseComponent;
+  private overlay: BaseComponent;
   private modalSwiper: BaseComponent;
+  private closeModalButton: BaseComponent;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
 
-    this.modalSwiper = new BaseComponent({
+    this.overlay = new BaseComponent({
       tagName: 'div',
-      classNames: 'modal',
+      classNames: 'overlay',
       parentNode: this.element,
     });
-    this.modalSwiperWrapper = new BaseComponent({
+
+    this.modalSwiper = new BaseComponent({
       tagName: 'div',
-      classNames: 'modal-swiper-wrapper',
+      classNames: 'modal-swiper',
+      parentNode: this.element,
+    });
+    this.closeModalButton = new BaseComponent({
+      tagName: 'button',
+      classNames: 'close-button',
       parentNode: this.modalSwiper.getElement(),
     });
-    this.modalSwiperButtonPrev = new BaseComponent({
-      tagName: 'div',
-      classNames: 'modal-swiper-button-prev',
-      parentNode: this.modalSwiper.getElement(),
-    });
-    this.modalSwiperButtonNext = new BaseComponent({
-      tagName: 'div',
-      classNames: 'modal-swiper-button-next',
-      parentNode: this.modalSwiper.getElement(),
-    });
+    this.closeModalButton.getElement().addEventListener('click', this.closeModal);
     this.productSwiper = new BaseComponent({
       tagName: 'div',
       classNames: 'swiper',
@@ -55,6 +51,7 @@ export class PageProduct extends BaseComponent {
       classNames: 'swiper-wrapper',
       parentNode: this.productSwiper.getElement(),
     });
+
     this.productSwiperButtonPrev = new BaseComponent({
       tagName: 'div',
       classNames: 'swiper-button-prev',
@@ -103,11 +100,10 @@ export class PageProduct extends BaseComponent {
         data.masterData.current.description ? data.masterData.current.description['en-GB'] : ''
       );
       if (data.masterData.staged.masterVariant.images) {
-        data.masterData.staged.masterVariant.images.forEach((image, index) => {
+        data.masterData.staged.masterVariant.images.forEach((image) => {
           const productSwiperSlide = new BaseComponent({
             tagName: 'div',
             classNames: 'swiper-slide',
-            textContent: index.toString(),
             parentNode: this.productSwiperWrapper.getElement(),
           });
 
@@ -121,23 +117,6 @@ export class PageProduct extends BaseComponent {
             name: 'src',
             value: image.url,
           });
-          // const modalSwiperSlide = new BaseComponent({
-          //   tagName: 'div',
-          //   classNames: 'modal-swiper-slide',
-          //   textContent: index.toString(),
-          //   parentNode: this.modalSwiperWrapper.getElement(),
-          // });
-
-          // const modalProductImg = new BaseComponent({
-          //   tagName: 'img',
-          //   classNames: 'modal-product-img',
-          //   parentNode: modalSwiperSlide.getElement(),
-          // });
-
-          // modalProductImg.setAttribute({
-          //   name: 'src',
-          //   value: image.url,
-          // });
         });
         this.renderSwiper();
       }
@@ -150,7 +129,6 @@ export class PageProduct extends BaseComponent {
     const swiper = new Swiper('.swiper', {
       slidesPerView: 1,
       centeredSlides: true,
-      loop: true,
       modules: [Navigation],
       navigation: {
         nextEl: '.swiper-button-next',
@@ -158,31 +136,46 @@ export class PageProduct extends BaseComponent {
       },
     });
 
-    const slides = document.querySelectorAll('.swiper-slide');
-    slides.forEach((slide) => {
-      slide.addEventListener('click', () => {
-        this.openModal();
+    const slides = this.productSwiperWrapper.getChildren();
+    slides.forEach((slide, index) => {
+      const [image] = slide.children;
+      image.addEventListener('click', () => {
+        this.openModal(index);
+        console.log(slides);
+        console.log(index);
       });
     });
 
     console.log(swiper);
   }
-  openModal = () => {
-    // const modalSwiper = new Swiper('.swiper', {
-    //   initialSlide: index,
-    //   slidesPerView: 1,
-    //   loop: true,
-    //   navigation: {
-    //     nextEl: '.swiper-button-next',
-    //     prevEl: '.swiper-button-prev',
-    //   },
-    //   observer: true,
-    //   observeParents: true,
-    //   observeSlideChildren: true,
-    // });
-    this.modalSwiper.insertChild(this.productSwiper.getElement());
+  openModal = (index: number) => {
     this.modalSwiper.setClassName('modal-swiper_active');
-    this.productSwiper.setClassName('swiper_large');
-    // console.log(modalSwiper);
+    this.overlay.setClassName('overlay_active');
+    const modal = this.productSwiper.getElement().cloneNode(true);
+    this.modalSwiper.getElement().appendChild(modal);
+    const swiper = new Swiper('.swiper', {
+      slidesPerView: 1,
+      initialSlide: index,
+      centeredSlides: true,
+      modules: [Navigation],
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+    const modalChildren = this.modalSwiper.getElement().children;
+
+    this.closeModalButton.getElement().addEventListener('click', () => {
+      const [firstChild, secondChild] = modalChildren;
+      if (secondChild && firstChild) {
+        this.modalSwiper.getElement().removeChild(secondChild);
+      }
+    });
+    console.log(swiper);
+  };
+
+  closeModal = () => {
+    this.modalSwiper.removeClassName('modal-swiper_active');
+    this.overlay.removeClassName('overlay_active');
   };
 }

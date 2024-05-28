@@ -153,6 +153,7 @@ export class PageProduct extends BaseComponent {
       this.modalSwiper.setClassName('modal-swiper_active');
       this.overlay.setClassName('overlay_active');
       const modal = this.productSwiper.getElement().cloneNode(true);
+      (modal as HTMLElement).classList.add('slider-enlarge');
       this.modalSwiper.getElement().appendChild(modal);
       const swiper = new Swiper('.swiper', {
         slidesPerView: 1,

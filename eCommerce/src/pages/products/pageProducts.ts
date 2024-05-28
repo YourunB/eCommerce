@@ -1,4 +1,5 @@
 import './pageProducts.sass';
+import { SectionSort } from './sort/sort';
 import { EmptyCard } from './productCard/emptyCard';
 import { ProductCard } from './productCard/productCard';
 import { BaseComponent } from '../../components/baseComponent';
@@ -12,6 +13,7 @@ const TRANSITION_DURATION = 1000;
 export class PageProducts extends BaseComponent {
   private dispatch: DispatchMain;
   private footer: ProductsFooter;
+  private sectionSort: SectionSort;
   private sectionProducts: BaseComponent;
   private sectionFilters: SectionFilters;
   private dialog: Dialog;
@@ -23,9 +25,10 @@ export class PageProducts extends BaseComponent {
     const sectionHero = new BaseComponent({ tagName: 'section', classNames: 'products__hero', textContent: 'hero' });
     this.sectionProducts = new BaseComponent({ tagName: 'section', classNames: 'products__container' });
     this.sectionFilters = new SectionFilters(dispatch);
+    this.sectionSort = new SectionSort(dispatch);
     this.footer = new ProductsFooter(limits, countPages, dispatch);
 
-    this.insertChildren([sectionHero, this.sectionFilters, this.sectionProducts, this.footer]);
+    this.insertChildren([sectionHero, this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
   }
 
   public showDialog(text: string, type: TypeMessage = 'info'): void {
@@ -42,6 +45,7 @@ export class PageProducts extends BaseComponent {
 
   set buttons(status: 'enabled' | 'disabled') {
     this.footer.buttons = status;
+    this.sectionSort.buttons = status;
   }
 
   public resetProducts(): void {

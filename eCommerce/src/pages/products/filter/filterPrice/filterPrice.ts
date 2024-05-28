@@ -15,6 +15,7 @@ export class FilterPrice extends BaseComponent {
   min: Input;
   max: Input;
   sliderObj: API | undefined;
+  btnFilter: Button;
 
   constructor(dispatch: DispatchMain) {
     super({ tagName: 'div' });
@@ -22,7 +23,7 @@ export class FilterPrice extends BaseComponent {
     this.max = new Input({ attribute: { name: 'type', value: 'number' } });
     const header = new BaseComponent({ tagName: 'p', classNames: 'filter-price__header', textContent: 'Price Range' });
     const slider = new BaseComponent({ tagName: 'div', attribute: { name: 'id', value: 'price-slider' } });
-    const btnFilter = new Button({ textContent: 'Filter' });
+    this.btnFilter = new Button({ textContent: 'Filter' });
     const inputContainer = new BaseComponent({ tagName: 'div', classNames: 'filter-price__inputs-container' });
 
     this.min.setAttribute({ name: 'name', value: 'min' });
@@ -32,7 +33,7 @@ export class FilterPrice extends BaseComponent {
     noUiSlider.create(slider.getElement(), {
       connect: true,
       start: [0, MAX_FILTER],
-      margin: 10,
+      margin: 1,
       range: { min: 0, max: MAX_FILTER },
       format: {
         to: (value) => `${value.toFixed(0)}`,
@@ -42,11 +43,13 @@ export class FilterPrice extends BaseComponent {
 
     this.sliderObj = (slider.getElement() as unknown as TargetElement).noUiSlider;
     this.sliderObj?.on('update', (values, handle) => {
+      this.btnFilter.on();
       inputs[handle].value = `${values[handle]}`;
     });
-    btnFilter.setOnclick(() => {
+    this.btnFilter.setOnclick(() => {
       const result = this.sliderObj?.get() || [0, MAX_FILTER];
       if (Array.isArray(result)) {
+        this.btnFilter.off();
         dispatch({ type: 'change-price-filter', payload: { prop1: `${result[0]}`, prop2: `${result[1]}` } });
       }
     });
@@ -54,10 +57,12 @@ export class FilterPrice extends BaseComponent {
     this.max.getElement().addEventListener('change', () => this.handleChangeInput());
 
     inputContainer.insertChildren([this.min, this.max]);
-    this.insertChildren([header, slider, inputContainer, btnFilter]);
+    this.insertChildren([header, slider, inputContainer, this.btnFilter]);
+    this.btnFilter.off();
   }
 
   private handleChangeInput(): void {
+    this.btnFilter.on();
     this.sliderObj?.set([this.min.value, this.max.value]);
   }
 }

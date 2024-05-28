@@ -1,11 +1,13 @@
 import state from '../../state/state';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
+import { filterSort } from '../../components/helpers/filterSort';
 import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
 import { filterOffset } from '../../components/helpers/filterOffset';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
+import { SortDirection, SortField } from '../../pages/products/sort/sort';
 import { filterСentAmount } from '../../components/helpers/filterСentAmount';
 import { ActionsMain, FilterRules, MappedCategories, MappedProducts } from './types';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
@@ -13,6 +15,8 @@ import { isMappedCategories, isMappedProducts, isProductProjection } from '../..
 
 const START_PAGE = 1;
 const DEFAULT_LIMIT = '10';
+const DEFAULT_SORT_FIELD: SortField = 'price';
+const DEFAULT_SORT_DIRECTION: SortDirection = 'asc';
 
 export class Products {
   private filter: Map<FilterRules, string> = new Map(); // Map of functions (filters) to construct filter query
@@ -24,15 +28,18 @@ export class Products {
   private _currentOffset: string;
   private _currentPage: number;
   private currentLimit: string;
+  private currentSort: [SortField, SortDirection];
 
   constructor() {
     this._currentOffset = '0';
     this._currentPage = START_PAGE;
+    this.currentSort = [DEFAULT_SORT_FIELD, DEFAULT_SORT_DIRECTION];
     this.currentLimit = state.limits[0] || DEFAULT_LIMIT;
     this.categoriesList = new Error();
     this.page = new PageProducts(state.limits, this._currentPage, this.dispatch);
     this.addFilter(filterLimit, this.currentLimit);
     this.addFilter(filterOffset, this.currentOffset);
+    this.addFilter(filterSort, `${this.currentSort[0]} ${this.currentSort[1]}`);
   }
 
   get currentOffset(): string {
@@ -94,6 +101,10 @@ export class Products {
         break;
       case 'change-offset':
         this.currentPage = +this.prop1;
+        this.procesProducts(true);
+        break;
+      case 'change-sort':
+        this.addFilter(filterSort, `${this.prop1} ${this.prop2}`);
         this.procesProducts(true);
         break;
     }

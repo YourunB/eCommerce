@@ -2,7 +2,7 @@
 
 .page-products-container
   display: grid
-  grid-template-areas: "hero hero" "filters products" ".products-footer"
+  grid-template-areas: "hero hero" "filters sort" "filters products" ".products-footer"
   grid-template-rows: 10rem auto
   grid-template-columns: 12rem auto
   gap: 1rem
@@ -19,6 +19,9 @@
   top: 0
   position: sticky
   grid-area: filters
+
+.products__sort-container
+  grid-area: sort
 
 .products__container
   display: grid

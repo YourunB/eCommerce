@@ -29,7 +29,7 @@ export class PageProduct extends BaseComponent {
       classNames: 'overlay',
       parentNode: this.element,
     });
-
+    this.overlay.getElement().addEventListener('click', () => this.switchModal(false));
     this.modalSwiper = new BaseComponent({
       tagName: 'div',
       classNames: 'modal-swiper',
@@ -40,7 +40,7 @@ export class PageProduct extends BaseComponent {
       classNames: 'close-button',
       parentNode: this.modalSwiper.getElement(),
     });
-    this.closeModalButton.getElement().addEventListener('click', this.closeModal);
+    this.closeModalButton.getElement().addEventListener('click', () => this.switchModal(false));
     this.productSwiper = new BaseComponent({
       tagName: 'div',
       classNames: 'swiper',
@@ -140,7 +140,7 @@ export class PageProduct extends BaseComponent {
     slides.forEach((slide, index) => {
       const [image] = slide.children;
       image.addEventListener('click', () => {
-        this.openModal(index);
+        this.switchModal(true, index);
         console.log(slides);
         console.log(index);
       });
@@ -148,34 +148,32 @@ export class PageProduct extends BaseComponent {
 
     console.log(swiper);
   }
-  openModal = (index: number) => {
-    this.modalSwiper.setClassName('modal-swiper_active');
-    this.overlay.setClassName('overlay_active');
-    const modal = this.productSwiper.getElement().cloneNode(true);
-    this.modalSwiper.getElement().appendChild(modal);
-    const swiper = new Swiper('.swiper', {
-      slidesPerView: 1,
-      initialSlide: index,
-      centeredSlides: true,
-      modules: [Navigation],
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-    const modalChildren = this.modalSwiper.getElement().children;
-
-    this.closeModalButton.getElement().addEventListener('click', () => {
+  switchModal = (isOpen: boolean, index?: number) => {
+    if (isOpen) {
+      this.modalSwiper.setClassName('modal-swiper_active');
+      this.overlay.setClassName('overlay_active');
+      const modal = this.productSwiper.getElement().cloneNode(true);
+      this.modalSwiper.getElement().appendChild(modal);
+      const swiper = new Swiper('.swiper', {
+        slidesPerView: 1,
+        initialSlide: index,
+        centeredSlides: true,
+        modules: [Navigation],
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+      console.log(swiper);
+    }
+    if (!isOpen) {
+      const modalChildren = this.modalSwiper.getElement().children;
       const [firstChild, secondChild] = modalChildren;
       if (secondChild && firstChild) {
         this.modalSwiper.getElement().removeChild(secondChild);
       }
-    });
-    console.log(swiper);
-  };
-
-  closeModal = () => {
-    this.modalSwiper.removeClassName('modal-swiper_active');
-    this.overlay.removeClassName('overlay_active');
+      this.modalSwiper.removeClassName('modal-swiper_active');
+      this.overlay.removeClassName('overlay_active');
+    }
   };
 }

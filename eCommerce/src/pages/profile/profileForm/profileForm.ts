@@ -32,6 +32,9 @@ import { PageProfilePropsType } from '../../../modules/profil/helpers/types';
 import { isErrorResponse } from '../../../components/helpers/predicates'; // remove isAuthResponse, isCustomerSignInResult,
 import state from '../../../state/state';
 import { Login } from '../../../modules/login/login';
+import '../../../assets/images/svg/add.svg';
+import '../../../assets/images/svg/edit.svg';
+import '../../../assets/images/svg/delete.svg';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
@@ -39,6 +42,8 @@ const lstorage = new LStorage();
 export class ProfileForm extends BaseComponent {
   private isSubmittedProfile: boolean;
   private isSubmittedPass: boolean;
+  private isSubmittedAddress: boolean;
+  private isAddAddress: boolean;
   private inputEmail: InputWithNotice;
   private inputPassOld: InputWithNotice;
   private inputPassNew: InputWithNotice;
@@ -51,10 +56,19 @@ export class ProfileForm extends BaseComponent {
   private btnSaveProfile: Button;
   private btnEditPass: Button;
   private btnEditAddress: Button;
+  private btnCloseModalAddress: Button;
+  private btnSaveModalAddress: Button;
   private showPassword: BaseComponent;
   private label: BaseComponent;
   private btnsContainerSaveEdit: BaseComponent;
   private btnsContainerOpenEdit: BaseComponent;
+  private adressesEditContainer: BaseComponent;
+  private modalAddressForm: BaseComponent;
+  private modalAddressFormBtnsContainer: BaseComponent;
+  private adressesEditContainerTitle: BaseComponent;
+  private adressesControlsContainer: BaseComponent;
+  private btnCloseAddressesContainer: Button;
+  private adressesBtnsContainer: BaseComponent;
   private addressContainer: BaseComponent;
   private overlay: BaseComponent;
   private modalEditPass: BaseComponent;
@@ -68,6 +82,8 @@ export class ProfileForm extends BaseComponent {
     super({ tagName: 'form', classNames: 'profile-form-container', ...props });
     this.isSubmittedPass = false;
     this.isSubmittedProfile = false;
+    this.isSubmittedAddress = false;
+    this.isAddAddress = true;
     //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
     console.log(state.customer, state.access_token.access_token);
     // first name
@@ -299,6 +315,7 @@ export class ProfileForm extends BaseComponent {
             });
           this.overlay.getElement().classList.remove('overlay_show');
           this.modalEditPass.getElement().classList.remove('modal-pass_show');
+          this.isSubmittedPass = false;
         }
       } catch (error) {
         this.showErrorMessage(error);
@@ -315,15 +332,259 @@ export class ProfileForm extends BaseComponent {
       this.inputPassNew.getElement().value = '';
     });
 
-    this.addressForm = new AddressForm({ parentNode: this.element });
+    //adress control panel
+    this.adressesEditContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['edit-adresses-container', 'unvisible'],
+      parentNode: this.element,
+    });
+
+    this.adressesEditContainerTitle = new BaseComponent({
+      tagName: 'h3',
+      parentNode: this.adressesEditContainer.getElement(),
+      textContent: 'Address Control Panel',
+    });
+
+    this.adressesControlsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['controls-adresses-container'],
+      parentNode: this.adressesEditContainer.getElement(),
+    });
+
+    this.adressesBtnsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
+      parentNode: this.adressesEditContainer.getElement(),
+    });
+    //btn close addresses container
+    this.btnCloseAddressesContainer = new Button({
+      textContent: 'Back',
+      classNames: 'profile__btn',
+      parentNode: this.adressesBtnsContainer.getElement(),
+    });
+
+    this.btnCloseAddressesContainer.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.adressesEditContainer.getElement().classList.add('unvisible');
+    });
+
+    this.modalAddressForm = new BaseComponent({
+      tagName: 'div',
+      classNames: ['modal-address', 'unvisible'],
+      parentNode: this.element,
+    });
+
+    this.addressForm = new AddressForm({ parentNode: this.modalAddressForm.getElement() });
     this.addressForm.inputStreetShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputStreetBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCityShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCityBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputPostalCodeShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputPostalCodeBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
     this.addressForm.inputCountryShipping.getElement().addEventListener('keyup', () => this.handleChangeInput());
-    this.addressForm.inputCountryBilling.getElement().addEventListener('keyup', () => this.handleChangeInput());
+
+    this.adressesControlsContainer.getElement().addEventListener('click', (event) => {
+      const currentTarget = event.target as HTMLElement;
+      if (currentTarget.classList.contains('btn-svg-add')) {
+        this.isAddAddress = true;
+        this.overlay.getElement().classList.add('overlay_show');
+        this.modalAddressForm.getElement().classList.remove('unvisible');
+      }
+      if (currentTarget.classList.contains('billing-address')) {
+        const checkBox = currentTarget as HTMLInputElement;
+        if (checkBox.checked) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'setDefaultBillingAddress',
+                addressId: currentTarget.dataset.id,
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+        }
+      }
+      if (currentTarget.classList.contains('shipping-address')) {
+        const checkBox = currentTarget as HTMLInputElement;
+        if (checkBox.checked) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'setDefaultShippingAddress',
+                addressId: currentTarget.dataset.id,
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+        }
+      }
+      if (currentTarget.classList.contains('btn-svg-edit')) {
+        this.isSubmittedAddress = true;
+        this.isAddAddress = false;
+        this.btnSaveModalAddress.getElement().dataset.id = currentTarget.dataset.id;
+        this.addressForm.inputStreetShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].streetName || '';
+        this.addressForm.inputCityShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].city || '';
+        this.addressForm.inputPostalCodeShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].postalCode || '';
+        this.addressForm.inputCountryShipping.getElement().value =
+          state.customer.addresses[Number(currentTarget.dataset.index)].country || '';
+        this.overlay.getElement().classList.add('overlay_show');
+        this.modalAddressForm.getElement().classList.remove('unvisible');
+      }
+      if (currentTarget.classList.contains('btn-svg-delete')) {
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: 'removeAddress',
+              addressId: currentTarget.dataset.id,
+            },
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            this.showMsg('Succes', true);
+            this.overlay.getElement().classList.add('overlay_show');
+            setTimeout(() => {
+              this.overlay.getElement().classList.remove('overlay_show');
+              this.createAddressesOnControlPanel();
+              this.addAllAddress();
+            }, 2000);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
+      }
+    });
+
+    this.modalAddressFormBtnsContainer = new BaseComponent({
+      tagName: 'div',
+      classNames: ['profile-btns-container'],
+      parentNode: this.modalAddressForm.getElement(),
+    });
+
+    this.btnCloseModalAddress = new Button({
+      textContent: 'Cancel',
+      classNames: 'profile__btn',
+      parentNode: this.modalAddressFormBtnsContainer.getElement(),
+    });
+
+    this.btnSaveModalAddress = new Button({
+      textContent: 'Save',
+      classNames: 'profile__btn',
+      parentNode: this.modalAddressFormBtnsContainer.getElement(),
+    });
+
+    this.btnCloseModalAddress.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.overlay.getElement().classList.remove('overlay_show');
+      this.modalAddressForm.getElement().classList.add('unvisible');
+      this.isSubmittedAddress = false;
+      this.deleteNoticeInfo();
+      this.clearAddressInputs();
+    });
+
+    this.btnSaveModalAddress.getElement().addEventListener('click', (event) => {
+      event.preventDefault();
+      this.isSubmittedAddress = true;
+      if (this.validateEditAddress()) {
+        if (this.isAddAddress) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'addAddress',
+                address: {
+                  country: this.addressForm.inputCountryShipping.getElement().value,
+                  city: this.addressForm.inputCityShipping.getElement().value,
+                  streetName: this.addressForm.inputStreetShipping.getElement().value,
+                  postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+                },
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.modalAddressForm.getElement().classList.add('unvisible');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+          this.clearAddressInputs();
+          this.isSubmittedAddress = false;
+        }
+        if (!this.isAddAddress) {
+          const newCustomerData = {
+            version: Number(state.customer.version),
+            actions: [
+              {
+                action: 'changeAddress',
+                addressId: this.btnSaveModalAddress.getElement().dataset.id,
+                address: {
+                  country: this.addressForm.inputCountryShipping.getElement().value,
+                  city: this.addressForm.inputCityShipping.getElement().value,
+                  streetName: this.addressForm.inputStreetShipping.getElement().value,
+                  postalCode: this.addressForm.inputPostalCodeShipping.getElement().value,
+                },
+              },
+            ],
+          };
+          updateCustomerApi(newCustomerData, state.access_token.access_token)
+            .then((result) => {
+              state.customer = result as Customer;
+              this.showMsg('Succes', true);
+              this.overlay.getElement().classList.add('overlay_show');
+              setTimeout(() => {
+                this.overlay.getElement().classList.remove('overlay_show');
+                this.modalAddressForm.getElement().classList.add('unvisible');
+                this.createAddressesOnControlPanel();
+                this.addAllAddress();
+              }, 2000);
+            })
+            .catch((error) => {
+              this.showErrorMessage(error);
+            });
+          this.clearAddressInputs();
+          this.isSubmittedAddress = false;
+        }
+      }
+    });
 
     this.btnsContainerOpenEdit = new BaseComponent({
       tagName: 'div',
@@ -387,6 +648,8 @@ export class ProfileForm extends BaseComponent {
 
     this.btnEditAddress.getElement().addEventListener('click', (event) => {
       event.preventDefault();
+      this.createAddressesOnControlPanel();
+      this.adressesEditContainer.getElement().classList.remove('unvisible');
     });
 
     this.btnCancelProfile.getElement().addEventListener('click', (event) => {
@@ -405,6 +668,8 @@ export class ProfileForm extends BaseComponent {
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
+        this.overlay.getElement().classList.add('overlay_show');
+        setTimeout(() => this.overlay.getElement().classList.remove('overlay_show'), 2000);
         const newCustomerData = {
           version: Number(state.customer.version),
           actions: [
@@ -450,7 +715,35 @@ export class ProfileForm extends BaseComponent {
     }
   }
 
+  private createAddressesOnControlPanel() {
+    const container = this.adressesControlsContainer.getElement();
+    container.innerHTML = '';
+    const arrAddresses = state.customer.addresses;
+    for (let i = 0; i < arrAddresses.length; i += 1) {
+      const address = document.createElement('div');
+      address.classList.add('controls-adresses-container__address-box');
+      address.innerHTML = `
+        <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i} data-id=${arrAddresses[i].id}>
+        <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
+        <label>Shipping<input class="shipping-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? 'checked' : null} type="checkbox"></label>
+        <label>Billing<input class="billing-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? 'checked' : null} type="checkbox"></label>
+        Country: ${arrAddresses[i].country}, 
+        City: ${arrAddresses[i].city}, 
+        Street: ${arrAddresses[i].streetName}, 
+        Post code: ${arrAddresses[i].postalCode}
+      `;
+      container.append(address);
+    }
+    const btnAdd = document.createElement('img');
+    btnAdd.className = 'btn-svg btn-svg-add';
+    btnAdd.src = '/add.svg';
+    btnAdd.alt = 'Add address';
+    btnAdd.title = 'Add';
+    container.append(btnAdd);
+  }
+
   private addAllAddress(): void {
+    this.addressContainer.getElement().innerHTML = '';
     const arrAddresses = state.customer.addresses;
     for (let i = 0; i < arrAddresses.length; i += 1) {
       const address = document.createElement('p');
@@ -505,6 +798,7 @@ export class ProfileForm extends BaseComponent {
   private handleChangeInput(): void {
     if (this.isSubmittedProfile) this.validateEditProfile();
     if (this.isSubmittedPass) this.validateEditPass();
+    if (this.isSubmittedAddress) this.validateEditAddress();
   }
 
   private showErrorMessage(error: unknown): void {
@@ -515,13 +809,6 @@ export class ProfileForm extends BaseComponent {
       }
       dialog.show(`${error.message}`, 'warning');
     }
-  }
-
-  private copyShippingToBilling(): void {
-    this.addressForm.inputCountryBilling.value = 'this.addressForm.inputCountryShipping.value';
-    this.addressForm.inputStreetBilling.value = this.addressForm.inputStreetShipping.value;
-    this.addressForm.inputPostalCodeBilling.value = this.addressForm.inputPostalCodeShipping.value;
-    this.addressForm.inputCityBilling.value = this.addressForm.inputCityShipping.value;
   }
 
   private validateEditProfile(): boolean {
@@ -535,36 +822,28 @@ export class ProfileForm extends BaseComponent {
     this.inputLastName.showNotice(isValidLastName.errors);
     this.inputDateOfBirth.showNotice(isValidDateOfBirth.errors);
     this.inputEmail.showNotice(isValidLogin.errors);
-    //const isValidPassword = this.validatePassword(this.inputPass.value);
-    //const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
-    //const isValidCityBilling = this.validateNamesAndCity(this.addressForm.inputCityBilling.value);
-    //const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
-    //const isValidStreetBilling = this.validateStreet(this.addressForm.inputStreetBilling.value);
-    //const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
-    //const isValidPostalCodeBilling = this.validatePostalCode(this.addressForm.inputPostalCodeBilling.value);
-    //const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
-    //const isValidCountryBilling = this.validateCountry(this.addressForm.inputCountryBilling.value);
-    //this.inputPass.showNotice(isValidPassword.errors);
-    //this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
-    //this.addressForm.inputCityBilling.showNotice(isValidCityBilling.errors);
-    //this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
-    //this.addressForm.inputStreetBilling.showNotice(isValidStreetBilling.errors);
-    //this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
-    //this.addressForm.inputPostalCodeBilling.showNotice(isValidPostalCodeBilling.errors);
-    //this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
-    //this.addressForm.inputCountryBilling.showNotice(isValidCountryBilling.errors);
 
     return (
       isValidLogin.validate && isValidFirstName.validate && isValidLastName.validate && isValidDateOfBirth.validate
-      //isValidPassword.validate &&
-      //isValidCityBilling.validate &&
-      //isValidCityShipping.validate &&
-      //isValidCountryBilling.validate &&
-      //isValidCountryShipping.validate &&
-      //isValidPostalCodeBilling.validate &&
-      //isValidPostalCodeShipping.validate &&
-      //isValidStreetBilling.validate &&
-      //isValidStreetShipping.validate
+    );
+  }
+
+  private validateEditAddress() {
+    const isValidCountryShipping = this.validateCountry(this.addressForm.inputCountryShipping.value);
+    const isValidCityShipping = this.validateNamesAndCity(this.addressForm.inputCityShipping.value);
+    const isValidStreetShipping = this.validateStreet(this.addressForm.inputStreetShipping.value);
+    const isValidPostalCodeShipping = this.validatePostalCode(this.addressForm.inputPostalCodeShipping.value);
+
+    this.addressForm.inputCityShipping.showNotice(isValidCityShipping.errors);
+    this.addressForm.inputStreetShipping.showNotice(isValidStreetShipping.errors);
+    this.addressForm.inputPostalCodeShipping.showNotice(isValidPostalCodeShipping.errors);
+    this.addressForm.inputCountryShipping.showNotice(isValidCountryShipping.errors);
+
+    return (
+      isValidCityShipping.validate &&
+      isValidCountryShipping.validate &&
+      isValidPostalCodeShipping.validate &&
+      isValidStreetShipping.validate
     );
   }
 
@@ -576,6 +855,13 @@ export class ProfileForm extends BaseComponent {
     setTimeout(() => {
       this.msg.getElement().classList.remove('msg-modal_show');
     }, 1990);
+  }
+
+  private clearAddressInputs() {
+    this.addressForm.inputCountryShipping.getElement().value = '';
+    this.addressForm.inputCityShipping.getElement().value = '';
+    this.addressForm.inputStreetShipping.getElement().value = '';
+    this.addressForm.inputPostalCodeShipping.getElement().value = '';
   }
 
   private validateEditPass(): boolean {

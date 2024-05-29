@@ -23,13 +23,20 @@
 
 .swiper-slide
   text-align: center
-  color: #FFFFFF  
+  color: #FFFFFF
 
 
 .product-img
+  object-fit: contain
   max-width: 90%
-  height: 90%
-  object-fit: cover
+  max-height: 450px
+
+.modal-swiper_active .product-img
+  max-height: 90vh
+  width: max-content
+ 
+.slider-enlarge
+  max-width: 90vw
 
 @media (hover: hover)
 .product-img 
@@ -77,8 +84,12 @@
   justify-content: center
   align-items: center
   z-index: 3
+  margin-top: 5vh
   position: fixed
-  max-width: 900px
+  left: 50%
+  top: 50%
+  transform: translate(-50%, -50%)
+  max-width: 90vw
   width: 100%
   overflow: hidden
  
@@ -87,7 +98,7 @@
   display: flex
   align-items: center
   width: 100%
-  max-width: 800px
+  max-width: 90vw
   max-height: 90%
   margin-bottom: 5%
    
@@ -121,9 +132,8 @@
   top: 2%
   right: 2%
   z-index: 4
-  background-color: #757373
-  border-style: none
- 
+  border-style: none 
+
 
 @media(max-width: 768px) 
   .page-product-container
@@ -136,8 +146,8 @@
     width: 100%
     
   .swiper
-    max-width: 400px
-    max-height: 400px
+    max-width: 350px
+    max-height: 350px
 
   .modal-swiper_active
     max-width: 800px
@@ -148,8 +158,8 @@
   
 @media(max-width: 400px) 
   .swiper
-    max-width: 350px
-    max-height: 350px
+    max-width: 300px
+    max-height: 300px
 
   .modal-swiper_active
     max-width: 400px

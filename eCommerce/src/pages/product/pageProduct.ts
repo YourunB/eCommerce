@@ -139,6 +139,7 @@ export class PageProduct extends BaseComponent {
         initialSlide: index,
         centeredSlides: true,
         modules: [Navigation],
+        autoHeight: true,
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',

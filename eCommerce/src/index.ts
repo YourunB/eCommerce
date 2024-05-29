@@ -12,6 +12,7 @@ import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 import { PageProfile } from './pages/profile/pageProfile';
 import { background } from './components/background/background';
+import { PageProduct } from './pages/product/pageProduct';
 
 const main = document.createElement('main');
 main.classList.add('main');
@@ -67,7 +68,8 @@ router.addRoute({
     const { hash } = window.location;
 
     if (hash) {
-      // main.append(nadya.getPage(hash));
+      const product = new PageProduct({ tagName: 'div' });
+      main.append(product.getElement());
     } else {
       main.append(products.getPage());
     }
@@ -116,22 +118,12 @@ router.addRoute({
     checkAuthorization();
   },
 });
-// router.addRoute({
-//   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
-//   handler: () => {
-//     document.title = 'Registration';
-//     main.innerHTML = '';
-//     main.append(new PageRegistration({}).getElement());
-//     setActivePage();
-//     checkAuthorization();
-//   },
-// });
 router.addRoute({
   path: '/yourunb-JSFE2023Q4/ecommerce/registration',
   handler: () => {
-    document.title = 'Product';
+    document.title = 'Registration';
     main.innerHTML = '';
-    main.append(new PageProduct({ tagName: 'div' }).getElement());
+    main.append(new PageRegistration({}).getElement());
     setActivePage();
     checkAuthorization();
   },

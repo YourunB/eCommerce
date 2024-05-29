@@ -88,7 +88,8 @@ export class PageProduct extends BaseComponent {
       classNames: 'product-description',
       parentNode: this.productTextContainer.getElement(),
     });
-    getProduct().then((data: Product | ErrorResponse) => {
+    const Id = window.location.hash.substring(1);
+    getProduct(Id).then((data: Product | ErrorResponse) => {
       if ('statusCode' in data) return;
       this.productName.setTextContent(data.masterData.current.name['en-GB']);
       this.productPrice.setTextContent(

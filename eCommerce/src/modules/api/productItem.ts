@@ -3,7 +3,7 @@ import { responseToJSON } from '../../components/helpers/predicates';
 import state from '../../state/state';
 import { API_URL, AUTH_BEARER, MSG_NETWORK_ERROR, PROJECT_KEY } from '../login/constants';
 
-export function getProduct() {
+export function getProduct(ID: string) {
   const options = {
     method: 'GET',
     headers: {
@@ -11,7 +11,7 @@ export function getProduct() {
     },
   };
 
-  return fetch(`${API_URL}/${PROJECT_KEY}/products/f606d30c-12b3-49c6-b6d4-7162b9a50103`, options)
+  return fetch(`${API_URL}/${PROJECT_KEY}/products/${ID}`, options)
     .then(responseToJSON<Product>)
     .catch(() => {
       throw new Error(MSG_NETWORK_ERROR);

@@ -1,3 +1,5 @@
+import { CategoryReference } from '@commercetools/platform-sdk';
+
 export type ActionsProducts = {
   type:
     | 'change-category'
@@ -17,7 +19,12 @@ export type DispatchProducts = {
   (action: ActionsProducts): void;
 };
 
-export type MappedCategories = { name: string; id: string };
+export type MappedCategories = {
+  name: string;
+  id: string;
+  parent: CategoryReference | undefined;
+  subcategory: MappedCategories[];
+};
 export type MappedProducts = {
   description: string;
   name: string;

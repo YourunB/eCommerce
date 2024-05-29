@@ -2,7 +2,7 @@ import './modalDialog.sass';
 import { BaseComponent } from '../baseComponent';
 import { Button } from '../basebutton/baseButton';
 
-type TypeMessage = 'warning' | 'info';
+export type TypeMessage = 'warning' | 'info';
 
 export class Dialog extends BaseComponent {
   private static instance: unknown;

@@ -1,15 +1,15 @@
 import './categories.sass';
 import { BaseComponent } from '../../../../components/baseComponent';
-import { DispatchMain, MappedCategories } from '../../../../modules/products/types';
+import { DispatchProducts, MappedCategories } from '../../../../modules/products/types';
 
 const CLASS_ACTIVE = 'categories_element__active';
 const CLASS_LI = 'categories_element';
 
 export class Categories extends BaseComponent {
-  dispatch: DispatchMain;
+  dispatch: DispatchProducts;
   activeCategoryId: string;
 
-  constructor(dispatch: DispatchMain) {
+  constructor(dispatch: DispatchProducts) {
     super({ tagName: 'ul', classNames: 'filters_categories' });
     this.dispatch = dispatch;
     this.activeCategoryId = '';

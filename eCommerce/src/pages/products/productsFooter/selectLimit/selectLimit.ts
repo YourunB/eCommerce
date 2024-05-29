@@ -1,11 +1,11 @@
 import './selectLimit.sass';
-import { DispatchMain } from '../../../../modules/products/types';
 import { BaseComponent } from '../../../../components/baseComponent';
+import { DispatchProducts } from '../../../../modules/products/types';
 
 export class SelectLimit extends BaseComponent {
-  dispatch: DispatchMain;
+  dispatch: DispatchProducts;
 
-  constructor(limits: string[], dispatch: DispatchMain) {
+  constructor(limits: string[], dispatch: DispatchProducts) {
     super({ tagName: 'div', classNames: 'limits-container' });
     this.dispatch = dispatch;
     const select = new BaseComponent({ tagName: 'select', classNames: 'limits__select' });

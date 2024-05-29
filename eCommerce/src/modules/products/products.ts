@@ -1,18 +1,23 @@
 import state from '../../state/state';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
+import { filterSort } from '../../components/helpers/filterSort';
 import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
 import { filterOffset } from '../../components/helpers/filterOffset';
+import { filterSearch } from '../../components/helpers/filterSearch';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
+import { SortDirection, SortField } from '../../pages/products/sort/sort';
 import { filterСentAmount } from '../../components/helpers/filterСentAmount';
-import { ActionsMain, FilterRules, MappedCategories, MappedProducts } from './types';
+import { ActionsProducts, FilterRules, MappedCategories, MappedProducts } from './types';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
 import { isMappedCategories, isMappedProducts, isProductProjection } from '../../components/helpers/predicates';
 
 const START_PAGE = 1;
 const DEFAULT_LIMIT = '10';
+const DEFAULT_SORT_FIELD: SortField = 'price';
+const DEFAULT_SORT_DIRECTION: SortDirection = 'asc';
 
 export class Products {
   private filter: Map<FilterRules, string> = new Map(); // Map of functions (filters) to construct filter query
@@ -24,15 +29,18 @@ export class Products {
   private _currentOffset: string;
   private _currentPage: number;
   private currentLimit: string;
+  private currentSort: [SortField, SortDirection];
 
   constructor() {
     this._currentOffset = '0';
     this._currentPage = START_PAGE;
+    this.currentSort = [DEFAULT_SORT_FIELD, DEFAULT_SORT_DIRECTION];
     this.currentLimit = state.limits[0] || DEFAULT_LIMIT;
     this.categoriesList = new Error();
     this.page = new PageProducts(state.limits, this._currentPage, this.dispatch);
     this.addFilter(filterLimit, this.currentLimit);
     this.addFilter(filterOffset, this.currentOffset);
+    this.addFilter(filterSort, `${this.currentSort[0]} ${this.currentSort[1]}`);
   }
 
   get currentOffset(): string {
@@ -49,17 +57,23 @@ export class Products {
     this.currentPage = 1;
     this.page.resetProducts();
     this.procesProducts();
-    this.getCategories().then((categories) => {
-      if (isMappedCategories(categories)) {
-        this.categoriesList = categories;
-        this.page.renderFilters({ categories });
-      }
-    });
+    this.getCategories()
+      .then((categories) => {
+        if (isMappedCategories(categories)) {
+          this.categoriesList = categories;
+          this.page.renderFilters({ categories });
+        }
+      })
+      .catch((error) => this.handleError(`${error}`));
 
     return this.page.getElement();
   }
 
-  public dispatch = (action: ActionsMain) => {
+  private handleError(error: string): void {
+    this.page.showDialog(error);
+  }
+
+  public dispatch = (action: ActionsProducts) => {
     const { type } = action;
     this.prop1 = action.payload.prop1;
     this.prop2 = action.payload.prop2;
@@ -90,6 +104,15 @@ export class Products {
         this.currentPage = +this.prop1;
         this.procesProducts(true);
         break;
+      case 'change-sort':
+        this.addFilter(filterSort, `${this.prop1} ${this.prop2}`);
+        this.procesProducts(true);
+        break;
+      case 'search':
+        this.currentPage = 1;
+        this.addFilter(filterSearch, `${this.prop1}`);
+        this.procesProducts(true);
+        break;
     }
   };
 
@@ -97,9 +120,14 @@ export class Products {
     this.page.buttons = 'disabled';
     this.getProducts()
       .then((products) => {
-        if (isMappedProducts(products)) this.page.renderProducts(products, fadeout);
-        //BUG if products === [] page doesn't empty regardless
+        if (isMappedProducts(products)) {
+          this.page.setSearchDataList(products.map((product) => product.name));
+          this.page.renderProducts(products, fadeout);
+        } else {
+          this.page.renderEmptyCard();
+        }
       })
+      .catch((error) => this.handleError(`${error}`))
       .finally(() => {
         this.page.buttons = 'enabled';
       });
@@ -109,12 +137,11 @@ export class Products {
     this.filter.delete(filterCategory);
   }
 
-  public async getProducts() {
+  public async getProducts(): Promise<Error | MappedProducts[] | undefined> {
     url.pruducts.search = '';
     const query = this.applyFilters(url.pruducts);
     const products = await queryProducts(query);
 
-    console.log('products', products);
     if (products instanceof Error) {
       return products;
     } else {

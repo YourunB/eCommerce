@@ -26,11 +26,19 @@ export function mapProduct(product: ProductProjection): MappedProducts {
   const discountCentAmount = discount ? (discount / 100).toFixed(2) : '';
   const percentDiscount = discount ? Math.round(100 - (discount / cent) * 100).toFixed(0) : '';
 
+  let description = '';
+  const localizedDescription = product.description;
+  if (localizedDescription) {
+    const [sentence] = localizedDescription['en-GB'].split('.');
+    description = sentence;
+  }
+
   const mappedProduct: MappedProducts = {
     id,
     name,
     photo,
     centAmount,
+    description,
     currencyCode: code,
   };
   if (discount) mappedProduct.discount = { centAmount: discountCentAmount, percent: percentDiscount };

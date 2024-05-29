@@ -42,9 +42,19 @@
   color: #FFFFFF
 
 .product-price
+  display: flex
+  flex-wrap: nowrap
+  gap: 2rem
   font-size: 1.4rem
   font-weight: 700
   color: #46A358
+
+.actual-price
+  color: #46A358
+
+.old-price
+  color: #A5A5A5
+  text-decoration: line-through
   
 
 .product-description
@@ -59,7 +69,8 @@
   border-top: 1px solid #97c293
 
 .modal-swiper
-  display: none  
+  display: none
+
 
 .modal-swiper_active
   display: flex

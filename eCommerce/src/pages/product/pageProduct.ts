@@ -91,17 +91,46 @@ export class PageProduct extends BaseComponent {
     const Id = window.location.hash.substring(1);
     getProduct(Id).then((data: Product | ErrorResponse) => {
       if ('statusCode' in data) return;
-      this.productName.setTextContent(data.masterData.current.name['en-GB']);
-      this.productPrice.setTextContent(
-        data.masterData.current.masterVariant.prices
-          ? `€ ${(data.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString('ru-RU')}.00`
-          : ''
-      );
-      this.productDescription.setTextContent(
-        data.masterData.current.description ? data.masterData.current.description['en-GB'] : ''
-      );
-      if (data.masterData.staged.masterVariant.images) {
-        data.masterData.staged.masterVariant.images.forEach((image) => {
+      const product = data.masterData;
+      this.productName.setTextContent(product.current.name['en-GB']);
+      if (product.staged.masterVariant.prices) {
+        const currentPrice =
+          product.staged.masterVariant.prices[0].discounted?.value.centAmount ||
+          product.staged.masterVariant.prices[0].value.centAmount;
+        const actualPrice = new BaseComponent({
+          tagName: 'span',
+          textContent: `€${(currentPrice / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2 })}`,
+          classNames: 'actual-price',
+        });
+        this.productPrice.insertChild(actualPrice);
+        if (product.staged.masterVariant.prices[0].discounted) {
+          const oldPrice = new BaseComponent({
+            tagName: 'span',
+            textContent: `€${(product.staged.masterVariant.prices[0].value.centAmount / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2 })}`,
+            classNames: 'old-price',
+          });
+          this.productPrice.insertChild(oldPrice);
+        }
+      }
+
+      // this.productPrice.setTextContent(
+      //   product.current.masterVariant.prices
+      //     ? `€ ${(product.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2 })}`
+      //     : ''
+      // );
+      // if ('discounted' in data) {
+      //   const newPrice = new BaseComponent({
+      //     tagName: 'span',
+      //     textContent: product.current.masterVariant.prices
+      //       ? `€ ${(product.current.masterVariant.prices[0].discounted?.value.centAmount / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2 })}`
+      //       : '',
+      //     classNames: 'price-container__old-price',
+      //   });
+      //   this.productPrice.insertChild(newPrice);
+      // }
+      this.productDescription.setTextContent(product.current.description ? product.current.description['en-GB'] : '');
+      if (product.staged.masterVariant.images) {
+        product.staged.masterVariant.images.forEach((image) => {
           const productSwiperSlide = new BaseComponent({
             tagName: 'div',
             classNames: 'swiper-slide',

@@ -156,7 +156,7 @@ window.onload = () => {
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/profile') {
     if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
-    else router.route('/yourunb-JSFE2023Q4/ecommerce/');
+    else router.route('/yourunb-JSFE2023Q4/ecommerce/login');
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
@@ -184,8 +184,8 @@ window.onpopstate = () => {
   }
 
   if (localStorage.logged === undefined && location.pathname === '/yourunb-JSFE2023Q4/ecommerce/profile') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/', false);
-    window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/');
+    router.route('/yourunb-JSFE2023Q4/ecommerce/login', false);
+    window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/login');
     setActivePage();
   }
 };

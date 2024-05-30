@@ -2,7 +2,7 @@
 
 .page-products-container
   display: grid
-  grid-template-areas: "hero hero" "filters products" ".products-footer"
+  grid-template-areas: "hero hero" "filters sort" "filters products" ".products-footer"
   grid-template-rows: 10rem auto
   grid-template-columns: 12rem auto
   gap: 1rem
@@ -19,13 +19,19 @@
   top: 0
   position: sticky
   grid-area: filters
+  height: min-content
+
+.products__sort-container
+  grid-area: sort
+  display: flex
+  align-items: center
 
 .products__container
   display: grid
   grid-area: products
   gap: 1rem
-  grid-auto-rows: 20rem
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))
+  grid-auto-rows: 23rem
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))
   justify-content: center
   transition-duration: 1000ms
 

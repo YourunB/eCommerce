@@ -1,0 +1,26 @@
+@use './src/variables' as *
+
+.search_container
+  width: clamp(5rem, 100%, 10rem)
+  margin-left: auto
+
+.search__form
+  position: relative
+  width: 100%
+
+.search__input
+  width: 100%
+  &[list]
+    padding-right: 1.5rem
+
+.search__button
+  position: absolute
+  top: 0
+  right: 0
+  height: 100%
+  aspect-ratio: 1/1
+
+  background-image: url("../../../assets/icons/search.svg")
+  background-position: center
+  background-repeat: no-repeat
+  background-size: 50%

@@ -2,18 +2,12 @@
 
 .page-products-container
   display: grid
-  grid-template-areas: "hero hero" "filters sort" "filters products" ".products-footer"
-  grid-template-rows: 10rem auto
+  grid-template-areas: "filters sort" "filters products" ".products-footer"
+  grid-template-rows: 3rem auto
   grid-template-columns: 12rem auto
   gap: 1rem
   min-height: calc(100vh - 200px)
   color: white
-
-.products__hero
-  grid-area: hero
-  background-color: white
-  color: $color-text-common
-  border-radius: 2px
 
 .products__filters
   top: 0
@@ -30,7 +24,7 @@
   display: grid
   grid-area: products
   gap: 1rem
-  grid-auto-rows: 23rem
+  grid-auto-rows: auto
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))
   justify-content: center
   transition-duration: 1000ms

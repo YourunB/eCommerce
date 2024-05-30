@@ -1,6 +1,7 @@
 import { State, Subscribers, StateKey, StateValue, Callback, AuthState } from './types';
 
 const initialState: State = {
+  rootCategory: 'All Products',
   authState: AuthState.notLogged,
   access_token: {},
   customer: {},

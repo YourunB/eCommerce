@@ -19,4 +19,8 @@ export class SectionFilters extends BaseComponent {
   public renderFilters(props: PropsFilters): void {
     this.categories.renderCategories(props.categories);
   }
+
+  public setCategoryActive(name: string): void {
+    this.categories.setClassActive(name);
+  }
 }

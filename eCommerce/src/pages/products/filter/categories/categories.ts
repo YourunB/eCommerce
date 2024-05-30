@@ -1,4 +1,5 @@
 import './categories.sass';
+import state from '../../../../state/state';
 import { BaseComponent } from '../../../../components/baseComponent';
 import { DispatchProducts, MappedCategories } from '../../../../modules/products/types';
 
@@ -21,7 +22,12 @@ export class Categories extends BaseComponent {
     this.element.innerHTML = '';
     this.setTextContent('Categories');
 
-    const elementAllCategories = this.createElementLi({ id: '', name: 'All', parent: undefined, subcategory: [] });
+    const elementAllCategories = this.createElementLi({
+      id: state.rootCategory,
+      name: state.rootCategory,
+      parent: undefined,
+      subcategory: [],
+    });
     const list = categories.reduce<BaseComponent[]>((elements, category) => {
       if (category.subcategory.length === 0) return [...elements, this.createElementLi(category)];
       const li = this.createElementLi(category);
@@ -48,11 +54,11 @@ export class Categories extends BaseComponent {
       tagName: 'li',
       textContent: category.name,
     });
+    element.setAttribute({ name: 'id', value: category.id });
     element.getElement().className = CLASS_LI + classActive;
     element.getElement().addEventListener('click', () => {
       this.activeCategoryId = category.id;
-      this.removeAllClassActive();
-      this.setClassActive(element);
+      this.setClassActive(category.id);
       this.dispatch({ type: 'change-category', payload: { prop1: category.id, prop2: category.name } });
     });
     this.listCategories?.push(element);
@@ -65,7 +71,12 @@ export class Categories extends BaseComponent {
     });
   }
 
-  private setClassActive(li: BaseComponent): void {
-    li.setClassName(CLASS_ACTIVE);
+  public setClassActive(idCategory: string): void {
+    this.removeAllClassActive();
+    this.activeCategoryId = idCategory;
+    this.listCategories?.forEach((category) => {
+      const { id } = category.getElement();
+      if (id === idCategory) category.setClassName(CLASS_ACTIVE);
+    });
   }
 }

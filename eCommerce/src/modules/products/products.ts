@@ -54,19 +54,36 @@ export class Products {
   }
 
   public getPage() {
-    this.currentPage = 1;
     this.page.resetProducts();
-    this.procesProducts();
     this.getCategories()
       .then((categories) => {
         if (isMappedCategories(categories)) {
           this.categoriesList = categories;
+          this.removeAllCategoryFilters();
+
+          const { search } = window.location;
+          const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
+          if (idCategoryRoute) {
+            this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
+          } else {
+            this.currentCategory = state.rootCategory;
+          }
+          this.page.setCategoryActive(this.currentCategory || state.rootCategory);
           this.page.renderFilters({ categories });
+          this.procesProducts();
         }
       })
       .catch((error) => this.handleError(`${error}`));
 
     return this.page.getElement();
+  }
+
+  private handleCategoryRoutes(idCategory: string, categoriesList: MappedCategories[]): void {
+    this.currentCategory = idCategory;
+    const [category] = categoriesList.filter((category) => category.id === idCategory);
+    const nameCategory = category?.name === state.rootCategory || !category ? state.rootCategory : category?.name;
+    document.title = nameCategory;
+    this.addFilter(filterCategory, this.currentCategory);
   }
 
   private handleError(error: string): void {
@@ -113,11 +130,14 @@ export class Products {
   };
 
   private changeCategory(id: string, name: string): void {
+    window.history.pushState({}, '', `${window.location.pathname}?${id}`);
     this.currentPage = 1;
     this.currentCategory = id;
-    document.title = name === 'All' ? 'Products' : name;
+    document.title = name;
     this.removeAllCategoryFilters();
-    if (this.currentCategory) this.addFilter(filterCategory, this.currentCategory);
+    if (this.currentCategory && this.currentCategory !== state.rootCategory) {
+      this.addFilter(filterCategory, this.currentCategory);
+    }
     this.procesProducts(true);
   }
 

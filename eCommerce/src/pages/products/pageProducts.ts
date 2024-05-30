@@ -31,6 +31,10 @@ export class PageProducts extends BaseComponent {
     this.insertChildren([sectionHero, this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
   }
 
+  public setCategoryActive(name: string): void {
+    this.sectionFilters.setCategoryActive(name);
+  }
+
   public setSearchDataList(values: string[]): void {
     this.sectionSort.setSearchDataList(values);
   }

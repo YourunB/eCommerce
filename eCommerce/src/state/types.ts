@@ -21,6 +21,7 @@ export enum AuthState {
 }
 
 export interface State {
+  rootCategory: string;
   authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
   customer: Customer | Record<string, never>;

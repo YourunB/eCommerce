@@ -125,13 +125,14 @@
   background-image: url("../../assets/icons/close.svg")
   background-position: center center
   background-repeat: no-repeat
-  object-fit: contain
+  object-fit: cover
   position: absolute
-  width: 3%
-  height: 4%
+  width: 2.5rem
+  height: 2.5rem
   top: 2%
   right: 2%
   z-index: 4
+  border-radius: 3px
   border-style: none 
 
 
@@ -155,6 +156,10 @@
   .slider-enlarge
     max-width: 800px
     max-height: 800px
+
+  .close-button  
+    width: 1.5rem
+    height: 1.5rem
   
 @media(max-width: 400px) 
   .swiper

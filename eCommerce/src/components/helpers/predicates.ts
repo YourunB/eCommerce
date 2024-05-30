@@ -31,3 +31,8 @@ export function isMappedCategories(data: unknown | MappedCategories[]): data is 
   if (typeof data !== 'object') return false;
   return (data as MappedCategories[])[0]?.name !== undefined && (data as MappedCategories[])[0]?.id !== undefined;
 }
+
+export async function responseToJSON<T>(response: Response): Promise<T | ErrorResponse> {
+  if (!response.ok) return response.json().then((resp) => resp as ErrorResponse);
+  return response.json() as T;
+}

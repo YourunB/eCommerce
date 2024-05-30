@@ -12,6 +12,7 @@ import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 import { PageProfile } from './pages/profile/pageProfile';
 import { background } from './components/background/background';
+import { PageProduct } from './pages/product/pageProduct';
 
 const main = document.createElement('main');
 main.classList.add('main');
@@ -67,7 +68,8 @@ router.addRoute({
     const { hash } = window.location;
 
     if (hash) {
-      // main.append(nadya.getPage(hash));
+      const product = new PageProduct({ tagName: 'div' });
+      main.append(product.getElement());
     } else {
       main.append(products.getPage());
     }

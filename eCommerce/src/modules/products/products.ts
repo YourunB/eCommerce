@@ -54,19 +54,36 @@ export class Products {
   }
 
   public getPage() {
-    this.currentPage = 1;
     this.page.resetProducts();
-    this.procesProducts();
     this.getCategories()
       .then((categories) => {
         if (isMappedCategories(categories)) {
           this.categoriesList = categories;
+          this.removeAllCategoryFilters();
+
+          const { search } = window.location;
+          const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
+          if (idCategoryRoute) {
+            this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
+          } else {
+            this.currentCategory = state.rootCategory;
+          }
+          this.page.setCategoryActive(this.currentCategory || state.rootCategory);
           this.page.renderFilters({ categories });
+          this.procesProducts();
         }
       })
       .catch((error) => this.handleError(`${error}`));
 
     return this.page.getElement();
+  }
+
+  private handleCategoryRoutes(idCategory: string, categoriesList: MappedCategories[]): void {
+    this.currentCategory = idCategory;
+    const [category] = categoriesList.filter((category) => category.id === idCategory);
+    const nameCategory = category?.name === state.rootCategory || !category ? state.rootCategory : category?.name;
+    document.title = nameCategory;
+    this.addFilter(filterCategory, this.currentCategory);
   }
 
   private handleError(error: string): void {
@@ -80,14 +97,10 @@ export class Products {
 
     switch (type) {
       case 'change-category':
-        this.currentPage = 1;
-        this.currentCategory = this.prop1;
-        this.removeAllCategoryFilters();
-        if (this.currentCategory) this.addFilter(filterCategory, this.currentCategory);
-        this.procesProducts(true);
+        this.changeCategory(this.prop1, this.prop2);
         break;
       case 'click-product':
-        window.location.hash = this.prop1; // <- product.id (for example: #9b34a224-cbc0-4687-8996-da5f958d2bbd)
+        window.location.hash = this.prop1;
         break;
       case 'change-limit':
         this.currentPage = 1;
@@ -115,6 +128,18 @@ export class Products {
         break;
     }
   };
+
+  private changeCategory(id: string, name: string): void {
+    window.history.pushState({}, '', `${window.location.pathname}?${id}`);
+    this.currentPage = 1;
+    this.currentCategory = id;
+    document.title = name;
+    this.removeAllCategoryFilters();
+    if (this.currentCategory && this.currentCategory !== state.rootCategory) {
+      this.addFilter(filterCategory, this.currentCategory);
+    }
+    this.procesProducts(true);
+  }
 
   private procesProducts(fadeout = false): void {
     this.page.buttons = 'disabled';
@@ -176,6 +201,19 @@ export class Products {
   }
 
   private mapCategories(categories: CategoryPagedQueryResponse): MappedCategories[] {
-    return categories.results.map(mapCategory);
+    const flatCategories = categories.results.map(mapCategory);
+    const splittedCategories = this.splitSubCategory(flatCategories);
+    return splittedCategories;
+  }
+
+  private splitSubCategory(categories: MappedCategories[]) {
+    const mainCategories = categories.filter((category) => !category.parent);
+    const subCategories = categories.filter((category) => category.parent);
+
+    subCategories.forEach((category) => {
+      const [mainCategory] = mainCategories.filter((c) => `${c.id}` === `${category.parent?.id}`);
+      mainCategory.subcategory.push(category);
+    });
+    return mainCategories;
   }
 }

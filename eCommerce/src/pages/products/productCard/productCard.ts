@@ -4,7 +4,12 @@ import { DispatchProducts, MappedProducts } from '../../../modules/products/type
 
 export class ProductCard extends BaseComponent {
   constructor(product: MappedProducts, dispatch: DispatchProducts) {
-    super({ tagName: 'div', classNames: 'product-card' });
+    super({
+      tagName: 'a',
+      classNames: 'product-card',
+      attribute: { name: 'href', value: product.url },
+    });
+
     const imgConteiner = new BaseComponent({ tagName: 'div', classNames: 'product-card__img' });
     const img = new BaseComponent({
       tagName: 'img',
@@ -25,7 +30,10 @@ export class ProductCard extends BaseComponent {
     this.insertChildren([imgConteiner, content]);
 
     const action = { type: 'click-product', payload: { prop1: product.id, prop2: '' } } as const;
-    this.setOnclick(() => dispatch(action));
+    this.element.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      dispatch(action);
+    });
   }
 
   private productPrice(product: MappedProducts): BaseComponent {

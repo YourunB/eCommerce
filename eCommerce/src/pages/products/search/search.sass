@@ -11,7 +11,7 @@
 .search__input
   width: 100%
   &[list]
-    padding-right: 1.5rem
+    padding-right: 1.45rem
 
 .search__button
   position: absolute
@@ -24,3 +24,13 @@
   background-position: center
   background-repeat: no-repeat
   background-size: 50%
+
+@media (max-width: 768px)
+  .search_container
+    width: 100%
+    margin-left: 0
+    order: -1
+
+  .search__input
+    &[list]
+      padding-left: 2rem

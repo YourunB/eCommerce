@@ -1,5 +1,6 @@
 import './modules/routingScript';
 import './index.sass';
+import state from './state/state';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
 import { Products } from './modules/products/products';
@@ -61,7 +62,7 @@ router.addRoute({
   },
 });
 router.addRoute({
-  path: '/yourunb-JSFE2023Q4/ecommerce/products',
+  path: state.routes.products,
   handler: () => {
     document.title = 'Products';
     main.innerHTML = '';

@@ -22,13 +22,16 @@ export class PageProducts extends BaseComponent {
     super({ tagName: 'article', classNames: 'page-products-container' });
     this.dispatch = dispatch;
     this.dialog = Dialog.getInstance();
-    const sectionHero = new BaseComponent({ tagName: 'section', classNames: 'products__hero', textContent: 'hero' });
     this.sectionProducts = new BaseComponent({ tagName: 'section', classNames: 'products__container' });
     this.sectionFilters = new SectionFilters(dispatch);
     this.sectionSort = new SectionSort(dispatch);
     this.footer = new ProductsFooter(limits, countPages, dispatch);
 
-    this.insertChildren([sectionHero, this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
+    this.insertChildren([this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
+  }
+
+  public setCategoryActive(name: string): void {
+    this.sectionFilters.setCategoryActive(name);
   }
 
   public setSearchDataList(values: string[]): void {

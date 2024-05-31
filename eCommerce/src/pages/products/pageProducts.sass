@@ -2,24 +2,22 @@
 
 .page-products-container
   display: grid
-  grid-template-areas: "hero hero" "filters sort" "filters products" ".products-footer"
-  grid-template-rows: 10rem auto
+  position: relative
+  grid-template-areas: "filters sort" "filters products" ".products-footer"
+  grid-template-rows: 3rem auto
   grid-template-columns: 12rem auto
   gap: 1rem
   min-height: calc(100vh - 200px)
   color: white
-
-.products__hero
-  grid-area: hero
-  background-color: white
-  color: $color-text-common
-  border-radius: 2px
 
 .products__filters
   top: 0
   position: sticky
   grid-area: filters
   height: min-content
+
+.open .products__filters__aside-btn
+  right: -2.9rem
 
 .products__sort-container
   grid-area: sort
@@ -30,10 +28,52 @@
   display: grid
   grid-area: products
   gap: 1rem
-  grid-auto-rows: 23rem
+  grid-auto-rows: auto
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))
   justify-content: center
   transition-duration: 1000ms
 
 .fadeout
   opacity: 0
+
+.open
+  transform: none
+
+.products__filters__aside-btn
+  display: none
+  position: absolute
+  z-index: 1
+  width: 3rem
+  height: 2.6rem
+  top: 0
+  right: -3.8rem
+  background-image: url("../../assets/icons/filter.webp")
+  background-position: center
+  background-repeat: no-repeat
+  background-size: 50%
+
+@media (max-width: 768px)
+  .page-products-container
+    grid-template-columns: 0.5rem auto
+    grid-template-rows: 6rem auto
+
+  .products__sort-container
+    flex-wrap: wrap
+
+  .products__filters
+    position: fixed
+    top: 105px
+    left: calc((97vw) * -1)
+    width: 97vw
+    padding: 2rem clamp(4rem, 20vw, 10rem)
+
+    border-radius: 0.3rem
+    transition-duration: 500ms
+    background-color: $color-background-aside
+    z-index: 1
+
+  .products__filters__aside-btn
+    display: inline-block
+
+  .open
+    transform: translateX(calc(100vw - 3rem))

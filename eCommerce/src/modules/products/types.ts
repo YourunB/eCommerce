@@ -26,6 +26,7 @@ export type MappedCategories = {
   subcategory: MappedCategories[];
 };
 export type MappedProducts = {
+  url: string;
   description: string;
   name: string;
   id: string;

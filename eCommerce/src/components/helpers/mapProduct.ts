@@ -1,3 +1,4 @@
+import state from '../../state/state';
 import { MappedProducts } from '../../modules/products/types';
 import { ProductProjection } from '@commercetools/platform-sdk';
 
@@ -40,6 +41,7 @@ export function mapProduct(product: ProductProjection): MappedProducts {
     centAmount,
     description,
     currencyCode: code,
+    url: `${state.routes.products}#${id}`,
   };
   if (discount) mappedProduct.discount = { centAmount: discountCentAmount, percent: percentDiscount };
 

@@ -4,7 +4,12 @@ import { DispatchProducts, MappedProducts } from '../../../modules/products/type
 
 export class ProductCard extends BaseComponent {
   constructor(product: MappedProducts, dispatch: DispatchProducts) {
-    super({ tagName: 'div', classNames: 'product-card' });
+    super({
+      tagName: 'a',
+      classNames: 'product-card',
+      attribute: { name: 'href', value: product.url },
+    });
+
     const imgConteiner = new BaseComponent({ tagName: 'div', classNames: 'product-card__img' });
     const img = new BaseComponent({
       tagName: 'img',

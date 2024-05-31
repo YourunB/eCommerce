@@ -1,11 +1,26 @@
 @import "../../variables"
 
 .main-slider
+  position: relative
   overflow: hidden
   border-radius: 5px
   border: solid 5px white
   background: rgba(0, 0, 0, 0.1)
   box-shadow: 4px 4px 8px 8px rgba(0, 0, 0, 0.1)
+  user-select: none
+
+.main-slider__title
+  position: absolute
+  z-index: 1
+  left: 50%
+  top: 50%
+  transform: translate(-50%, -50%)
+  border: solid 4px white
+  border-radius: 3px
+  padding: 20px
+  backdrop-filter: blur(10px)
+  background: rgba(0, 0, 0, 0.3)
+  transition: 0.7s
 
 .main-slider__slide
   border-radius: 5px
@@ -16,6 +31,17 @@
   gap: 50%
   animation: slide 20s infinite
   animation-delay: 1s
+
+@media (hover: hover)
+  .main-slider__title:hover
+    cursor: pointer
+    background: none
+    backdrop-filter: blur(0)
+    box-shadow: 0 0 4px 4px rgba(255, 255, 255, 0.5)
+
+.main-slider__title:active
+  transition: 0.2s
+  background: rgba(70, 163, 88, 0.8)
 
 @keyframes slide
   0%

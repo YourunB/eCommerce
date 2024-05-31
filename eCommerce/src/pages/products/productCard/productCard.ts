@@ -30,7 +30,10 @@ export class ProductCard extends BaseComponent {
     this.insertChildren([imgConteiner, content]);
 
     const action = { type: 'click-product', payload: { prop1: product.id, prop2: '' } } as const;
-    this.setOnclick(() => dispatch(action));
+    this.element.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      dispatch(action);
+    });
   }
 
   private productPrice(product: MappedProducts): BaseComponent {

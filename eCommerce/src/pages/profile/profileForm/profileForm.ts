@@ -170,7 +170,7 @@ export class ProfileForm extends BaseComponent {
     //overlay
     this.overlay = new BaseComponent({
       tagName: 'div',
-      classNames: ['overlay'],
+      classNames: ['profile-overlay'],
       parentNode: this.element,
     });
 
@@ -313,7 +313,7 @@ export class ProfileForm extends BaseComponent {
             .catch((error) => {
               this.showErrorMessage(error);
             });
-          this.overlay.getElement().classList.remove('overlay_show');
+          this.overlay.getElement().classList.remove('profile-overlay_show');
           this.modalEditPass.getElement().classList.remove('modal-pass_show');
           this.isSubmittedPass = false;
         }
@@ -326,7 +326,7 @@ export class ProfileForm extends BaseComponent {
       event.preventDefault();
       this.isSubmittedPass = false;
       this.deleteNoticeInfo();
-      this.overlay.getElement().classList.remove('overlay_show');
+      this.overlay.getElement().classList.remove('profile-overlay_show');
       this.modalEditPass.getElement().classList.remove('modal-pass_show');
       this.inputPassOld.getElement().value = '';
       this.inputPassNew.getElement().value = '';
@@ -384,7 +384,7 @@ export class ProfileForm extends BaseComponent {
       const currentTarget = event.target as HTMLElement;
       if (currentTarget.classList.contains('btn-svg-add')) {
         this.isAddAddress = true;
-        this.overlay.getElement().classList.add('overlay_show');
+        this.overlay.getElement().classList.add('profile-overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
       if (currentTarget.classList.contains('billing-address')) {
@@ -403,9 +403,9 @@ export class ProfileForm extends BaseComponent {
             .then((result) => {
               state.customer = result as Customer;
               this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('overlay_show');
+              this.overlay.getElement().classList.add('profile-overlay_show');
               setTimeout(() => {
-                this.overlay.getElement().classList.remove('overlay_show');
+                this.overlay.getElement().classList.remove('profile-overlay_show');
                 this.createAddressesOnControlPanel();
                 this.addAllAddress();
               }, 2000);
@@ -431,9 +431,9 @@ export class ProfileForm extends BaseComponent {
             .then((result) => {
               state.customer = result as Customer;
               this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('overlay_show');
+              this.overlay.getElement().classList.add('profile-overlay_show');
               setTimeout(() => {
-                this.overlay.getElement().classList.remove('overlay_show');
+                this.overlay.getElement().classList.remove('profile-overlay_show');
                 this.createAddressesOnControlPanel();
                 this.addAllAddress();
               }, 2000);
@@ -455,7 +455,7 @@ export class ProfileForm extends BaseComponent {
           state.customer.addresses[Number(currentTarget.dataset.index)].postalCode || '';
         this.addressForm.inputCountryShipping.getElement().value =
           state.customer.addresses[Number(currentTarget.dataset.index)].country || '';
-        this.overlay.getElement().classList.add('overlay_show');
+        this.overlay.getElement().classList.add('profile-overlay_show');
         this.modalAddressForm.getElement().classList.remove('unvisible');
       }
       if (currentTarget.classList.contains('btn-svg-delete')) {
@@ -472,9 +472,9 @@ export class ProfileForm extends BaseComponent {
           .then((result) => {
             state.customer = result as Customer;
             this.showMsg('Succes', true);
-            this.overlay.getElement().classList.add('overlay_show');
+            this.overlay.getElement().classList.add('profile-overlay_show');
             setTimeout(() => {
-              this.overlay.getElement().classList.remove('overlay_show');
+              this.overlay.getElement().classList.remove('profile-overlay_show');
               this.createAddressesOnControlPanel();
               this.addAllAddress();
             }, 2000);
@@ -505,7 +505,7 @@ export class ProfileForm extends BaseComponent {
 
     this.btnCloseModalAddress.getElement().addEventListener('click', (event) => {
       event.preventDefault();
-      this.overlay.getElement().classList.remove('overlay_show');
+      this.overlay.getElement().classList.remove('profile-overlay_show');
       this.modalAddressForm.getElement().classList.add('unvisible');
       this.isSubmittedAddress = false;
       this.deleteNoticeInfo();
@@ -535,9 +535,9 @@ export class ProfileForm extends BaseComponent {
             .then((result) => {
               state.customer = result as Customer;
               this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('overlay_show');
+              this.overlay.getElement().classList.add('profile-overlay_show');
               setTimeout(() => {
-                this.overlay.getElement().classList.remove('overlay_show');
+                this.overlay.getElement().classList.remove('profile-overlay_show');
                 this.modalAddressForm.getElement().classList.add('unvisible');
                 this.createAddressesOnControlPanel();
                 this.addAllAddress();
@@ -569,9 +569,9 @@ export class ProfileForm extends BaseComponent {
             .then((result) => {
               state.customer = result as Customer;
               this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('overlay_show');
+              this.overlay.getElement().classList.add('profile-overlay_show');
               setTimeout(() => {
-                this.overlay.getElement().classList.remove('overlay_show');
+                this.overlay.getElement().classList.remove('profile-overlay_show');
                 this.modalAddressForm.getElement().classList.add('unvisible');
                 this.createAddressesOnControlPanel();
                 this.addAllAddress();
@@ -641,7 +641,7 @@ export class ProfileForm extends BaseComponent {
     });
 
     this.btnEditPass.getElement().addEventListener('click', (event) => {
-      this.overlay.getElement().classList.add('overlay_show');
+      this.overlay.getElement().classList.add('profile-overlay_show');
       this.modalEditPass.getElement().classList.add('modal-pass_show');
       event.preventDefault();
     });
@@ -668,8 +668,8 @@ export class ProfileForm extends BaseComponent {
       if (this.validateEditProfile()) {
         this.btnsContainerSaveEdit.getElement().classList.add('unvisible');
         this.btnsContainerOpenEdit.getElement().classList.remove('unvisible');
-        this.overlay.getElement().classList.add('overlay_show');
-        setTimeout(() => this.overlay.getElement().classList.remove('overlay_show'), 2000);
+        this.overlay.getElement().classList.add('profile-overlay_show');
+        setTimeout(() => this.overlay.getElement().classList.remove('profile-overlay_show'), 2000);
         const newCustomerData = {
           version: Number(state.customer.version),
           actions: [

@@ -389,59 +389,55 @@ export class ProfileForm extends BaseComponent {
       }
       if (currentTarget.classList.contains('billing-address')) {
         const checkBox = currentTarget as HTMLInputElement;
-        if (checkBox.checked) {
-          const newCustomerData = {
-            version: Number(state.customer.version),
-            actions: [
-              {
-                action: 'setDefaultBillingAddress',
-                addressId: currentTarget.dataset.id,
-              },
-            ],
-          };
-          updateCustomerApi(newCustomerData, state.access_token.access_token)
-            .then((result) => {
-              state.customer = result as Customer;
-              this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('profile-overlay_show');
-              setTimeout(() => {
-                this.overlay.getElement().classList.remove('profile-overlay_show');
-                this.createAddressesOnControlPanel();
-                this.addAllAddress();
-              }, 2000);
-            })
-            .catch((error) => {
-              this.showErrorMessage(error);
-            });
-        }
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: checkBox.checked ? 'setDefaultBillingAddress' : 'removeBillingAddressId',
+              addressId: currentTarget.dataset.id,
+            },
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            this.showMsg('Succes', true);
+            this.overlay.getElement().classList.add('profile-overlay_show');
+            setTimeout(() => {
+              this.overlay.getElement().classList.remove('profile-overlay_show');
+              this.createAddressesOnControlPanel();
+              this.addAllAddress();
+            }, 2000);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
       }
       if (currentTarget.classList.contains('shipping-address')) {
         const checkBox = currentTarget as HTMLInputElement;
-        if (checkBox.checked) {
-          const newCustomerData = {
-            version: Number(state.customer.version),
-            actions: [
-              {
-                action: 'setDefaultShippingAddress',
-                addressId: currentTarget.dataset.id,
-              },
-            ],
-          };
-          updateCustomerApi(newCustomerData, state.access_token.access_token)
-            .then((result) => {
-              state.customer = result as Customer;
-              this.showMsg('Succes', true);
-              this.overlay.getElement().classList.add('profile-overlay_show');
-              setTimeout(() => {
-                this.overlay.getElement().classList.remove('profile-overlay_show');
-                this.createAddressesOnControlPanel();
-                this.addAllAddress();
-              }, 2000);
-            })
-            .catch((error) => {
-              this.showErrorMessage(error);
-            });
-        }
+        const newCustomerData = {
+          version: Number(state.customer.version),
+          actions: [
+            {
+              action: checkBox.checked ? 'setDefaultShippingAddress' : 'removeShippingAddressId',
+              addressId: currentTarget.dataset.id,
+            },
+          ],
+        };
+        updateCustomerApi(newCustomerData, state.access_token.access_token)
+          .then((result) => {
+            state.customer = result as Customer;
+            this.showMsg('Succes', true);
+            this.overlay.getElement().classList.add('profile-overlay_show');
+            setTimeout(() => {
+              this.overlay.getElement().classList.remove('profile-overlay_show');
+              this.createAddressesOnControlPanel();
+              this.addAllAddress();
+            }, 2000);
+          })
+          .catch((error) => {
+            this.showErrorMessage(error);
+          });
       }
       if (currentTarget.classList.contains('btn-svg-edit')) {
         this.isSubmittedAddress = true;

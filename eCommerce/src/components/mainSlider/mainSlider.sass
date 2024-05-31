@@ -1,0 +1,30 @@
+@import "../../variables"
+
+.main-slider
+  overflow: hidden
+  border-radius: 5px
+  border: solid 5px white
+  background: rgba(0, 0, 0, 0.1)
+  box-shadow: 4px 4px 8px 8px rgba(0, 0, 0, 0.1)
+
+.main-slider__slide
+  border-radius: 5px
+  width: 100%
+
+.main-slider__wrapper
+  display: flex
+  gap: 50%
+  animation: slide 20s infinite
+  animation-delay: 1s
+
+@keyframes slide
+  0%
+    transform: translateX(0)
+  25%
+    transform: translateX(-150%)
+  50%
+    transform: translateX(-300%)
+  75%
+    transform: translateX(-450%)
+  100%
+    transform: translateX(0)

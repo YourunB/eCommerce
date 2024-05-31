@@ -1,4 +1,6 @@
+import { mainSlider } from '../components/mainSlider/mainSlider';
+
 const mainPage = document.createElement('div');
-mainPage.textContent = 'Main page...';
+mainPage.append(mainSlider);
 
 export { mainPage };

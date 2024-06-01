@@ -10,10 +10,11 @@ import { filterOffset } from '../../components/helpers/filterOffset';
 import { filterSearch } from '../../components/helpers/filterSearch';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
-import { SortDirection, SortField } from '../../pages/products/sort/sort';
+import { ResetButton } from '../../pages/products/resetButton/resetButton';
 import { filterСentAmount } from '../../components/helpers/filterСentAmount';
-import { ActionsProducts, FilterRules, MappedCategories, MappedProducts } from './types';
+import { SortDirection, SortField } from '../../pages/products/control/control';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
+import { ActionsProducts, FilterRules, MappedCategories, MappedProducts, ResetButtonNames } from './types';
 import { isMappedCategories, isMappedProducts, isProductProjection } from '../../components/helpers/predicates';
 
 const START_PAGE = 1;
@@ -114,7 +115,7 @@ export class Products {
         break;
       case 'change-price-filter':
         this.currentPage = 1;
-        this.addFilter(filterСentAmount, `${+this.prop1 * 100}-${+this.prop2 * 100}`);
+        this.addFilter(filterСentAmount, `${+this.prop1 * 100}-${+this.prop2 * 100}`, 'price');
         this.procesProducts(true);
         break;
       case 'change-offset':
@@ -127,7 +128,12 @@ export class Products {
         break;
       case 'search':
         this.currentPage = 1;
-        this.addFilter(filterSearch, `${this.prop1}`);
+        this.addFilter(filterSearch, `${this.prop1}`, 'search');
+        this.procesProducts(true);
+        break;
+      case 'reset-btn':
+        this.currentPage = 1;
+        this.removeFilter(this.prop1 as ResetButtonNames);
         this.procesProducts(true);
         break;
     }
@@ -187,14 +193,27 @@ export class Products {
     return url;
   }
 
-  // add any filter rule
-  private addFilter(filter: FilterRules, value: string): void {
+  // add filter rule
+  private addFilter(filter: FilterRules, value: string, name?: ResetButtonNames): void {
+    if (name) this.page.addResetButton(name, new ResetButton(name, this.dispatch));
     this.filter.set(filter, value);
   }
 
-  // remove any filter rule
-  private removeFilter(filter: FilterRules): void {
-    this.filter.delete(filter);
+  // remove filter rule
+  private removeFilter(filterName: ResetButtonNames): void {
+    this.page.removeResetButton(filterName);
+    switch (filterName) {
+      case 'price':
+        this.page.resetPriceInputs();
+        this.filter.delete(filterСentAmount);
+        break;
+      case 'search':
+        this.page.resetSearchInput();
+        this.filter.delete(filterSearch);
+        break;
+      default:
+        break;
+    }
   }
 
   public async getCategories(): Promise<MappedCategories[] | Error> {

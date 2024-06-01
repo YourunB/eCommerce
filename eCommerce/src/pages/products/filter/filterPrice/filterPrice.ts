@@ -12,10 +12,10 @@ interface TargetElement extends HTMLElement {
 const MAX_FILTER = 1000;
 
 export class FilterPrice extends BaseComponent {
-  min: Input;
-  max: Input;
-  sliderObj: API | undefined;
-  btnFilter: Button;
+  private min: Input;
+  private max: Input;
+  private sliderObj: API | undefined;
+  private btnFilter: Button;
 
   constructor(dispatch: DispatchProducts) {
     super({ tagName: 'div' });
@@ -59,6 +59,12 @@ export class FilterPrice extends BaseComponent {
     inputContainer.insertChildren([this.min, this.max]);
     this.insertChildren([header, slider, inputContainer, this.btnFilter]);
     this.btnFilter.off();
+  }
+
+  public resetPriceInputs(): void {
+    this.min.value = '0';
+    this.max.value = `${MAX_FILTER}`;
+    this.sliderObj?.set([this.min.value, this.max.value]);
   }
 
   private handleChangeInput(): void {

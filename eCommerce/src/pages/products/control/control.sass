@@ -10,6 +10,14 @@
   border-radius: 0.25rem
   color: #46A358
   font-size: 1.125rem
+  cursor: pointer
+
+.reset-container
+  display: flex
+  flex-wrap: nowrap
+  flex: 1 1 auto
+  gap: 1rem
+  padding: 0 1rem
 
 .sort_option
   padding: 0.25rem
@@ -19,3 +27,7 @@
   filter: grayscale(1)
   pointer-events: none
   opacity: 0.5
+
+@media (max-width: 375px)
+  .sort__label
+    display: none

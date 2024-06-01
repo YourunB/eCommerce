@@ -1,19 +1,19 @@
 import './pageProducts.sass';
-import { SectionSort } from './sort/sort';
+import { SectionControl } from './control/control';
 import { EmptyCard } from './productCard/emptyCard';
 import { ProductCard } from './productCard/productCard';
 import { BaseComponent } from '../../components/baseComponent';
 import { PropsFilters, SectionFilters } from './filter/filter';
 import { ProductsFooter } from './productsFooter/productsFooter';
-import { DispatchProducts, MappedProducts } from '../../modules/products/types';
 import { Dialog, TypeMessage } from '../../components/modalDialog/modalDialog';
+import { DispatchProducts, MappedProducts, ResetButtonNames } from '../../modules/products/types';
 
 const TRANSITION_DURATION = 1000;
 
 export class PageProducts extends BaseComponent {
   private dispatch: DispatchProducts;
   private footer: ProductsFooter;
-  private sectionSort: SectionSort;
+  private sectionControl: SectionControl;
   private sectionProducts: BaseComponent;
   private sectionFilters: SectionFilters;
   private dialog: Dialog;
@@ -24,10 +24,26 @@ export class PageProducts extends BaseComponent {
     this.dialog = Dialog.getInstance();
     this.sectionProducts = new BaseComponent({ tagName: 'section', classNames: 'products__container' });
     this.sectionFilters = new SectionFilters(dispatch);
-    this.sectionSort = new SectionSort(dispatch);
+    this.sectionControl = new SectionControl(dispatch);
     this.footer = new ProductsFooter(limits, countPages, dispatch);
 
-    this.insertChildren([this.sectionFilters, this.sectionSort, this.sectionProducts, this.footer]);
+    this.insertChildren([this.sectionFilters, this.sectionControl, this.sectionProducts, this.footer]);
+  }
+
+  public resetPriceInputs(): void {
+    this.sectionFilters.resetPriceInputs();
+  }
+
+  public resetSearchInput(): void {
+    this.sectionControl.resetSearchInput();
+  }
+
+  public addResetButton(name: ResetButtonNames, btn: BaseComponent): void {
+    this.sectionControl.addResetButton(name, btn);
+  }
+
+  public removeResetButton(name: ResetButtonNames): void {
+    this.sectionControl.removeResetButton(name);
   }
 
   public setCategoryActive(name: string): void {
@@ -35,7 +51,7 @@ export class PageProducts extends BaseComponent {
   }
 
   public setSearchDataList(values: string[]): void {
-    this.sectionSort.setSearchDataList(values);
+    this.sectionControl.setSearchDataList(values);
   }
 
   public showDialog(text: string, type: TypeMessage = 'info'): void {
@@ -52,7 +68,7 @@ export class PageProducts extends BaseComponent {
 
   set buttons(status: 'enabled' | 'disabled') {
     this.footer.buttons = status;
-    this.sectionSort.buttons = status;
+    this.sectionControl.buttons = status;
   }
 
   public resetProducts(): void {

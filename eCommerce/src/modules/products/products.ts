@@ -1,4 +1,5 @@
 import state from '../../state/state';
+import { waitToken } from '../../components/helpers/waitToken';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
 import { filterSort } from '../../components/helpers/filterSort';
@@ -165,6 +166,7 @@ export class Products {
   public async getProducts(): Promise<Error | MappedProducts[] | undefined> {
     url.pruducts.search = '';
     const query = this.applyFilters(url.pruducts);
+    await waitToken(10, 100);
     const products = await queryProducts(query);
 
     if (products instanceof Error) {
@@ -192,6 +194,7 @@ export class Products {
   }
 
   public async getCategories(): Promise<MappedCategories[] | Error> {
+    await waitToken(10, 100);
     const categories = await queryCategories();
     return categories instanceof Error ? categories : this.mapCategories(categories);
   }

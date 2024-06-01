@@ -2,6 +2,7 @@ import state from '../../state/state';
 import { waitToken } from '../../components/helpers/waitToken';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
+import { Dialog } from '../../components/modalDialog/modalDialog';
 import { filterSort } from '../../components/helpers/filterSort';
 import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
@@ -31,6 +32,7 @@ export class Products {
   private _currentPage: number;
   private currentLimit: string;
   private currentSort: [SortField, SortDirection];
+  private dialog: Dialog;
 
   constructor() {
     this._currentOffset = '0';
@@ -38,6 +40,7 @@ export class Products {
     this.currentSort = [DEFAULT_SORT_FIELD, DEFAULT_SORT_DIRECTION];
     this.currentLimit = state.limits[0] || DEFAULT_LIMIT;
     this.categoriesList = new Error();
+    this.dialog = Dialog.getInstance();
     this.page = new PageProducts(state.limits, this._currentPage, this.dispatch);
     this.addFilter(filterLimit, this.currentLimit);
     this.addFilter(filterOffset, this.currentOffset);
@@ -150,6 +153,7 @@ export class Products {
           this.page.setSearchDataList(products.map((product) => product.name));
           this.page.renderProducts(products, fadeout);
         } else {
+          this.dialog.show('There are no products available at the selected conditions', 'warning');
           this.page.renderEmptyCard();
         }
       })

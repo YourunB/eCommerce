@@ -30,6 +30,14 @@ export class PageProducts extends BaseComponent {
     this.insertChildren([this.sectionFilters, this.sectionControl, this.sectionProducts, this.footer]);
   }
 
+  public resetAnnualInput(): void {
+    this.sectionFilters.resetAnnualInput();
+  }
+
+  public resetPerennialInput(): void {
+    this.sectionFilters.resetPerennialInput();
+  }
+
   public resetPriceInputs(): void {
     this.sectionFilters.resetPriceInputs();
   }

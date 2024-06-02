@@ -28,7 +28,7 @@
   display: grid
   grid-area: products
   gap: 1rem
-  grid-auto-rows: auto
+  grid-auto-rows: minmax(auto, 31rem)
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))
   justify-content: center
   transition-duration: 1000ms
@@ -45,7 +45,8 @@
   z-index: 1
   width: 3rem
   height: 2.6rem
-  top: 0
+  top: 105px
+  // top: 0
   right: -3.8rem
   background-image: url("../../assets/icons/filter.webp")
   background-position: center
@@ -62,15 +63,16 @@
 
   .products__filters
     position: fixed
-    top: 105px
+    top: 0
     left: calc((97vw) * -1)
     width: 97vw
-    padding: 2rem clamp(4rem, 20vw, 10rem)
+    height: 100dvh
+    padding: 0.5rem clamp(4rem, 20vw, 10rem)
 
     border-radius: 0.3rem
     transition-duration: 500ms
     background-color: $color-background-aside
-    z-index: 1
+    z-index: 200
 
   .products__filters__aside-btn
     display: inline-block

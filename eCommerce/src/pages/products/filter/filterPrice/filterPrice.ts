@@ -18,7 +18,7 @@ export class FilterPrice extends BaseComponent {
   private btnFilter: Button;
 
   constructor(dispatch: DispatchProducts) {
-    super({ tagName: 'div' });
+    super({ tagName: 'div', classNames: 'filters_price' });
     this.min = new Input({ attribute: { name: 'type', value: 'number' } });
     this.max = new Input({ attribute: { name: 'type', value: 'number' } });
     const header = new BaseComponent({ tagName: 'p', classNames: 'filter-price__header', textContent: 'Price Range' });

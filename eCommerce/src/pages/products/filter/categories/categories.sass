@@ -4,7 +4,7 @@
 .filters_main-categories
   list-style: none
   padding: 0
-  margin: 0 0 2rem 0
+  margin: 0 0 1rem 0
   font-size: 1.2rem
   font-weight: 700
   line-height: 2.5rem
@@ -12,6 +12,7 @@
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 
 .filters_main-categories
+  position: relative
   margin: 0
   & li::before
     content: "—"
@@ -43,3 +44,8 @@
   cursor: pointer
   color: $color-text-common
   background-color: color-mix(in srgb, $color-bacground-common 50%, $color-border-selected 50%)
+
+@media (max-width: 768px)
+  .filters_categories
+    margin-bottom: 1rem
+    border-bottom: 1px solid color-mix(in srgb, $color-background-aside 70%, white 30%)

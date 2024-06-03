@@ -4,7 +4,7 @@ interface AttributeElement {
 }
 
 export interface BaseComponentProps {
-  tagName: string;
+  tagName: keyof HTMLElementTagNameMap;
   classNames?: string | string[];
   textContent?: string | null;
   parentNode?: HTMLElement;

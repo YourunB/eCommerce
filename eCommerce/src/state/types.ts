@@ -20,9 +20,16 @@ export enum AuthState {
   anonymous = 'anonymous',
 }
 
+type Routes = {
+  readonly products: string;
+};
+
 export interface State {
+  readonly routes: Routes;
+  readonly rootCategory: string;
   authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
   customer: Customer | Record<string, never>;
+  readonly limits: string[];
   [index: string]: unknown;
 }

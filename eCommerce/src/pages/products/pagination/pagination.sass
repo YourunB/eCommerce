@@ -1,0 +1,27 @@
+@use './src/variables' as *
+
+.pagination__container
+  display: flex
+  gap: 0.5rem
+
+.pagination__button
+  background-color: $color-bacground-common
+  color: $color-button-pagination
+  border: 1px solid $color-input-placeholder
+
+  &.pagination__current-button
+    cursor: default
+    pointer-events: none
+    background-color: $color-button-background
+    color: $color-button-pagination-selected
+    text-shadow: 1px 1px 1px black
+
+.pagination_disabled
+  pointer-events: none
+  filter: grayscale(1)
+  opacity: 0.5
+
+@media (hover: hover)
+  .pagination__button:hover
+    background-color: $color-button-background
+    color: $color-button-common

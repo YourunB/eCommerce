@@ -1,9 +1,14 @@
 import { State, Subscribers, StateKey, StateValue, Callback, AuthState } from './types';
 
 const initialState: State = {
+  routes: {
+    products: '/yourunb-JSFE2023Q4/ecommerce/products',
+  },
+  rootCategory: 'All Products',
   authState: AuthState.notLogged,
   access_token: {},
   customer: {},
+  limits: ['10', '20', '30', '40', '50'],
 };
 
 const subscribers: Subscribers = {};

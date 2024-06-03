@@ -1,0 +1,51 @@
+@use './src/variables' as *
+
+.filters_categories,
+.filters_main-categories
+  list-style: none
+  padding: 0
+  margin: 0 0 1rem 0
+  font-size: 1.2rem
+  font-weight: 700
+  line-height: 2.5rem
+  user-select: none
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+
+.filters_main-categories
+  position: relative
+  margin: 0
+  & li::before
+    content: "—"
+    position: absolute
+    left: 1.5rem
+
+  & li
+    padding-left: 3rem
+
+.categories_element
+  padding-left: 1rem
+  color: white
+  font-size: 1rem
+  font-weight: 400
+  line-height: 2.5rem
+
+  border-radius: 0.3rem
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.categories_element__active
+  font-weight: 700
+  color: $color-border-selected
+  background-color: color-mix(in srgb, $color-bacground-common 70%, $color-border-selected 30%)
+
+@media (hover: hover)
+.categories_element:hover
+  cursor: pointer
+  color: $color-text-common
+  background-color: color-mix(in srgb, $color-bacground-common 50%, $color-border-selected 50%)
+
+@media (max-width: 768px)
+  .filters_categories
+    margin-bottom: 1rem
+    border-bottom: 1px solid color-mix(in srgb, $color-background-aside 70%, white 30%)

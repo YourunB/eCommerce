@@ -1,26 +1,31 @@
 import './modules/routingScript';
 import './index.sass';
+import state from './state/state';
 import { router } from './modules/router';
 import { mainPage } from './pages/mainPage';
+import { Products } from './modules/products/products';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
-import { productsPage } from './pages/productstPage';
 import { basketPage } from './pages/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnLogOut, btnReg, logo, menu, basket } from './components/header/header';
+import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
+import { PageProfile } from './pages/profile/pageProfile';
+import { background } from './components/background/background';
+import { PageProduct } from './pages/product/pageProduct';
 
 const main = document.createElement('main');
 main.classList.add('main');
 const login = new Login();
+const products = new Products();
 
 login.isLogined().then(
   () => localStorage.setItem('logged', 'true'),
   () => localStorage.removeItem('logged')
 );
 
-document.body.append(header, main, footer);
+document.body.append(header, main, footer, background);
 
 function setActivePage() {
   const menuItems = menu.getElementsByClassName('menu__item') as HTMLCollectionOf<HTMLElement>;
@@ -33,10 +38,12 @@ function setActivePage() {
 function checkAuthorization() {
   if (localStorage.logged !== undefined) {
     btnLogOut.classList.remove('header__btn_hide');
+    btnProfile.classList.remove('header__btn_hide');
     btnLogIn.classList.add('header__btn_hide');
     btnReg.classList.add('header__btn_hide');
   } else {
     btnLogOut.classList.add('header__btn_hide');
+    btnProfile.classList.add('header__btn_hide');
     btnLogIn.classList.remove('header__btn_hide');
     btnReg.classList.remove('header__btn_hide');
   }
@@ -55,11 +62,19 @@ router.addRoute({
   },
 });
 router.addRoute({
-  path: '/yourunb-JSFE2023Q4/ecommerce/products',
+  path: state.routes.products,
   handler: () => {
     document.title = 'Products';
     main.innerHTML = '';
-    main.append(productsPage);
+    const { hash } = window.location;
+
+    if (hash) {
+      const product = new PageProduct({ tagName: 'div' });
+      main.append(product.getElement());
+    } else {
+      main.append(products.getPage());
+    }
+
     setActivePage();
     checkAuthorization();
   },
@@ -80,6 +95,16 @@ router.addRoute({
     document.title = 'Basket';
     main.innerHTML = '';
     main.append(basketPage);
+    setActivePage();
+    checkAuthorization();
+  },
+});
+router.addRoute({
+  path: '/yourunb-JSFE2023Q4/ecommerce/profile',
+  handler: () => {
+    document.title = 'Profile';
+    main.innerHTML = '';
+    main.append(new PageProfile({}).getElement());
     setActivePage();
     checkAuthorization();
   },
@@ -121,7 +146,7 @@ window.onload = () => {
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/products');
+    router.route(`/yourunb-JSFE2023Q4/ecommerce/products${location.hash}`);
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') {
@@ -130,6 +155,11 @@ window.onload = () => {
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/basket') {
     router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
+    return;
+  }
+  if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/profile') {
+    if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    else router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {
@@ -155,6 +185,12 @@ window.onpopstate = () => {
     window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/');
     setActivePage();
   }
+
+  if (localStorage.logged === undefined && location.pathname === '/yourunb-JSFE2023Q4/ecommerce/profile') {
+    router.route('/yourunb-JSFE2023Q4/ecommerce/login', false);
+    window.history.replaceState({}, '', '/yourunb-JSFE2023Q4/ecommerce/login');
+    setActivePage();
+  }
 };
 
 logo.addEventListener('click', () => {
@@ -163,18 +199,21 @@ logo.addEventListener('click', () => {
 btnBackHome.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
 });
+btnBasket.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
+});
 btnLogIn.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/login');
 });
-btnLogOut.addEventListener('click', () => {
-  localStorage.clear();
-  router.route('/yourunb-JSFE2023Q4/ecommerce/');
+btnProfile.addEventListener('click', () => {
+  router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
 });
 btnReg.addEventListener('click', () => {
   router.route('/yourunb-JSFE2023Q4/ecommerce/registration');
 });
-basket.addEventListener('click', () => {
-  router.route('/yourunb-JSFE2023Q4/ecommerce/basket');
+btnLogOut.addEventListener('click', () => {
+  localStorage.clear();
+  router.route('/yourunb-JSFE2023Q4/ecommerce/');
 });
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;

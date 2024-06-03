@@ -5,7 +5,9 @@
   padding: 10px
   height: 80px
   width: 100%
-  color: $color-text-common
+  color: white
+  display: flex
+  justify-content: space-between
 
 .header__btn
   max-width: fit-content
@@ -23,6 +25,8 @@
   align-items: center
   gap: 5px
   transition: 0.7s
+  color: white
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4)
 
 @media (hover:hover)
   .logo-box:hover
@@ -41,31 +45,35 @@
 
 .menu__item
   padding: 0.63rem 1rem
-  border-radius: 5px
+  border-radius: 3px
 
 .menu__item_active
   color: white
   background: $color-button-background
 
+.basket,
+.profile
+  width: 30px
+
 .menu__item,
-.basket
+.basket,
+.profile
   transition: 0.7s
 
 @media (hover:hover)
   .menu__item:hover,
-  .basket:hover
+  .basket:hover,
+  .profile:hover
     transform: scale(1.1)
     cursor: pointer
 
 .menu__item:active,
-.basket:active
+.basket:active,
+.profile:active
   transform: scale(0.9)
   transition: 0.2s
 
 .navigation
-  display: flex
-  justify-content: space-between
-  align-items: center
   gap: 10px
   transition: 1s
 
@@ -80,13 +88,11 @@
   transition: 1s
   border: none
   padding: 0
-  height: 60px
-  width: 60px
+  height: 50px
+  width: 40px
   display: none
-  position: absolute
+  position: relative
   z-index: 200
-  top: 20px
-  right: 20px
 
 @media (hover:hover)
   .btn-menu:hover
@@ -105,9 +111,9 @@
   position: absolute
   top: 16px
   left: 0
-  width: 60px
-  height: 10px
-  background: $color-text-common
+  width: 40px
+  height: 5px
+  background: $color-border-selected
   border-radius: 10px
   transition: 1s
 
@@ -116,40 +122,43 @@
   position: absolute
   top: 30px
   left: 0
-  width: 60px
-  height: 10px
-  background: $color-text-common
+  width: 40px
+  height: 5px
+  background: $color-border-selected
   border-radius: 10px
   transition: 1s
 
 .btn-menu_cliked::before
-  top: 23px
+  top: 20px
   rotate: 45deg
 
 .btn-menu_cliked::after
-  top: 23px
+  top: 20px
   rotate: -45deg
 
 @media (max-width: 768px)
   .navigation
     display: block
-    padding: 10px
-    position: relative
-    width: 100%
+    padding: 40px 10px 10px 10px
+    position: absolute
+    width: calc(100% - 40px)
     transform: translateX(-180%)
     z-index: 100
-    border-radius: 5px
-    background: white
+    border-radius: 3px
+    background: rgba(0, 0, 0, 0.5)
+    backdrop-filter: blur(5px)
+    box-shadow: 0 0 0 3px $color-border-selected
 
     .menu
       display: block
       text-align: center
-
-    .navigation__btns
-      justify-content: flex-end
   
   .btn-menu
     display: block
 
 .navigation_show
    transform: translateX(0)
+
+@media (max-width: 430px)
+  .logo-box span
+    display: none

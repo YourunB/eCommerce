@@ -34,14 +34,18 @@ export function mapProduct(product: ProductProjection): MappedProducts {
     description = sentence;
   }
 
+  const { categories } = product;
+  const categoryId = categories[0].id;
+
   const mappedProduct: MappedProducts = {
     id,
     name,
     photo,
     centAmount,
+    categoryId,
     description,
     currencyCode: code,
-    url: `${state.routes.products}#${id}`,
+    url: `${state.routes.products}?${categoryId}#${id}`,
   };
   if (discount) mappedProduct.discount = { centAmount: discountCentAmount, percent: percentDiscount };
 

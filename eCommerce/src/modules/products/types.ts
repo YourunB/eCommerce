@@ -8,7 +8,10 @@ export type ActionsProducts = {
     | 'change-price-filter'
     | 'change-offset'
     | 'change-sort'
-    | 'search';
+    | 'search'
+    | 'reset-btn'
+    | 'change-annual'
+    | 'change-perennial';
   payload: {
     prop1: string;
     prop2: string;
@@ -39,3 +42,4 @@ export type MappedProducts = {
   };
 };
 export type FilterRules = (url: URL, value: string) => URL;
+export type ResetButtonNames = 'category' | 'price' | 'search' | 'annual' | 'perennial';

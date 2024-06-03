@@ -1,17 +1,22 @@
 import state from '../../state/state';
+import { waitToken } from '../../components/helpers/waitToken';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
+import { Dialog } from '../../components/modalDialog/modalDialog';
 import { filterSort } from '../../components/helpers/filterSort';
 import { mapCategory } from '../../components/helpers/mapCategory';
 import { filterLimit } from '../../components/helpers/filterLimit';
 import { filterOffset } from '../../components/helpers/filterOffset';
 import { filterSearch } from '../../components/helpers/filterSearch';
+import { filterAnnual } from '../../components/helpers/filterAnnual';
 import { queryCategories, queryProducts, url } from '../api/products';
 import { filterCategory } from '../../components/helpers/filterCategory';
-import { SortDirection, SortField } from '../../pages/products/sort/sort';
+import { ResetButton } from '../../pages/products/resetButton/resetButton';
+import { filterPerennial } from '../../components/helpers/filterPerennial';
 import { filterСentAmount } from '../../components/helpers/filterСentAmount';
-import { ActionsProducts, FilterRules, MappedCategories, MappedProducts } from './types';
+import { SortDirection, SortField } from '../../pages/products/control/control';
 import { CategoryPagedQueryResponse, PagedQueryResponse } from '@commercetools/platform-sdk';
+import { ActionsProducts, FilterRules, MappedCategories, MappedProducts, ResetButtonNames } from './types';
 import { isMappedCategories, isMappedProducts, isProductProjection } from '../../components/helpers/predicates';
 
 const START_PAGE = 1;
@@ -30,6 +35,7 @@ export class Products {
   private _currentPage: number;
   private currentLimit: string;
   private currentSort: [SortField, SortDirection];
+  private dialog: Dialog;
 
   constructor() {
     this._currentOffset = '0';
@@ -37,6 +43,7 @@ export class Products {
     this.currentSort = [DEFAULT_SORT_FIELD, DEFAULT_SORT_DIRECTION];
     this.currentLimit = state.limits[0] || DEFAULT_LIMIT;
     this.categoriesList = new Error();
+    this.dialog = Dialog.getInstance();
     this.page = new PageProducts(state.limits, this._currentPage, this.dispatch);
     this.addFilter(filterLimit, this.currentLimit);
     this.addFilter(filterOffset, this.currentOffset);
@@ -110,7 +117,7 @@ export class Products {
         break;
       case 'change-price-filter':
         this.currentPage = 1;
-        this.addFilter(filterСentAmount, `${+this.prop1 * 100}-${+this.prop2 * 100}`);
+        this.addFilter(filterСentAmount, `${+this.prop1 * 100}-${+this.prop2 * 100}`, 'price');
         this.procesProducts(true);
         break;
       case 'change-offset':
@@ -123,7 +130,32 @@ export class Products {
         break;
       case 'search':
         this.currentPage = 1;
-        this.addFilter(filterSearch, `${this.prop1}`);
+        this.addFilter(filterSearch, `${this.prop1}`, 'search');
+        this.procesProducts(true);
+        break;
+      case 'reset-btn':
+        this.currentPage = 1;
+        this.removeFilter(this.prop1 as ResetButtonNames);
+        this.procesProducts(true);
+        break;
+      case 'change-annual':
+        if (this.prop1 === 'true') {
+          this.addFilter(filterAnnual, `${this.prop1}`, 'annual');
+          this.removeFilter('perennial');
+        } else {
+          this.removeFilter('annual');
+        }
+        this.currentPage = 1;
+        this.procesProducts(true);
+        break;
+      case 'change-perennial':
+        if (this.prop1 === 'true') {
+          this.addFilter(filterPerennial, `${this.prop1}`, 'perennial');
+          this.removeFilter('annual');
+        } else {
+          this.removeFilter('perennial');
+        }
+        this.currentPage = 1;
         this.procesProducts(true);
         break;
     }
@@ -149,6 +181,7 @@ export class Products {
           this.page.setSearchDataList(products.map((product) => product.name));
           this.page.renderProducts(products, fadeout);
         } else {
+          this.dialog.show('There are no products available at the selected conditions', 'warning');
           this.page.renderEmptyCard();
         }
       })
@@ -165,6 +198,7 @@ export class Products {
   public async getProducts(): Promise<Error | MappedProducts[] | undefined> {
     url.pruducts.search = '';
     const query = this.applyFilters(url.pruducts);
+    await waitToken(10, 100);
     const products = await queryProducts(query);
 
     if (products instanceof Error) {
@@ -181,17 +215,39 @@ export class Products {
     return url;
   }
 
-  // add any filter rule
-  private addFilter(filter: FilterRules, value: string): void {
+  // add filter rule
+  private addFilter(filter: FilterRules, value: string, name?: ResetButtonNames): void {
+    if (name) this.page.addResetButton(name, new ResetButton(name, this.dispatch));
     this.filter.set(filter, value);
   }
 
-  // remove any filter rule
-  private removeFilter(filter: FilterRules): void {
-    this.filter.delete(filter);
+  // remove filter rule
+  private removeFilter(filterName: ResetButtonNames): void {
+    this.page.removeResetButton(filterName);
+    switch (filterName) {
+      case 'price':
+        this.page.resetPriceInputs();
+        this.filter.delete(filterСentAmount);
+        break;
+      case 'search':
+        this.page.resetSearchInput();
+        this.filter.delete(filterSearch);
+        break;
+      case 'annual':
+        this.page.resetAnnualInput();
+        this.filter.delete(filterAnnual);
+        break;
+      case 'perennial':
+        this.page.resetPerennialInput();
+        this.filter.delete(filterPerennial);
+        break;
+      default:
+        break;
+    }
   }
 
   public async getCategories(): Promise<MappedCategories[] | Error> {
+    await waitToken(10, 100);
     const categories = await queryCategories();
     return categories instanceof Error ? categories : this.mapCategories(categories);
   }

@@ -5,9 +5,9 @@ import { Button } from '../../../components/basebutton/baseButton';
 import { ActionsProducts, DispatchProducts } from '../../../modules/products/types';
 
 export class SectionSearch extends BaseComponent {
-  input: Input;
-  dispatch: DispatchProducts;
-  datalist: BaseComponent;
+  private input: Input;
+  private dispatch: DispatchProducts;
+  private datalist: BaseComponent;
 
   constructor(dispatch: DispatchProducts) {
     super({ tagName: 'search', classNames: 'search_container' });
@@ -24,6 +24,10 @@ export class SectionSearch extends BaseComponent {
 
     form.insertChildren([this.input, this.datalist, button]);
     this.insertChild(form);
+  }
+
+  public resetSearchInput(): void {
+    this.input.value = '';
   }
 
   private handleSubmit(e: Event): void {

@@ -1,7 +1,7 @@
-import './sort.sass';
+import './control.sass';
 import { SectionSearch } from '../search/search';
 import { BaseComponent } from '../../../components/baseComponent';
-import { ActionsProducts, DispatchProducts } from '../../../modules/products/types';
+import { ActionsProducts, DispatchProducts, ResetButtonNames } from '../../../modules/products/types';
 
 export type SortDirection = 'asc' | 'desc';
 export type SortField = 'price' | 'name.en-GB' | 'createdAt';
@@ -16,15 +16,25 @@ const options: SortOption[] = [
   ['created ↓', 'createdAt', 'desc'],
 ];
 
-export class SectionSort extends BaseComponent {
+type ResetButton = {
+  [index in ResetButtonNames]?: BaseComponent;
+};
+
+export class SectionControl extends BaseComponent {
   dispatch: DispatchProducts;
   sectionSearch: SectionSearch;
+  resetContainer: BaseComponent;
+  resetButtons: ResetButton;
 
   constructor(dispatch: DispatchProducts) {
-    super({ tagName: 'div', classNames: 'products__sort-container' });
+    super({ tagName: 'div', classNames: 'products__control-container' });
+    this.resetButtons = {};
     this.dispatch = dispatch;
+    const sortContainer = new BaseComponent({ tagName: 'div', classNames: 'sort-container' });
+    this.resetContainer = new BaseComponent({ tagName: 'div', classNames: 'reset-container' });
     const label = new BaseComponent({ tagName: 'label', textContent: 'Sort by:', classNames: 'sort__label' });
     const select = new BaseComponent({ tagName: 'select', classNames: 'sort__select' });
+    sortContainer.insertChildren([label, select]);
     options.forEach(([text, field, direction]) => {
       const option = new BaseComponent<HTMLOptionElement>({
         tagName: 'option',
@@ -37,7 +47,11 @@ export class SectionSort extends BaseComponent {
     this.sectionSearch = new SectionSearch(dispatch);
 
     select.getElement().addEventListener('change', (e) => this.handleChange(e));
-    this.insertChildren([label, select, this.sectionSearch]);
+    this.insertChildren([sortContainer, this.resetContainer, this.sectionSearch]);
+  }
+
+  public resetSearchInput(): void {
+    this.sectionSearch.resetSearchInput();
   }
 
   public setSearchDataList(values: string[]): void {
@@ -58,6 +72,21 @@ export class SectionSort extends BaseComponent {
       this.setClassName('sort-container_disabled');
     } else {
       this.removeClassName('sort-container_disabled');
+    }
+  }
+
+  public addResetButton(name: ResetButtonNames, btn: BaseComponent): void {
+    this.removeResetButton(name);
+    this.resetButtons[name] = btn;
+    this.resetContainer.insertChild(btn);
+  }
+
+  public removeResetButton(name: ResetButtonNames): void {
+    try {
+      this.resetButtons[name]?.destroy();
+      delete this.resetButtons[name];
+    } catch (error) {
+      console.log('SectionControl, removeResetButton. ', error);
     }
   }
 }

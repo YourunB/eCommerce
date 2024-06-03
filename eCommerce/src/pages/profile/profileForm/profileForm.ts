@@ -84,8 +84,7 @@ export class ProfileForm extends BaseComponent {
     this.isSubmittedProfile = false;
     this.isSubmittedAddress = false;
     this.isAddAddress = true;
-    //this.getElement().addEventListener('submit', (e) => this.handleSubmit(e));
-    console.log(state.customer, state.access_token.access_token);
+
     // first name
     this.label = new BaseComponent({
       tagName: 'label',
@@ -303,7 +302,6 @@ export class ProfileForm extends BaseComponent {
           updatePasswordApi(newCustomerData, state.access_token.access_token)
             .then((result) => {
               state.customer = result as Customer;
-              console.log(currentEmail, this.inputPassNew.getElement().value);
               lstorage.saveCredentials({ email: currentEmail, password: this.inputPassNew.getElement().value });
               this.showMsg('Succes', true);
               this.inputPassOld.getElement().value = '';

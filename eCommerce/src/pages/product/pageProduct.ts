@@ -7,6 +7,7 @@ import 'swiper/scss/pagination';
 import 'swiper/scss/navigation';
 import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
+import { waitToken } from '../../components/helpers/waitToken';
 
 export class PageProduct extends BaseComponent {
   private productSwiper: BaseComponent;
@@ -92,19 +93,20 @@ export class PageProduct extends BaseComponent {
     });
 
     const Id = window.location.hash.substring(1);
+    waitToken(10, 100).then(() => {
+      getProduct(Id).then((data: Product | ErrorResponse) => {
+        if ('statusCode' in data) return;
+        const product = data.masterData;
+        this.productName.setTextContent(product.current.name['en-GB']);
+        this.productDescription.setTextContent(product.current.description ? product.current.description['en-GB'] : '');
+        this.renderPrices(product);
+        if (product.staged.masterVariant.images) {
+          this.renderImages(product);
+          this.renderSwiper();
+        }
 
-    getProduct(Id).then((data: Product | ErrorResponse) => {
-      if ('statusCode' in data) return;
-      const product = data.masterData;
-      this.productName.setTextContent(product.current.name['en-GB']);
-      this.productDescription.setTextContent(product.current.description ? product.current.description['en-GB'] : '');
-      this.renderPrices(product);
-      if (product.staged.masterVariant.images) {
-        this.renderImages(product);
-        this.renderSwiper();
-      }
-
-      return data;
+        return data;
+      });
     });
   }
 

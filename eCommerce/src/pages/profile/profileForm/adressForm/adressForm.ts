@@ -1,5 +1,4 @@
 import { BaseComponent } from '../../../../components/baseComponent';
-//import { Input } from '../../../../components/baseInput/baseInput';
 import { InputWithNotice } from '../../../../components/inputWithNotice/inputWithNotice';
 import { PageRegistrationPropsType } from '../../../../modules/registration/helpers/types';
 import '../profileForm.sass';
@@ -11,10 +10,6 @@ export class AddressForm extends BaseComponent {
   public inputPostalCodeShipping: InputWithNotice;
   public inputCountryShipping: InputWithNotice;
   public addressLabel: BaseComponent;
-  //public useAsDefaultShipping: Input;
-  //public useAsDefaultShippingLabel: BaseComponent;
-  //public useAsDefaultBilling: Input;
-  //public useAsDefaultBillingLabel: BaseComponent;
 
   constructor(props: Omit<PageRegistrationPropsType, 'dispatch'>) {
     super({ tagName: 'div', classNames: ['address-container'], ...props });
@@ -104,27 +99,5 @@ export class AddressForm extends BaseComponent {
 
     this.inputCountryShipping.insertChild(countryList);
     this.inputCountryShipping.getElement().setAttribute('list', 'countries');
-    /*
-    this.useAsDefaultShippingLabel = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Use as default shipping address',
-      classNames: 'UseAsDefault__label',
-      parentNode: this.addressFormShipping.getElement(),
-    });
-    this.useAsDefaultShipping = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsDefaultShippingLabel.getElement(),
-    });
-    
-    this.useAsDefaultBillingLabel = new BaseComponent({
-      tagName: 'label',
-      textContent: 'Use as default billing address',
-      classNames: 'UseAsDefault__label',
-      parentNode: this.addressFormShipping.getElement(),
-    });
-    this.useAsDefaultBilling = new Input({
-      attribute: { name: 'type', value: 'checkbox' },
-      parentNode: this.useAsDefaultBillingLabel.getElement(),
-    });*/
   }
 }

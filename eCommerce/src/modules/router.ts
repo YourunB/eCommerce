@@ -21,8 +21,9 @@ class Router {
   }
 
   route(pathname: string, pushState = true) {
+    const [baseURL] = pathname.split('#');
     for (const route of this.routes) {
-      if (route.path === pathname) {
+      if (route.path === baseURL) {
         if (pushState) {
           window.history.pushState({}, '', pathname);
         }

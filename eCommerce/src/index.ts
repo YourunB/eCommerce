@@ -146,7 +146,7 @@ window.onload = () => {
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/products') {
-    router.route('/yourunb-JSFE2023Q4/ecommerce/products');
+    router.route(`/yourunb-JSFE2023Q4/ecommerce/products${location.hash}`);
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/about') {

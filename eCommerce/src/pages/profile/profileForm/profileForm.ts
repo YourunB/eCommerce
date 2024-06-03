@@ -719,8 +719,8 @@ export class ProfileForm extends BaseComponent {
       const address = document.createElement('div');
       address.classList.add('controls-adresses-container__address-box');
       address.innerHTML = `
-        <img class="btn-svg btn-svg-edit" src="/edit.svg" alt="Edit" title="Edit" data-index=${i} data-id=${arrAddresses[i].id}>
-        <img class="btn-svg btn-svg-delete" src="/delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
+        <img class="btn-svg btn-svg-edit" src="edit.svg" alt="Edit" title="Edit" data-index=${i} data-id=${arrAddresses[i].id}>
+        <img class="btn-svg btn-svg-delete" src="delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
         <label>Shipping<input class="shipping-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? 'checked' : null} type="checkbox"></label>
         <label>Billing<input class="billing-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? 'checked' : null} type="checkbox"></label>
         Country: ${arrAddresses[i].country}, 
@@ -732,7 +732,7 @@ export class ProfileForm extends BaseComponent {
     }
     const btnAdd = document.createElement('img');
     btnAdd.className = 'btn-svg btn-svg-add';
-    btnAdd.src = '/add.svg';
+    btnAdd.src = 'add.svg';
     btnAdd.alt = 'Add address';
     btnAdd.title = 'Add';
     container.append(btnAdd);
@@ -748,8 +748,8 @@ export class ProfileForm extends BaseComponent {
         <span>${i + 1}.</span> Country: ${arrAddresses[i].country}, 
         City: ${arrAddresses[i].city}, Street: ${arrAddresses[i].streetName}, 
         Post code: ${arrAddresses[i].postalCode} 
-        ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? '<span> - Billing Address</span>' : ''}
-        ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? '<span> - Shipping Address</span>' : ''}
+        ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? '<span> - Selected Billing Address</span>' : ''}
+        ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? '<span> - Selected Shipping Address</span>' : ''}
       `;
       this.addressContainer.getElement().append(address);
     }
@@ -763,7 +763,6 @@ export class ProfileForm extends BaseComponent {
 
   private closeEditMode(): void {
     this.inputEmail.getElement().classList.remove('edit-mode');
-    //this.inputPass.getElement().classList.remove('edit-mode');
     this.inputFirstName.getElement().classList.remove('edit-mode');
     this.inputLastName.getElement().classList.remove('edit-mode');
     this.inputDateOfBirth.getElement().classList.remove('edit-mode');
@@ -771,7 +770,6 @@ export class ProfileForm extends BaseComponent {
 
   private openEditMode(): void {
     this.inputEmail.getElement().classList.add('edit-mode');
-    //this.inputPass.getElement().classList.add('edit-mode');
     this.inputFirstName.getElement().classList.add('edit-mode');
     this.inputLastName.getElement().classList.add('edit-mode');
     this.inputDateOfBirth.getElement().classList.add('edit-mode');
@@ -779,7 +777,6 @@ export class ProfileForm extends BaseComponent {
 
   private setUserDataFromState(): void {
     this.inputEmail.getElement().value = state.customer.email || '';
-    //this.inputPass.getElement().value = state.customer.password || '';
     this.inputFirstName.getElement().value = state.customer.firstName || '';
     this.inputLastName.getElement().value = state.customer.lastName || '';
     this.inputDateOfBirth.getElement().value = state.customer.dateOfBirth || '';
@@ -808,8 +805,6 @@ export class ProfileForm extends BaseComponent {
   }
 
   private validateEditProfile(): boolean {
-    //if (this.addressForm.useAsBilling.getElement().checked) this.copyShippingToBilling();
-
     const isValidLogin = this.validateEmail(this.inputEmail.value);
     const isValidFirstName = this.validateNamesAndCity(this.inputFirstName.value);
     const isValidLastName = this.validateNamesAndCity(this.inputLastName.value);

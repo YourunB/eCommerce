@@ -158,8 +158,8 @@ window.onload = () => {
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/profile') {
-    if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
-    else router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    if (localStorage.logged === undefined) router.route('/yourunb-JSFE2023Q4/ecommerce/login');
+    else router.route('/yourunb-JSFE2023Q4/ecommerce/profile');
     return;
   }
   if (location.pathname === '/yourunb-JSFE2023Q4/ecommerce/login') {

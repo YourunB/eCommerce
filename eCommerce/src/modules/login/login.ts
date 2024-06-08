@@ -1,16 +1,18 @@
 import { router } from '../router';
+import { MyCart } from '../cart/cart';
 import state from '../../state/state';
 import { AuthState } from '../../state/types';
 import { Actions, AuthResponse } from './types';
-import { LStorage } from '../localStorage/localStorage';
 import { PageLogin } from '../../pages/login/pageLogin';
 import { AuthErrorResponse } from '@commercetools/platform-sdk';
 import { Dialog } from '../../components/modalDialog/modalDialog';
-import { createAnonymous, getAccessToken, getCustomer } from '../api/auth';
-import { isAuthResponse, isCustomer } from '../../components/helpers/predicates';
+import { createAnonymous, getAccessToken, meLogin } from '../api/auth';
+import { LStorage, MSG_ERR_NO_DATA } from '../localStorage/localStorage';
+import { isAuthResponse, isCustomerSignInResult } from '../../components/helpers/predicates';
 
 const dialog = Dialog.getInstance();
 const lstorage = new LStorage();
+const cart = new MyCart();
 
 export class Login {
   private page: PageLogin;
@@ -21,41 +23,15 @@ export class Login {
     this.page = new PageLogin(this.dispatch);
   }
 
-  public isLogined() {
-    return new Promise((resolve, reject) => {
-      lstorage
-        .getCredentials()
-        .then((credential) => {
-          if (typeof credential !== 'string') {
-            this.email = credential.email;
-            this.password = credential.password;
-            getAccessToken(this.email, this.password)
-              .then(this.processResponse)
-              .then(this.saveResponse, this.handleError)
-              .catch((e) => {
-                // if lstorage has credential but login failed
-                this.getAnonymousToken();
-                reject(e);
-              });
-          } else {
-            reject(credential);
-          }
-        })
-        .catch((e) => {
-          // if lstorage hasn't credential
-          this.getAnonymousToken();
-          reject(e);
-        });
-    });
+  public async createAnonymousCustomer() {
+    return createAnonymous()
+      .then(this.processAuthResponse)
+      .then(this.saveAnonymousToken)
+      .then(() => cart.create());
   }
 
-  private getAnonymousToken() {
-    createAnonymous()
-      .then(this.processResponse)
-      .then((token) => {
-        state.authState = AuthState.anonymous;
-        this.saveAccessToken(token);
-      });
+  public isLogined() {
+    return state.authState;
   }
 
   public getPage() {
@@ -71,26 +47,54 @@ export class Login {
     switch (type) {
       case 'login':
         this.page.btnOFF();
-        this.execute(this.email, this.password).finally(() => this.page.btnON());
+        this.execute(this.email, this.password)
+          .catch(() => {})
+          .finally(() => this.page.btnON());
         break;
     }
   };
 
-  public execute(email: string, password: string): Promise<void> {
-    this.email = email;
-    this.password = password;
-    return getAccessToken(email, password)
-      .then(this.processResponse)
-      .then(this.saveResponse, this.handleError)
-      .then(this.redirect)
-      .catch((error) => dialog.show(`${error}`, 'warning'));
+  public async execute(email?: string, password?: string): Promise<string> {
+    try {
+      if (!email || !password) {
+        const credential = await lstorage.getCredentials();
+        if (typeof credential === 'string') return Promise.reject('');
+        this.email = credential.email;
+        this.password = credential.password;
+      } else {
+        this.email = email;
+        this.password = password;
+      }
+
+      const response = await meLogin(this.email, this.password);
+      if (isCustomerSignInResult(response)) {
+        state.authState = AuthState.logged;
+        state.customer = response.customer;
+        if (response.cart) cart.cart = response.cart;
+        this.saveCredential();
+        await this.getNewToken(this.email, this.password);
+        this.redirect();
+      } else {
+        throw new Error(response.message);
+      }
+      return Promise.resolve(`${response.customer.firstName} is logined`);
+    } catch (error) {
+      error !== MSG_ERR_NO_DATA && dialog.show(`${error}`, 'warning');
+      return Promise.reject(`${error}`);
+    }
+  }
+
+  public async getNewToken(email: string, password: string): Promise<AuthResponse | AuthErrorResponse> {
+    const token = await getAccessToken(email, password);
+    if (isAuthResponse(token)) state.access_token = token;
+    return token;
   }
 
   private redirect() {
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
   }
 
-  private processResponse(response: AuthResponse | AuthErrorResponse) {
+  private processAuthResponse(response: AuthResponse | AuthErrorResponse) {
     if (isAuthResponse(response)) {
       return Promise.resolve(response);
     } else {
@@ -98,50 +102,13 @@ export class Login {
     }
   }
 
-  private saveResponse = (response: AuthResponse) => {
-    this.saveAccessToken(response);
-    this.saveCredential();
-    this.saveClient(response);
-    state.authState = AuthState.logged;
-    return this;
-  };
-
-  private saveAccessToken(response: AuthResponse) {
+  private saveAnonymousToken(response: AuthResponse) {
+    state.authState = AuthState.anonymous;
     state.access_token = response;
+    [, state.anonymousId] = response.scope.split('anonymous_id:');
   }
 
   private saveCredential() {
     lstorage.saveCredentials({ email: this.email, password: this.password });
-  }
-
-  private saveClient(response: AuthResponse) {
-    getCustomer(response.access_token)
-      .then((customer) => {
-        if (isCustomer(customer)) state.customer = customer;
-      })
-      .catch((error) => dialog.show(error, 'warning'));
-  }
-
-  private handleError(response: AuthErrorResponse) {
-    let msg;
-    switch (response.statusCode) {
-      case 400:
-        msg = `Authentication error: ${response.message} Please check that you have entered the correct email and password.`;
-        break;
-      case 401:
-        msg = `Unauthorized: ${response.message} Please check that you have entered the correct email and password.`;
-        break;
-      case 403:
-        msg = `Forbidden: ${response.message}`;
-        break;
-      case 404:
-        msg = `Resource Not Found: ${response.message}`;
-        break;
-
-      default:
-        msg = response.message;
-        break;
-    }
-    throw new Error(msg);
   }
 }

@@ -12,7 +12,7 @@ export class WidgetCart extends BaseComponent {
     super({ tagName: 'section', classNames: 'widget-cart__container' });
     this.quantity = quantity;
     this.dispatch = dispatch;
-    this.setAttributeIsInCart(quantity);
+    this.setAttributeIsInCart(this.quantity);
 
     this.cartText = new BaseComponent({
       tagName: 'span',
@@ -24,6 +24,7 @@ export class WidgetCart extends BaseComponent {
     this.cartButton.getElement().addEventListener('click', (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
+      if (this.quantity > 0) return;
       this.dispatch({ type: 'cart-addLine', payload: { prop1: productId, prop2: '' } });
     });
     this.insertChildren([this.cartButton]);
@@ -34,6 +35,7 @@ export class WidgetCart extends BaseComponent {
     if (quantity === 1) this.insertChildren([this.cartText]);
     this.setAttributeIsInCart(quantity);
     this.cartText.setTextContent(`${quantity}`);
+    this.quantity = quantity;
   }
 
   private setAttributeIsInCart(quantity: number): void {

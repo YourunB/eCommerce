@@ -77,8 +77,10 @@
   transform: translateY(-2.5rem)
   transition-duration: 300ms
 
-.widget-cart__container[data-set-is-in-cart]
-  opacity: 1
+.widget-cart__container[data-set-is-in-cart] .widget-cart__button
+  background-color: $color-bacground-backdrop
+  filter: grayscale(1)
+  cursor: default
 
 .widget-cart__button
   width: 3rem
@@ -87,7 +89,6 @@
   padding-right: 1.7rem
 
   background-image: url("../../../../src/assets/icons/cart.webp")
-  background-color: $color-text-common
   background-position: 6px center
   background-repeat: no-repeat
   background-size: contain
@@ -104,19 +105,17 @@
   cursor: default
 
 @media (hover: hover)
-  .widget-cart__container
-    opacity: 0
-
   .product-card:hover
     transition-duration: 250ms
     cursor: pointer
     box-shadow: 0 0 0 3px white
-    & .widget-cart__container
-      opacity: 1
 
   .product-card__img:hover
     & img
       transform: scale(1.2)
+
+  .widget-cart__container[data-set-is-in-cart] .widget-cart__button:hover
+    background-color: none
 
 .product-card:has(.product-card_empty)
   background-image: url("../../../assets/images/card/no-data.webp")

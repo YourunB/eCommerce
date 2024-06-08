@@ -1,14 +1,17 @@
 import './pageProducts.sass';
+import { Cart } from '@commercetools/platform-sdk';
 import { SectionControl } from './control/control';
 import { EmptyCard } from './productCard/emptyCard';
 import { ProductCard } from './productCard/productCard';
 import { BaseComponent } from '../../components/baseComponent';
 import { PropsFilters, SectionFilters } from './filter/filter';
 import { ProductsFooter } from './productsFooter/productsFooter';
+import { ProductsState } from '../../modules/products/productsState';
 import { Dialog, TypeMessage } from '../../components/modalDialog/modalDialog';
 import { DispatchProducts, MappedProducts, ResetButtonNames } from '../../modules/products/types';
 
 const TRANSITION_DURATION = 1000;
+const productsState = new ProductsState();
 
 export class PageProducts extends BaseComponent {
   private dispatch: DispatchProducts;
@@ -83,14 +86,19 @@ export class PageProducts extends BaseComponent {
     this.sectionProducts.getElement().innerHTML = '';
   }
 
-  public renderProducts(products: MappedProducts[], fadeout: boolean) {
+  public renderProducts(products: MappedProducts[], cart: Cart, fadeout: boolean) {
     if (fadeout) this.sectionProducts.setClassName('fadeout');
     setTimeout(() => {
       this.sectionProducts.getElement().innerHTML = '';
-      const cards = products.reduce<ProductCard[]>(
-        (container, product) => [...container, new ProductCard(product, this.dispatch)],
-        []
-      );
+      const cards = products.reduce<ProductCard[]>((container, product) => {
+        const { lineItems } = cart;
+        const [lineItem] = lineItems.filter((item) => item.productId === product.id);
+        if (lineItem) productsState.set(lineItem.productId, lineItem);
+
+        const card = new ProductCard(product, this.dispatch);
+        productsState.subscribe(product.id, () => card.update());
+        return [...container, card];
+      }, []);
       this.sectionProducts.insertChildren([...cards]);
       this.sectionProducts.removeClassName('fadeout');
     }, TRANSITION_DURATION);

@@ -39,6 +39,14 @@
   color: gray
   box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
   transition: 1s
+  transform: translateX(-100vw)
+  opacity: 0
+  animation: show-developers 1s forwards
+
+.developer:nth-of-type(2)
+  animation-delay: 0.5s
+.developer:nth-of-type(3)
+    animation-delay: 1s
 
 @media (hover:hover)
   .developer:hover
@@ -94,3 +102,11 @@
 .rss-box__title
   width: 100%
   text-align: center
+
+@keyframes show-developers
+  0%
+    opacity: 0
+    transform: translateX(-100vw)
+  100%
+    opacity: 1
+    transform: translateX(0)

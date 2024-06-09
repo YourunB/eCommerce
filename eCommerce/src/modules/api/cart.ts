@@ -70,6 +70,8 @@ export function createAnonymousCart() {
  */
 export function createMyCart(): Promise<Cart | InvalidOperation | Error> {
   const currency = 'EUR';
+
+  // anonymousId: string; Anonymous session associated with the Cart.
   const cartDraft: CartDraft = {
     currency,
     anonymousId: state.anonymousId,

@@ -109,9 +109,12 @@ export class Products {
     switch (type) {
       case 'cart-addLine':
         cart.addLineItems([{ productId: this.prop1, quantity: 1 }]).then((cart) => {
-          if (!cart) return;
-          const [lineCart] = cart.lineItems.filter((item) => item.productId === this.prop1);
-          productsState.set(lineCart.productId, lineCart);
+          if (cart) {
+            const [lineCart] = cart.lineItems.filter((item) => item.productId === this.prop1);
+            productsState.set(lineCart.productId, lineCart);
+          } else {
+            productsState.set(this.prop1, 'isFail');
+          }
         });
         break;
       case 'change-category':

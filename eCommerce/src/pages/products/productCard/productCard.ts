@@ -1,9 +1,10 @@
 import './productCard.sass';
+import { WidgetCart } from './widgetCart';
 import { BaseComponent } from '../../../components/baseComponent';
 import { Button } from '../../../components/basebutton/baseButton';
+import { isLineItem } from '../../../components/helpers/predicates';
 import { ProductsState } from '../../../modules/products/productsState';
 import { DispatchProducts, MappedProducts } from '../../../modules/products/types';
-import { WidgetCart } from './widgetCart';
 
 const productsState = new ProductsState();
 
@@ -51,15 +52,14 @@ export class ProductCard extends BaseComponent {
 
   private productWidget(product: MappedProducts): BaseComponent {
     const cartLine = productsState.get(this.product.id);
-    const quantity = cartLine ? cartLine.quantity : 0;
+    const quantity = isLineItem(cartLine) ? cartLine.quantity : 0;
     this.widget = new WidgetCart(quantity, product.id, this.dispatch);
     return this.widget;
   }
 
   public update(): void {
     const cartLine = productsState.get(this.product.id);
-    if (!cartLine) return;
-    this.widget.update(cartLine.quantity);
+    if (cartLine) this.widget.update(cartLine);
   }
 
   private productPrice(product: MappedProducts): BaseComponent {

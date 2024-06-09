@@ -3,10 +3,24 @@
 .about-page__title
   text-align: center
 
+.about-page__text
+  text-align: justify
+
+.about-page__text a
+  display: inline-block
+  font-weight: 700
+  color: $color-border-selected
+  transition: 0.7s
+
+.about-page__text a:hover
+  cursor: pointer
+  color: white
+  transform: scale(1.02)
+
 .developers
   margin: auto
-  max-width: 900px
   display: flex
+  flex-wrap: wrap
   justify-content: center
   gap: 10px
 
@@ -17,7 +31,7 @@
 .developer
   position: relative
   display: block
-  min-width: 300px
+  width: 300px
   padding: 10px
   border: solid 3px white
   border-radius: 3px
@@ -57,4 +71,26 @@
   color: $color-border-selected
   width: 100%
   font-weight: 700
+  text-align: center
+
+.rss-box
+  display: flex
+  justify-content: center
+  flex-wrap: wrap
+  justify-content: center
+
+.rss-box__logo
+  width: 300px
+  transition: 0.7s
+
+@media (hover:hover)
+  .rss-box__logo:hover
+    transform: rotate(10deg)
+
+.rss-box__logo:active
+  transition: 0.2s
+  transform: scale(0.9)
+
+.rss-box__title
+  width: 100%
   text-align: center

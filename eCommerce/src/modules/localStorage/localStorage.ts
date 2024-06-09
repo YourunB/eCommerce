@@ -9,7 +9,7 @@ type Credential = {
 
 const LS_CREDENTIAL_KEY = '202405062139';
 const MSG_ERR_NO_KEY = 'check for ".env" file and "LS_CREDENTIAL_KEY" key';
-const MSG_ERR_NO_DATA = 'no data';
+export const MSG_ERR_NO_DATA = 'no data';
 const MSG_OK = 'ok';
 
 export class LStorage {

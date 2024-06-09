@@ -1,30 +1,58 @@
 import {
-  AuthErrorResponse,
   Customer,
-  CustomerSignInResult,
   ErrorResponse,
   MyCustomerDraft,
+  MyCustomerSignin,
+  AuthErrorResponse,
+  CustomerSignInResult,
   MyCustomerUpdateAction,
   MyCustomerChangePassword,
 } from '@commercetools/platform-sdk';
 import {
-  AUTH_BASIC,
-  AUTH_PARAMS,
-  GRANT_PASSWORD,
-  AUTH_URL,
-  PATH,
-  MSG_NETWORK_ERROR,
-  AUTH_BEARER,
-  PROJECT_KEY,
   API_URL,
-  CONTENT_TYPE_APP,
+  PATH,
+  AUTH_URL,
+  AUTH_BASIC,
+  AUTH_BEARER,
+  AUTH_PARAMS,
+  PROJECT_KEY,
   SCOPES_CLIENT,
+  GRANT_PASSWORD,
+  CONTENT_TYPE_APP,
+  MSG_NETWORK_ERROR,
 } from '../login/constants';
+import state from '../../state/state';
 import { AuthResponse } from '../login/types';
 
-async function responseToJSON<T>(response: Response): Promise<T | AuthErrorResponse> {
-  if (!response.ok) return response.json().then((resp) => resp as AuthErrorResponse);
+export type InvalidCredentials = {
+  code: string;
+  message: string;
+};
+
+async function responseToJSON<T, E = AuthErrorResponse>(response: Response): Promise<T | E> {
+  if (!response.ok) return response.json().then((resp) => resp as E);
   return response.json() as T;
+}
+
+export function meLogin<T = CustomerSignInResult>(email: string, password: string): Promise<T | InvalidCredentials> {
+  const body: MyCustomerSignin = {
+    email,
+    password,
+  };
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': CONTENT_TYPE_APP,
+      Authorization: `${AUTH_BEARER} ${state.access_token.access_token}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${API_URL}/${PROJECT_KEY}/me/login`, options)
+    .then(responseToJSON<T, InvalidCredentials>)
+    .catch(() => {
+      throw new Error(MSG_NETWORK_ERROR);
+    });
 }
 
 export function getAccessToken<T = AuthResponse>(email: string, password: string): Promise<T | AuthErrorResponse> {

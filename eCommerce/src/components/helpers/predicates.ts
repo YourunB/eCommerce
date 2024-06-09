@@ -1,6 +1,13 @@
-import { Customer, CustomerSignInResult, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { AuthResponse } from '../../modules/login/types';
 import { MappedCategories, MappedProducts } from '../../modules/products/types';
+import {
+  Cart,
+  Customer,
+  CustomerSignInResult,
+  ErrorResponse,
+  LineItem,
+  ProductProjection,
+} from '@commercetools/platform-sdk';
 
 export function isAuthResponse(data: unknown | AuthResponse): data is AuthResponse {
   return (data as AuthResponse)?.access_token !== undefined;
@@ -8,6 +15,14 @@ export function isAuthResponse(data: unknown | AuthResponse): data is AuthRespon
 
 export function isCustomer(data: unknown | Customer): data is Customer {
   return (data as Customer)?.email !== undefined;
+}
+
+export function isLineItem(data: unknown | LineItem): data is LineItem {
+  return (data as LineItem)?.productId !== undefined;
+}
+
+export function isCart(data: unknown | Cart): data is Cart {
+  return (data as Cart)?.cartState !== undefined;
 }
 
 export function isCustomerSignInResult(data: unknown | CustomerSignInResult): data is CustomerSignInResult {

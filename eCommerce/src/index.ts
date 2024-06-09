@@ -20,10 +20,14 @@ main.classList.add('main');
 const login = new Login();
 const products = new Products();
 
-login.isLogined().then(
-  () => localStorage.setItem('logged', 'true'),
-  () => localStorage.removeItem('logged')
-);
+login
+  .createAnonymousCustomer()
+  .then(() => login.execute())
+  .then(
+    () => localStorage.setItem('logged', 'true'),
+    () => localStorage.removeItem('logged')
+  )
+  .catch(() => {});
 
 document.body.append(header, main, footer, background);
 
@@ -213,6 +217,7 @@ btnReg.addEventListener('click', () => {
 });
 btnLogOut.addEventListener('click', () => {
   localStorage.clear();
+  login.createAnonymousCustomer();
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
 });
 menu.addEventListener('click', (event) => {

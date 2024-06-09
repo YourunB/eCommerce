@@ -59,6 +59,7 @@
   display: flex
   flex-wrap: nowrap
   gap: 1rem
+  margin-bottom: 0.5rem
   font-size: 1.1rem
 
 .price-container__actual-price
@@ -69,6 +70,40 @@
   color: $color-product-price-cancel
   text-decoration: line-through
 
+.widget-cart__container
+  position: relative
+  display: flex
+  justify-content: center
+  transform: translateY(-2.5rem)
+  transition-duration: 300ms
+
+.widget-cart__container[data-set-is-in-cart] .widget-cart__button
+  background-color: $color-bacground-backdrop
+  filter: grayscale(1)
+  cursor: default
+
+.widget-cart__button
+  width: 3rem
+  height: 2rem
+  border-radius: 0.3rem
+  padding-right: 1.7rem
+
+  background-image: url("../../../../src/assets/icons/cart.webp")
+  background-position: 6px center
+  background-repeat: no-repeat
+  background-size: contain
+
+.widget-cart__text
+  position: absolute
+  top: -1.5rem
+  right: 50%
+  transform: translateX(100%)
+  padding: 0.25rem 0.5rem
+  color: $color-text-common
+  background-color: $color-product-price
+  border-radius: 0.3rem
+  cursor: default
+
 @media (hover: hover)
   .product-card:hover
     transition-duration: 250ms
@@ -78,6 +113,9 @@
   .product-card__img:hover
     & img
       transform: scale(1.2)
+
+  .widget-cart__container[data-set-is-in-cart] .widget-cart__button:hover
+    background-color: none
 
 .product-card:has(.product-card_empty)
   background-image: url("../../../assets/images/card/no-data.webp")

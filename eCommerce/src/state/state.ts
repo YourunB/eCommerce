@@ -7,8 +7,9 @@ const initialState: State = {
   rootCategory: 'All Products',
   authState: AuthState.notLogged,
   access_token: {},
+  anonymousId: '',
   customer: {},
-  limits: ['10', '20', '30', '40', '50'],
+  limits: ['8', '16', '32', '64'],
 };
 
 const subscribers: Subscribers = {};

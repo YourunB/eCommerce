@@ -1,4 +1,6 @@
 import state from '../../state/state';
+import { MyCart } from '../cart/cart';
+import { ProductsState } from './productsState';
 import { waitToken } from '../../components/helpers/waitToken';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
@@ -23,6 +25,8 @@ const START_PAGE = 1;
 const DEFAULT_LIMIT = '10';
 const DEFAULT_SORT_FIELD: SortField = 'price';
 const DEFAULT_SORT_DIRECTION: SortDirection = 'asc';
+const productsState = new ProductsState();
+const cart = new MyCart();
 
 export class Products {
   private filter: Map<FilterRules, string> = new Map(); // Map of functions (filters) to construct filter query
@@ -103,6 +107,13 @@ export class Products {
     this.prop2 = action.payload.prop2;
 
     switch (type) {
+      case 'cart-addLine':
+        cart.addLineItems([{ productId: this.prop1, quantity: 1 }]).then((cart) => {
+          if (!cart) return;
+          const [lineCart] = cart.lineItems.filter((item) => item.productId === this.prop1);
+          productsState.set(lineCart.productId, lineCart);
+        });
+        break;
       case 'change-category':
         this.changeCategory(this.prop1, this.prop2);
         break;
@@ -175,11 +186,12 @@ export class Products {
 
   private procesProducts(fadeout = false): void {
     this.page.buttons = 'disabled';
+    productsState.reset();
     this.getProducts()
       .then((products) => {
         if (isMappedProducts(products)) {
           this.page.setSearchDataList(products.map((product) => product.name));
-          this.page.renderProducts(products, fadeout);
+          this.page.renderProducts(products, cart.cart, fadeout);
         } else {
           this.dialog.show('There are no products available at the selected conditions', 'warning');
           this.page.renderEmptyCard();

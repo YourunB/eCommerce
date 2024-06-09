@@ -302,12 +302,14 @@ export class ProfileForm extends BaseComponent {
           updatePasswordApi(newCustomerData, state.access_token.access_token)
             .then((result) => {
               state.customer = result as Customer;
-              lstorage.saveCredentials({ email: currentEmail, password: this.inputPassNew.getElement().value });
               this.showMsg('Succes', true);
+              lstorage.saveCredentials({ email: currentEmail, password: this.inputPassNew.getElement().value });
+            })
+            .then(() => login.getNewToken(currentEmail, this.inputPassNew.getElement().value))
+            .then(() => {
               this.inputPassOld.getElement().value = '';
               this.inputPassNew.getElement().value = '';
             })
-            .then(() => login.isLogined())
             .catch((error) => {
               this.showErrorMessage(error);
             });
@@ -721,9 +723,9 @@ export class ProfileForm extends BaseComponent {
         <img class="btn-svg btn-svg-delete" src="delete.svg" alt="Delete" title="Delete" data-index=${i} data-id=${arrAddresses[i].id}>
         <label>Shipping<input class="shipping-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? 'checked' : null} type="checkbox"></label>
         <label>Billing<input class="billing-address" data-id=${arrAddresses[i].id} ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? 'checked' : null} type="checkbox"></label>
-        Country: ${arrAddresses[i].country}, 
-        City: ${arrAddresses[i].city}, 
-        Street: ${arrAddresses[i].streetName}, 
+        Country: ${arrAddresses[i].country},
+        City: ${arrAddresses[i].city},
+        Street: ${arrAddresses[i].streetName},
         Post code: ${arrAddresses[i].postalCode}
       `;
       container.append(address);
@@ -743,9 +745,9 @@ export class ProfileForm extends BaseComponent {
       const address = document.createElement('p');
       address.classList.add('addresses-container__address');
       address.innerHTML = `
-        <span>${i + 1}.</span> Country: ${arrAddresses[i].country}, 
-        City: ${arrAddresses[i].city}, Street: ${arrAddresses[i].streetName}, 
-        Post code: ${arrAddresses[i].postalCode} 
+        <span>${i + 1}.</span> Country: ${arrAddresses[i].country},
+        City: ${arrAddresses[i].city}, Street: ${arrAddresses[i].streetName},
+        Post code: ${arrAddresses[i].postalCode}
         ${arrAddresses[i].id === state.customer.defaultBillingAddressId ? '<span> - Selected Billing Address</span>' : ''}
         ${arrAddresses[i].id === state.customer.defaultShippingAddressId ? '<span> - Selected Shipping Address</span>' : ''}
       `;

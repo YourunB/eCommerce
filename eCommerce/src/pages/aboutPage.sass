@@ -15,6 +15,7 @@
   text-align: center
 
 .developer
+  position: relative
   display: block
   min-width: 300px
   padding: 10px
@@ -23,11 +24,29 @@
   background: white
   color: gray
   box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
-  cursor: pointer
+  transition: 1s
+
+@media (hover:hover)
+  .developer:hover
+    cursor: pointer
+    transform: scale(1.03)
+
+.developer:active
+  transition: 0.2s
+  transform: scale(0.9)
 
 .developer span
   color: $color-border-selected
   font-weight: 700
+
+.developer__logo
+  position: absolute
+  top: 10px
+  right: 10px
+  width: 35px
+  padding: 5px
+  background: white
+  border-radius: 100px
 
 .developer__image
   width: 100%

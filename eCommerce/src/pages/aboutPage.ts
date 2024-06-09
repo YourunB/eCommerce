@@ -1,4 +1,5 @@
 import './aboutPage.sass';
+import '../assets/images/svg/github.svg';
 
 const aboutPage = document.createElement('div');
 aboutPage.classList.add('about-page');
@@ -9,16 +10,19 @@ aboutPage.innerHTML = `
   <h3 class="developers__title">Developers</h3>
   <div class="developers">
     <div class="developer">
+      <img src="github.svg" class="developer__logo" alt="Github">
       <img src="https://avatars.githubusercontent.com/u/124175026?v=4" class="developer__image" alt="Developer">
       <p class="developer__name">Yury Butskevich<p>
       <p class="developer__description"><span>Front-end Developer (Team Lead)</span> - process management, work planning, team building, quality control, project assembly, architecture design, routing on github, project design, work with API, development, user API data management.</p>
     </div>
     <div class="developer">
+      <img src="github.svg" class="developer__logo" alt="Github">
       <img src="https://avatars.githubusercontent.com/u/119855793?v=4" class="developer__image" alt="Developer">
       <p class="developer__name">Nadzeya Tsimashenkava<p>
       <p class="developer__description"><span>Front-end developer</span> - search and evaluation of solutions, layout, adaptation for different devices, work with API, development, testing, create slider with swiper, maintaining API a product description.</p>
     </div>
     <div class="developer">
+      <img src="github.svg" class="developer__logo" alt="Github">
       <img src="https://avatars.githubusercontent.com/u/88248839?v=4" class="developer__image" alt="Developer">
       <p class="developer__name">Konstantin Shumkin<p>
       <p class="developer__description"><span>Front-end developer</span> - initial eCommerce API setup, layout, component logic, adaptation for different devices, development, refactoring and optimization, testing, maintaining API a product catalog.</p>

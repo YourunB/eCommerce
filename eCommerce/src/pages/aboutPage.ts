@@ -35,7 +35,7 @@ aboutPage.innerHTML = `
   
   <div class="rss-box">
     <a href="https://rs.school/" target="_blank"><img src="logo-rs.svg" alt="RS School" class="rss-box__logo"></a>
-    <h3 class="rss-box__title">RS School is a free and community-based online education program conducted by The Rolling Scopes Community since 2013.</h3>
+    <h3 class="rss-box__title"><a href="https://rs.school/" target="_blank">RS School</a> is a free and community-based online education program conducted by The Rolling Scopes Community since 2013.</h3>
   </div>
 `;
 

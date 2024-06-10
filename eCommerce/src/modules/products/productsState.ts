@@ -1,11 +1,12 @@
 import { LineItem } from '@commercetools/platform-sdk';
 import { Callback, Subscribers } from '../../state/types';
 
+export type ProductsStateLine = LineItem | 'isFetching' | 'isFail' | 'idle';
 export class ProductsState {
   private static instance: unknown;
   private subscribers: Subscribers = {};
   private _props: {
-    [index: string]: LineItem;
+    [index: string]: ProductsStateLine;
   } = {};
 
   constructor() {
@@ -24,11 +25,11 @@ export class ProductsState {
     return this._props;
   }
 
-  public get(key: string): LineItem | undefined {
+  public get(key: string): ProductsStateLine | undefined {
     return this._props[key];
   }
 
-  public set(key: string, value: LineItem) {
+  public set(key: string, value: ProductsStateLine) {
     this._props[key] = value;
     this.subscribers[key]?.forEach((callback) => callback());
   }

@@ -33,26 +33,26 @@ export class BasketButton extends BaseComponent {
 
     this.id = window.location.hash.substring(1);
     this.cart = new MyCart();
-    this.productInCart = this.cart.cart.lineItems?.find((item) => item.productId === this.id);
 
-    this.checkButtonStatus();
+    this.setButtonStatus();
 
     this.addButton.getElement().addEventListener('click', async () => {
       const resp = await this.cart.addLineItems([{ productId: this.id, quantity: 1 }]);
       if (isCart(resp)) {
-        this.checkButtonStatus();
+        this.setButtonStatus();
       }
     });
 
     this.removeButton.getElement().addEventListener('click', async () => {
-      const resp = await this.cart.removeLineItems([{ productId: this.id, quantity: 1 }]);
+      if (!this?.productInCart?.id) return;
+      const resp = await this.cart.removeLineItems([{ lineItemId: this.productInCart.id, quantity: 1 }]);
       if (isCart(resp)) {
-        this.checkButtonStatus();
+        this.setButtonStatus();
       }
     });
   }
 
-  checkButtonStatus = () => {
+  setButtonStatus = () => {
     this.productInCart = this.cart.cart.lineItems?.find((item) => item.productId === this.id);
     const isChecked = !!this.productInCart;
     if (isChecked) {

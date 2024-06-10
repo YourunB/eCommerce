@@ -40,7 +40,8 @@ export class PageBasket extends BaseComponent {
 
     this.totalPrice = new BaseComponent({
       tagName: 'p',
-      textContent: 'Total price: -',
+      textContent: 'Total price: - €',
+      classNames: 'basket-price',
       parentNode: this.basketFooter.getElement(),
     });
 
@@ -61,7 +62,18 @@ export class PageBasket extends BaseComponent {
         `;
         this.basketMain.getElement().append(item);
       });
-      this.totalPrice.getElement().textContent = `${'totalPrice' in cart ? cart.totalPrice.centAmount : '-'} €`;
+      this.totalPrice.getElement().textContent = `Total price: ${'totalPrice' in cart ? cart.totalPrice.centAmount : '-'} €`;
     });
+  }
+  public clearProductsItems(itemClass: string) {
+    const arrItems = document.getElementsByClassName(itemClass) as HTMLCollectionOf<HTMLElement>;
+    for (let i = arrItems.length - 1; i >= 0; i -= 1) {
+      arrItems[i].remove();
+    }
+  }
+
+  public updateCart() {
+    this.clearProductsItems('product-item'); //ввести наименование класса удаляемых элементов
+    this.createProductsItems();
   }
 }

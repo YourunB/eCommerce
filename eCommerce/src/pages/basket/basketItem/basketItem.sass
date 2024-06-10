@@ -1,0 +1,77 @@
+.basket-item
+  display: flex
+  height: 6rem
+  gap: 2rem
+  flex-wrap: nowrap
+
+.basket__product-price-container,
+.basket__quantity-total-container
+  display: flex
+  align-items: center
+  gap: 2rem
+  flex-wrap: nowrap
+
+.basket__product-price-container
+  flex: 1 1 50%
+
+.basket-item__img
+  height: 100%
+  aspect-ratio: 1/1
+  object-fit: contain
+
+.basket-item__product-name
+  overflow: hidden
+  width: clamp(1rem, 80%, 80%)
+
+.product-name__p
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.product__price-container
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+  justify-content: center
+  align-items: center
+
+.product-price__span
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.basket-item__quantity-container
+  display: flex
+  height: 100%
+  align-items: center
+  gap: 0.5rem
+
+.basket-item__btn-quantity
+  height: 30%
+  padding: 0.1rem
+  aspect-ratio: 1/1.2
+  border-radius: 0.5rem
+
+.product-price__discounted
+  text-decoration: line-through
+  opacity: 0.8
+
+.basket-item__dtn-delete
+  height: 30%
+  aspect-ratio: 1/1
+
+  filter: brightness(2.0)
+  background-color: transparent
+  background-image: url("../../../assets/icons/del.svg")
+  background-position: center
+  background-repeat: no-repeat
+  background-size: contain
+
+@media (hover: hover)
+  .basket-item__dtn-delete:hover
+    background-color: transparent
+    filter: brightness(1.7)
+
+  .product-name__p:hover
+    filter: brightness(0.9)
+    text-shadow: 2px 2px black

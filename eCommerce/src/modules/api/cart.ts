@@ -107,3 +107,18 @@ export function UpdateMyCart(id: string, request: RequestUpdateCart): Promise<Ca
     .then(responseProcess<Cart>)
     .catch(handleError);
 }
+
+//get cart
+export function getCartApi(id: string): Promise<Cart | Error> {
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': CONTENT_TYPE_APP,
+      Authorization: `${AUTH_BEARER} ${state.access_token.access_token}`,
+    },
+  };
+
+  return fetch(`${API_URL}/${PROJECT_KEY}/carts/customer-id=${id}`, options)
+    .then(responseProcess<Cart>)
+    .catch(handleError);
+}

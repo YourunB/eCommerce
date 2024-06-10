@@ -1,6 +1,9 @@
 import './basketPage.sass';
 import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
+//import { isCartExistsByCustomerID } from '../../modules/api/cart';
+import state from '../../state/state';
+import { getCartApi } from '../../modules/api/cart';
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
@@ -31,7 +34,7 @@ export class PageBasket extends BaseComponent {
 
     this.btnClearBasket = new Button({
       textContent: 'Clear basket',
-      classNames: 'basket-page__btn',
+      classNames: 'basket-page__btn-clear',
       parentNode: this.basketHeader.getElement(),
     });
 
@@ -40,5 +43,11 @@ export class PageBasket extends BaseComponent {
       classNames: 'basket-page__btn',
       parentNode: this.basketFooter.getElement(),
     });
+
+    this.btnPagination.getElement().addEventListener('click', () => {
+      console.log(state.customer.id);
+      getCartApi(state.customer.id).then((cart) => console.log(cart));
+    });
+    //console.log(isCartExistsByCustomerID(state.customer.id));
   }
 }

@@ -6,7 +6,7 @@ import { mainPage } from './pages/mainPage';
 import { Products } from './modules/products/products';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
-import { basketPage } from './pages/basketPage';
+import { PageBasket } from './pages/basket/basketPage';
 import { Login } from './modules/login/login';
 import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
 import { footer } from './components/footer/footer';
@@ -98,7 +98,7 @@ router.addRoute({
   handler: () => {
     document.title = 'Basket';
     main.innerHTML = '';
-    main.append(basketPage);
+    main.append(new PageBasket().getElement());
     setActivePage();
     checkAuthorization();
   },

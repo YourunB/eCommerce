@@ -1,3 +1,4 @@
+import { Callback } from '../../state/types';
 import { isCart } from '../../components/helpers/predicates';
 import { Dialog } from '../../components/modalDialog/modalDialog';
 import { createAnonymousCart, createMyCart, UpdateMyCart } from '../api/cart';
@@ -11,8 +12,18 @@ export type UpdateProducts = {
   quantity: number;
 };
 
+type RemoveLineItem = {
+  lineItemId: string;
+  quantity?: number;
+};
+
 export class MyCart {
   private static _cart: Cart;
+  private static subscribers: Callback[];
+
+  constructor() {
+    MyCart.subscribers ??= [];
+  }
 
   /**
    * A cart is created for the **anonymous** user.
@@ -53,7 +64,7 @@ export class MyCart {
     return this.updateCart(actions);
   }
 
-  public async removeLineItems(products: UpdateProducts[]) {
+  public async removeLineItems(products: RemoveLineItem[]) {
     const action = 'removeLineItem';
     const actions: CartUpdateAction[] = products.map((product) => ({ ...product, action }));
     return this.updateCart(actions);
@@ -123,5 +134,14 @@ export class MyCart {
 
   set cart(value: Cart) {
     MyCart._cart = value;
+    MyCart.subscribers?.forEach((callback) => callback());
+  }
+
+  public subscribe(callback: Callback): void {
+    MyCart.subscribers.push(callback);
+  }
+
+  public deleteSubscribe(callback: Callback): void {
+    MyCart.subscribers = MyCart.subscribers.filter((subscriber) => subscriber !== callback);
   }
 }

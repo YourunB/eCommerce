@@ -9,7 +9,7 @@ export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
   public basketMain: BaseComponent;
   public basketFooter: BaseComponent;
-  public btnPagination: Button;
+  public totalPrice: BaseComponent;
   public btnClearBasket: Button;
 
   constructor() {
@@ -38,21 +38,19 @@ export class PageBasket extends BaseComponent {
       parentNode: this.basketHeader.getElement(),
     });
 
-    this.btnPagination = new Button({
-      textContent: '1',
-      classNames: 'basket-page__btn',
+    this.totalPrice = new BaseComponent({
+      tagName: 'p',
+      textContent: 'Total price: -',
       parentNode: this.basketFooter.getElement(),
     });
 
-    this.btnPagination.getElement().addEventListener('click', () => {
-      this.createProductsItems();
-    });
+    this.createProductsItems();
   }
 
   public createProductsItems() {
     getCartApi(state.customer.id).then((cart: Cart | Error) => {
       const productsInCart = 'lineItems' in cart ? cart.lineItems : [];
-      console.log(productsInCart);
+      console.log(cart);
       productsInCart.forEach((product) => {
         const item = document.createElement('div');
         item.classList.add('product-item');
@@ -63,6 +61,7 @@ export class PageBasket extends BaseComponent {
         `;
         this.basketMain.getElement().append(item);
       });
+      this.totalPrice.getElement().textContent = `${'totalPrice' in cart ? cart.totalPrice.centAmount : '-'} €`;
     });
   }
 }

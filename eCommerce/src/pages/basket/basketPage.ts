@@ -1,7 +1,7 @@
 import './basketPage.sass';
 import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
-//import { isCartExistsByCustomerID } from '../../modules/api/cart';
+import { Cart } from '@commercetools/platform-sdk';
 import state from '../../state/state';
 import { getCartApi } from '../../modules/api/cart';
 
@@ -45,9 +45,24 @@ export class PageBasket extends BaseComponent {
     });
 
     this.btnPagination.getElement().addEventListener('click', () => {
-      console.log(state.customer.id);
-      getCartApi(state.customer.id).then((cart) => console.log(cart));
+      this.createProductsItems();
     });
-    //console.log(isCartExistsByCustomerID(state.customer.id));
+  }
+
+  public createProductsItems() {
+    getCartApi(state.customer.id).then((cart: Cart | Error) => {
+      const productsInCart = 'lineItems' in cart ? cart.lineItems : [];
+      console.log(productsInCart);
+      productsInCart.forEach((product) => {
+        const item = document.createElement('div');
+        item.classList.add('product-item');
+        item.innerHTML = `
+          <img src="${product.variant.images !== undefined && product.variant.images.length > 0 ? product.variant.images[0].url : ''}">
+          <p>${product.name['en-GB']}</p>
+          <p>${product.price.value.centAmount} eur</p>
+        `;
+        this.basketMain.getElement().append(item);
+      });
+    });
   }
 }

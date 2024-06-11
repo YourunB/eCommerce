@@ -1,0 +1,73 @@
+@import '../../variables/'
+
+.basket-header,
+.basket-footer
+  display: flex
+  flex-wrap: wrap
+  justify-content: flex-end
+  height: 40px
+
+.basket-main
+  position: relative
+  min-height: calc(100vh - 280px)
+  padding: 10px 0
+
+.msg-empty
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  margin: auto
+  background: white
+  max-width: 400px
+  width: 100%
+  padding: 10px
+  min-height: 100px
+  overflow-y: auto
+  max-height: 200px
+  border-radius: 3px
+  color: $color-border-selected
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-wrap: wrap
+
+.msg-empty_hide
+  display: none
+
+.msg-empty__text
+  width: 100%
+  text-align: center
+
+.msg-empty__btn
+  display: block
+  margin: auto
+
+.basket-page__btn-clear
+  background: $color-text-errors
+
+@media (hover: hover)
+  .basket-page__btn-clear:hover
+    background: red
+
+.product-item
+  background: white
+  border-radius: 3px
+  padding: 10px
+  height: 120px
+  overflow-y: auto
+  width: 100%
+  display: flex
+  justify-content: space-between
+  align-items: center
+  gap: 10px
+  color: gray
+  margin: 10px 0
+
+.product-item img
+  width: 100px
+  border-radius: 3px
+
+.basket-price
+  font-weight: 700

@@ -9,6 +9,7 @@ import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
 import { waitToken } from '../../components/helpers/waitToken';
 import { router } from '../../modules/router';
+import { BasketButton } from './basketButton/basketButton';
 
 export class PageProduct extends BaseComponent {
   private productSwiper: BaseComponent;
@@ -23,6 +24,7 @@ export class PageProduct extends BaseComponent {
   private overlay: BaseComponent;
   private modalSwiper: BaseComponent;
   private closeModalButton: BaseComponent;
+  private productButtons: BasketButton;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
 
@@ -90,6 +92,10 @@ export class PageProduct extends BaseComponent {
     this.productDescription = new BaseComponent({
       tagName: 'div',
       classNames: 'product-description',
+      parentNode: this.productTextContainer.getElement(),
+    });
+    this.productButtons = new BasketButton({
+      tagName: 'div',
       parentNode: this.productTextContainer.getElement(),
     });
 

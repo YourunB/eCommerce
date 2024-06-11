@@ -2,9 +2,9 @@ import './basketPage.sass';
 import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
 import { Cart } from '@commercetools/platform-sdk';
-//import state from '../../state/state';
 import { getCartApi, deleteCartApi } from '../../modules/api/cart';
 import { MyCart } from '../../modules/cart/cart';
+import { router } from '../../modules/router';
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
@@ -49,6 +49,10 @@ export class PageBasket extends BaseComponent {
       textContent: 'Open catalog',
       classNames: 'msg-empty__btn',
       parentNode: this.msgEmptyCart.getElement(),
+    });
+
+    this.btnOpenCatalog.getElement().addEventListener('click', () => {
+      router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     });
 
     this.basketFooter = new BaseComponent({

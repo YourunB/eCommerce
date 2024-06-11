@@ -2,8 +2,9 @@ import './basketPage.sass';
 import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
 import { Cart } from '@commercetools/platform-sdk';
-import state from '../../state/state';
+//import state from '../../state/state';
 import { getCartApi } from '../../modules/api/cart';
+import { MyCart } from '../../modules/cart/cart';
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
@@ -11,9 +12,11 @@ export class PageBasket extends BaseComponent {
   public basketFooter: BaseComponent;
   public totalPrice: BaseComponent;
   public btnClearBasket: Button;
+  public cartId: string;
 
   constructor() {
     super({ tagName: 'div', classNames: 'basket-page' });
+    this.cartId = '';
     this.basketHeader = new BaseComponent({
       tagName: 'div',
       classNames: 'basket-header',
@@ -49,7 +52,10 @@ export class PageBasket extends BaseComponent {
   }
 
   public createProductsItems() {
-    getCartApi(state.customer.id).then((cart: Cart | Error) => {
+    const cart = MyCart._cart;
+    console.log(cart);
+    getCartApi(cart.id).then((cart: Cart | Error) => {
+      this.cartId = 'id' in cart ? cart.id : '';
       const productsInCart = 'lineItems' in cart ? cart.lineItems : [];
       console.log(cart);
       productsInCart.forEach((product) => {

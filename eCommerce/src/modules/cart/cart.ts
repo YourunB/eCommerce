@@ -12,7 +12,7 @@ export type UpdateProducts = {
 };
 
 export class MyCart {
-  private static _cart: Cart;
+  public static _cart: Cart;
 
   /**
    * A cart is created for the **anonymous** user.

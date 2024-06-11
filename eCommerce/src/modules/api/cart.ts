@@ -118,7 +118,7 @@ export function getCartApi(id: string): Promise<Cart | Error> {
     },
   };
 
-  return fetch(`${API_URL}/${PROJECT_KEY}/carts/customer-id=${id}`, options)
+  return fetch(`${API_URL}/${PROJECT_KEY}/carts/${id}`, options)
     .then(responseProcess<Cart>)
     .catch(handleError);
 }

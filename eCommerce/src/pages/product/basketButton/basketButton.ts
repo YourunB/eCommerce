@@ -45,7 +45,7 @@ export class BasketButton extends BaseComponent {
 
     this.removeButton.getElement().addEventListener('click', async () => {
       if (!this?.productInCart?.id) return;
-      const resp = await this.cart.removeLineItems([{ lineItemId: this.productInCart.id, quantity: 1 }]);
+      const resp = await this.cart.removeLineItems([{ lineItemId: this.productInCart.id }]);
       if (isCart(resp)) {
         this.setButtonStatus();
       }
@@ -58,9 +58,13 @@ export class BasketButton extends BaseComponent {
     if (isChecked) {
       this.addButton.setAttribute({ name: 'disabled', value: isChecked.toString() });
       this.removeButton.removeAttribute({ name: 'disabled' });
+      this.addButton.setClassName('inactive');
+      this.removeButton.removeClassName('inactive');
     } else {
       this.removeButton.setAttribute({ name: 'disabled', value: isChecked.toString() });
       this.addButton.removeAttribute({ name: 'disabled' });
+      this.removeButton.setClassName('inactive');
+      this.addButton.removeClassName('inactive');
     }
   };
 }

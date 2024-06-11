@@ -3,7 +3,7 @@ import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
 import { Cart } from '@commercetools/platform-sdk';
 //import state from '../../state/state';
-import { getCartApi } from '../../modules/api/cart';
+import { getCartApi, deleteCartApi } from '../../modules/api/cart';
 import { MyCart } from '../../modules/cart/cart';
 
 export class PageBasket extends BaseComponent {
@@ -11,7 +11,10 @@ export class PageBasket extends BaseComponent {
   public basketMain: BaseComponent;
   public basketFooter: BaseComponent;
   public totalPrice: BaseComponent;
+  public msgEmptyCart: BaseComponent;
+  public msgEmptyCartText: BaseComponent;
   public btnClearBasket: Button;
+  public btnOpenCatalog: Button;
   public cartId: string;
 
   constructor() {
@@ -27,6 +30,25 @@ export class PageBasket extends BaseComponent {
       tagName: 'div',
       classNames: 'basket-main',
       parentNode: this.element,
+    });
+
+    this.msgEmptyCart = new BaseComponent({
+      tagName: 'div',
+      classNames: ['msg-empty', 'msg-empty_hide'],
+      parentNode: this.element,
+    });
+
+    this.msgEmptyCartText = new BaseComponent({
+      tagName: 'h3',
+      classNames: 'msg-empty__text',
+      textContent: 'Empty cart',
+      parentNode: this.msgEmptyCart.getElement(),
+    });
+
+    this.btnOpenCatalog = new Button({
+      textContent: 'Open catalog',
+      classNames: 'msg-empty__btn',
+      parentNode: this.msgEmptyCart.getElement(),
     });
 
     this.basketFooter = new BaseComponent({
@@ -46,6 +68,10 @@ export class PageBasket extends BaseComponent {
       textContent: 'Total price: - €',
       classNames: 'basket-price',
       parentNode: this.basketFooter.getElement(),
+    });
+
+    this.btnClearBasket.getElement().addEventListener('click', () => {
+      this.clearCart();
     });
 
     this.createProductsItems();
@@ -70,12 +96,28 @@ export class PageBasket extends BaseComponent {
       });
       this.totalPrice.getElement().textContent = `Total price: ${'totalPrice' in cart ? cart.totalPrice.centAmount : '-'} €`;
     });
+    this.checkEmptyCart();
   }
+
+  public checkEmptyCart() {
+    if (MyCart._cart.lineItems.length === 0) {
+      this.msgEmptyCart.getElement().classList.remove('msg-empty_hide');
+    } else this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
+  }
+
   public clearProductsItems(itemClass: string) {
     const arrItems = document.getElementsByClassName(itemClass) as HTMLCollectionOf<HTMLElement>;
     for (let i = arrItems.length - 1; i >= 0; i -= 1) {
       arrItems[i].remove();
     }
+  }
+
+  public clearCart() {
+    const cart = new MyCart();
+    deleteCartApi(MyCart._cart.id, MyCart._cart.version)
+      .then(() => this.clearProductsItems('product-item')) //ввести наименование класса удаляемых элементов
+      .then(() => cart.create())
+      .then(() => this.checkEmptyCart());
   }
 
   public updateCart() {

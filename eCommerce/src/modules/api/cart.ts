@@ -122,3 +122,18 @@ export function getCartApi(id: string): Promise<Cart | Error> {
     .then(responseProcess<Cart>)
     .catch(handleError);
 }
+
+//delete cart
+export function deleteCartApi(id: string, version: number): Promise<Cart | Error> {
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': CONTENT_TYPE_APP,
+      Authorization: `${AUTH_BEARER} ${state.access_token.access_token}`,
+    },
+  };
+
+  return fetch(`${API_URL}/${PROJECT_KEY}/carts/${id}?version=${version}`, options)
+    .then(responseProcess<Cart>)
+    .catch(handleError);
+}

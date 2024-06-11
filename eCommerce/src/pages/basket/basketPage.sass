@@ -8,8 +8,41 @@
   height: 40px
 
 .basket-main
+  position: relative
   min-height: calc(100vh - 280px)
   padding: 10px 0
+
+.msg-empty
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  margin: auto
+  background: white
+  max-width: 400px
+  width: 100%
+  padding: 10px
+  min-height: 100px
+  overflow-y: auto
+  max-height: 200px
+  border-radius: 3px
+  color: $color-border-selected
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-wrap: wrap
+
+.msg-empty_hide
+  display: none
+
+.msg-empty__text
+  width: 100%
+  text-align: center
+
+.msg-empty__btn
+  display: block
+  margin: auto
 
 .basket-page__btn-clear
   background: $color-text-errors

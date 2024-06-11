@@ -8,6 +8,8 @@
   height: 40px
 
 .basket-main
+  display: flex
+  gap: 6%
   position: relative
   min-height: calc(100vh - 280px)
   padding: 10px 0
@@ -51,23 +53,14 @@
   .basket-page__btn-clear:hover
     background: red
 
-.product-item
-  background: white
-  border-radius: 3px
-  padding: 10px
-  height: 120px
-  overflow-y: auto
-  width: 100%
+.basket-items
   display: flex
-  justify-content: space-between
-  align-items: center
-  gap: 10px
-  color: gray
-  margin: 10px 0
+  flex: 60%
+  flex-direction: column
+  gap: 0.5rem
 
-.product-item img
-  width: 100px
-  border-radius: 3px
+  container-type: inline-size
+  container-name: basket-items
 
 .basket-price
   font-weight: 700

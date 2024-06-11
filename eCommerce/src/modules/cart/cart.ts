@@ -18,7 +18,7 @@ type RemoveLineItem = {
 };
 
 export class MyCart {
-  public static _cart: Cart;
+  private static _cart: Cart;
   private static subscribers: Callback[];
 
   constructor() {

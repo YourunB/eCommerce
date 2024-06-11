@@ -1,10 +1,12 @@
 import './basketPage.sass';
 import { BaseComponent } from '../../components/baseComponent';
 import { Button } from '../../components/basebutton/baseButton';
-import { Cart } from '@commercetools/platform-sdk';
-import { getCartApi, deleteCartApi } from '../../modules/api/cart';
+import { deleteCartApi } from '../../modules/api/cart';
 import { MyCart } from '../../modules/cart/cart';
 import { router } from '../../modules/router';
+import { BasketItem } from './basketItem/basketItem';
+
+const myCart = new MyCart();
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
@@ -16,6 +18,7 @@ export class PageBasket extends BaseComponent {
   public btnClearBasket: Button;
   public btnOpenCatalog: Button;
   public cartId: string;
+  public basketItems: BaseComponent;
 
   constructor() {
     super({ tagName: 'div', classNames: 'basket-page' });
@@ -31,6 +34,9 @@ export class PageBasket extends BaseComponent {
       classNames: 'basket-main',
       parentNode: this.element,
     });
+
+    this.basketItems = new BaseComponent({ tagName: 'div', classNames: 'basket-items' });
+    this.basketMain.insertChildren([this.basketItems]); // <-- insert a coupon section here
 
     this.msgEmptyCart = new BaseComponent({
       tagName: 'div',
@@ -82,29 +88,25 @@ export class PageBasket extends BaseComponent {
   }
 
   public createProductsItems() {
-    const cart = MyCart._cart;
-    console.log(cart);
-    getCartApi(cart.id).then((cart: Cart | Error) => {
-      this.cartId = 'id' in cart ? cart.id : '';
-      const productsInCart = 'lineItems' in cart ? cart.lineItems : [];
-      console.log(cart);
-      productsInCart.forEach((product) => {
-        const item = document.createElement('div');
-        item.classList.add('product-item');
-        item.innerHTML = `
-          <img src="${product.variant.images !== undefined && product.variant.images.length > 0 ? product.variant.images[0].url : ''}">
-          <p>${product.name['en-GB']}</p>
-          <p>${product.price.value.centAmount} eur</p>
-        `;
-        this.basketMain.getElement().append(item);
-      });
-      this.totalPrice.getElement().textContent = `Total price: ${'totalPrice' in cart ? cart.totalPrice.centAmount : '-'} €`;
-    });
+    myCart.deleteSubscribe(this.update);
+    const items = myCart.cart?.lineItems.map((product) => new BasketItem(product));
+    this.basketItems.insertChildren(items);
+    myCart.subscribe(this.update);
+
+    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
     this.checkEmptyCart();
   }
 
+  public update = (): void => {
+    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+  };
+
+  private getTotalPrice(): string {
+    return myCart.cart?.totalPrice?.centAmount ? (myCart.cart.totalPrice.centAmount / 100).toFixed(2) : '0';
+  }
+
   public checkEmptyCart() {
-    if (MyCart._cart.lineItems.length === 0) {
+    if (myCart.cart.lineItems.length === 0) {
       this.msgEmptyCart.getElement().classList.remove('msg-empty_hide');
     } else this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
   }
@@ -117,14 +119,13 @@ export class PageBasket extends BaseComponent {
   }
 
   public clearCart() {
-    const cart = new MyCart();
-    deleteCartApi(MyCart._cart.id, MyCart._cart.version)
-      .then(() => cart.create())
+    deleteCartApi(myCart.cart.id, myCart.cart.version)
+      .then(() => myCart.create())
       .then(() => this.updateCart());
   }
 
   public updateCart() {
-    this.clearProductsItems('product-item'); //ввести наименование класса удаляемых элементов
+    this.clearProductsItems('basket-item');
     this.createProductsItems();
   }
 }

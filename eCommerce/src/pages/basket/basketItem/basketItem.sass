@@ -8,7 +8,7 @@
 .basket__quantity-total-container
   display: flex
   align-items: center
-  gap: 2rem
+  gap: 0.5rem
   flex-wrap: nowrap
 
 .basket__product-price-container
@@ -17,13 +17,15 @@
 .basket-item__img
   height: 100%
   aspect-ratio: 1/1
-  object-fit: contain
+  object-fit: cover
 
 .basket-item__product-name
   overflow: hidden
-  width: clamp(1rem, 80%, 80%)
+  width: 5rem
+  flex: 1 1 auto
 
 .product-name__p
+  display: inherit
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
@@ -36,6 +38,8 @@
   align-items: center
 
 .product-price__span
+  display: inline-block
+  width: 4rem
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
@@ -44,12 +48,17 @@
   display: flex
   height: 100%
   align-items: center
-  gap: 0.5rem
+  gap: 0.25rem
+
+  span
+    display: inline-block
+    width: 2rem
+    text-align: center
 
 .basket-item__btn-quantity
-  height: 30%
+  height: 2rem
+  width: 1.5rem
   padding: 0.1rem
-  aspect-ratio: 1/1.2
   border-radius: 0.5rem
 
 .product-price__discounted
@@ -75,3 +84,27 @@
   .product-name__p:hover
     filter: brightness(0.9)
     text-shadow: 2px 2px black
+
+@container basket-items (width < 768px)
+  .basket-item
+    flex-direction: column
+    height: 10rem
+    gap: 0.25rem
+
+  .basket-item__img
+    height: 6rem
+
+  .basket__product-price-container
+    flex: none
+
+  .basket__quantity-total-container
+    gap: 2rem
+    flex: 1 1 100%
+    justify-content: flex-end
+
+  .basket-item__dtn-delete
+    height: 50%
+
+@container basket-items (width < 500px)
+  .product__price-container
+    display: none

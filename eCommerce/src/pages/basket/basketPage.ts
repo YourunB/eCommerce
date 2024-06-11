@@ -115,9 +115,8 @@ export class PageBasket extends BaseComponent {
   public clearCart() {
     const cart = new MyCart();
     deleteCartApi(MyCart._cart.id, MyCart._cart.version)
-      .then(() => this.clearProductsItems('product-item')) //ввести наименование класса удаляемых элементов
       .then(() => cart.create())
-      .then(() => this.checkEmptyCart());
+      .then(() => this.updateCart());
   }
 
   public updateCart() {

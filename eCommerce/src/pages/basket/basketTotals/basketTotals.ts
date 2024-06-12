@@ -38,6 +38,7 @@ export class BasketTotals extends BaseComponent {
     });
     this.addPromoButton = new BaseComponent({
       tagName: 'button',
+      attribute: { name: 'type', value: 'button' },
       classNames: 'add-promo_button',
       textContent: 'Apply',
       parentNode: this.promoContainer.getElement(),

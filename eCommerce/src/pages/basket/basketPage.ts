@@ -5,6 +5,7 @@ import { deleteCartApi } from '../../modules/api/cart';
 import { MyCart } from '../../modules/cart/cart';
 import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
+import { BasketTotals } from './basketTotals/basketTotals';
 
 const myCart = new MyCart();
 
@@ -19,6 +20,7 @@ export class PageBasket extends BaseComponent {
   public btnOpenCatalog: Button;
   public cartId: string;
   public basketItems: BaseComponent;
+  public basketTotals: BaseComponent;
 
   constructor() {
     super({ tagName: 'div', classNames: 'basket-page' });
@@ -36,7 +38,8 @@ export class PageBasket extends BaseComponent {
     });
 
     this.basketItems = new BaseComponent({ tagName: 'div', classNames: 'basket-items' });
-    this.basketMain.insertChildren([this.basketItems]); // <-- insert a coupon section here
+    this.basketTotals = new BasketTotals({ tagName: 'div' });
+    this.basketMain.insertChildren([this.basketItems, this.basketTotals]); // <-- insert a coupon section here
 
     this.msgEmptyCart = new BaseComponent({
       tagName: 'div',

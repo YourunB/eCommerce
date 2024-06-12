@@ -38,8 +38,8 @@ export class PageBasket extends BaseComponent {
     });
 
     this.basketItems = new BaseComponent({ tagName: 'div', classNames: 'basket-items' });
-    this.basketTotals = new BasketTotals({ tagName: 'div' });
-    this.basketMain.insertChildren([this.basketItems, this.basketTotals]); // <-- insert a coupon section here
+    this.basketTotals = new BasketTotals({ tagName: 'div', parentNode: this.element });
+    this.basketMain.insertChildren([this.basketItems]); // <-- insert a coupon section here
 
     this.msgEmptyCart = new BaseComponent({
       tagName: 'div',
@@ -80,7 +80,7 @@ export class PageBasket extends BaseComponent {
       tagName: 'p',
       textContent: 'Total price: - €',
       classNames: 'basket-price',
-      parentNode: this.basketFooter.getElement(),
+      parentNode: this.basketTotals.getElement(),
     });
 
     this.btnClearBasket.getElement().addEventListener('click', () => {
@@ -106,6 +106,17 @@ export class PageBasket extends BaseComponent {
 
   private getTotalPrice(): string {
     return myCart.cart?.totalPrice?.centAmount ? (myCart.cart.totalPrice.centAmount / 100).toFixed(2) : '0';
+  }
+
+  private getDiscountOnTotalPrice(): string {
+    return myCart.cart?.discountOnTotalPrice
+      ? (myCart.cart.discountOnTotalPrice.discountedAmount.centAmount / 100).toFixed(2)
+      : '0';
+  }
+
+  private getFirstPrice(): string {
+    const firstPrice = Number(this.getTotalPrice()) + Number(this.getDiscountOnTotalPrice());
+    return firstPrice.toString();
   }
 
   public checkEmptyCart() {

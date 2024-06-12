@@ -32,7 +32,7 @@ export const url: URLs = {
 /**
  * Get discount code by ID.
  */
-export function getDiscountCodeById(id: string): Promise<boolean | Error | DiscountCode> {
+export function getDiscountCodeById(id: string): Promise<Error | DiscountCode> {
   const options = {
     method: 'GET',
     headers: {

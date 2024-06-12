@@ -1,10 +1,8 @@
 import { BaseComponent, BaseComponentProps } from '../../../components/baseComponent';
 import './basketTotals.sass';
-
 import { MyCart } from '../../../modules/cart/cart';
-
 import { Dialog } from '../../../components/modalDialog/modalDialog';
-import { DiscountCodeReference } from '@commercetools/platform-sdk';
+import { DiscountCode, DiscountCodeInfo, DiscountCodeReference, LocalizedString } from '@commercetools/platform-sdk';
 import { getDiscountCodeById } from '../../../modules/api/cart';
 
 export class BasketTotals extends BaseComponent {
@@ -18,6 +16,7 @@ export class BasketTotals extends BaseComponent {
   public removePromoButton: BaseComponent;
   public cart: MyCart;
   public promocodeId: string;
+  public discounted: DiscountCodeInfo | undefined;
 
   constructor(props: BaseComponentProps) {
     super({ classNames: 'basket-totals__container', ...props });
@@ -25,9 +24,8 @@ export class BasketTotals extends BaseComponent {
     const dialog = Dialog.getInstance();
     console.log(this.cart.cart);
 
-    this.promocodeId = this.cart.cart.discountCodes[0]
-      ? this.cart.cart.discountCodes[0].discountCode.id.toString()
-      : '';
+    this.promocodeId = '';
+    this.checkIsDiscounted();
 
     this.totalsTitle = new BaseComponent({
       tagName: 'div',
@@ -56,7 +54,6 @@ export class BasketTotals extends BaseComponent {
       classNames: ['discount-code', 'invisible'],
       parentNode: this.promoContainer.getElement(),
     });
-    
 
     this.removePromoButton = new BaseComponent({
       tagName: 'div',
@@ -89,12 +86,7 @@ export class BasketTotals extends BaseComponent {
           return;
         }
 
-        console.log(this.cart.cart);
-        (this.promoInput.getElement() as HTMLInputElement).value === '';
-        this.promo.removeClassName('invisible');
-        this.promo.setTextContent(promocode);
-        this.promo.insertChild(this.removePromoButton);
-        this.promocodeId = this.cart.cart.discountCodes[0].discountCode.id.toString();
+        this.checkIsDiscounted();
       }
     });
     this.removePromoButton.getElement().addEventListener('click', async () => {
@@ -110,4 +102,19 @@ export class BasketTotals extends BaseComponent {
       }
     });
   }
+  checkIsDiscounted = () => {
+    this.discounted = this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart');
+    if (this.discounted) {
+      this.promocodeId = this.discounted.discountCode.id;
+      getDiscountCodeById(this.promocodeId).then((data: Error | DiscountCode) => {
+        const discountChipText = (data.name as LocalizedString)['en-GB'];
+        this.showDiscounterChip(discountChipText);
+      });
+    }
+  };
+  showDiscounterChip = (content: string) => {
+    this.promo.removeClassName('invisible');
+    this.promo.setTextContent(content);
+    this.promo.insertChild(this.removePromoButton);
+  };
 }

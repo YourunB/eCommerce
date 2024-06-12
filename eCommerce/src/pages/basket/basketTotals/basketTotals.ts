@@ -5,6 +5,7 @@ import { MyCart } from '../../../modules/cart/cart';
 
 import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { DiscountCodeReference } from '@commercetools/platform-sdk';
+import { getDiscountCodeById } from '../../../modules/api/cart';
 
 export class BasketTotals extends BaseComponent {
   public totalsTitle: BaseComponent;
@@ -21,10 +22,12 @@ export class BasketTotals extends BaseComponent {
   constructor(props: BaseComponentProps) {
     super({ classNames: 'basket-totals__container', ...props });
     this.cart = new MyCart();
-    console.log(this.cart.cart);
-    this.promocodeId = '';
-
     const dialog = Dialog.getInstance();
+    console.log(this.cart.cart);
+
+    this.promocodeId = this.cart.cart.discountCodes[0]
+      ? this.cart.cart.discountCodes[0].discountCode.id.toString()
+      : '';
 
     this.totalsTitle = new BaseComponent({
       tagName: 'div',
@@ -53,6 +56,8 @@ export class BasketTotals extends BaseComponent {
       classNames: ['discount-code', 'invisible'],
       parentNode: this.promoContainer.getElement(),
     });
+    
+
     this.removePromoButton = new BaseComponent({
       tagName: 'div',
       classNames: 'remove-promo_button',
@@ -62,12 +67,10 @@ export class BasketTotals extends BaseComponent {
     this.subTotal = new BaseComponent({
       tagName: 'div',
       classNames: 'subtotal',
-      textContent: 'Subtotal',
     });
     this.promoDiscount = new BaseComponent({
       tagName: 'div',
       classNames: 'promo-discount',
-      textContent: 'Coupon discount',
     });
 
     this.insertChildren([this.totalsTitle, this.promoContainer, this.subTotal, this.promoDiscount]);
@@ -107,13 +110,4 @@ export class BasketTotals extends BaseComponent {
       }
     });
   }
-
-  getDiscountOnTotalPrice(): string {
-    return this.cart.cart?.discountOnTotalPrice
-      ? (this.cart.cart.discountOnTotalPrice.discountedAmount.centAmount / 100).toFixed(2)
-      : '0';
-  }
-  public updatePrices = (): void => {
-    this.promoDiscount.setTextContent(`Coupon discount:  ${this.getDiscountOnTotalPrice()}`);
-  };
 }

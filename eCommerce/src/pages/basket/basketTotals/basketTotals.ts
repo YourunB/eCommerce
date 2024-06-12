@@ -73,7 +73,7 @@ export class BasketTotals extends BaseComponent {
     this.insertChildren([this.totalsTitle, this.promoContainer, this.subTotal, this.promoDiscount]);
 
     this.addPromoButton.getElement().addEventListener('click', async () => {
-      if (this.cart.cart.discountCodes.length > 0) {
+      if (this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart')) {
         dialog.show('you may apply only one discount code');
         return;
       }
@@ -81,26 +81,17 @@ export class BasketTotals extends BaseComponent {
       const resp = await this.cart.addDiscountCode(promocode);
 
       if (resp) {
-        if (this.cart.cart.discountCodes[0].state === 'DoesNotMatchCart') {
+        const promoResp = this.cart.cart.discountCodes.at(-1);
+        if (promoResp?.state === 'DoesNotMatchCart') {
           dialog.show('This discount code doesn`t apply to your product categories');
+          this.removeDiscount(promoResp.discountCode.id)();
           return;
         }
 
         this.checkIsDiscounted();
       }
     });
-    this.removePromoButton.getElement().addEventListener('click', async () => {
-      const discountCodeRef: DiscountCodeReference = {
-        typeId: 'discount-code',
-        id: this.promocodeId,
-      };
-      const resp = await this.cart.removeDiscountCode(discountCodeRef);
-      if (resp) {
-        this.promo.setClassName('invisible');
-
-        console.log(this.cart.cart);
-      }
-    });
+    this.removePromoButton.getElement().addEventListener('click', this.removeDiscount());
   }
   checkIsDiscounted = () => {
     this.discounted = this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart');
@@ -116,5 +107,18 @@ export class BasketTotals extends BaseComponent {
     this.promo.removeClassName('invisible');
     this.promo.setTextContent(content);
     this.promo.insertChild(this.removePromoButton);
+  };
+
+  removeDiscount = (id?: string) => async () => {
+    const discountCodeRef: DiscountCodeReference = {
+      typeId: 'discount-code',
+      id: id || this.promocodeId,
+    };
+    const resp = await this.cart.removeDiscountCode(discountCodeRef);
+    if (resp) {
+      this.promo.setClassName('invisible');
+
+      console.log(this.cart.cart);
+    }
   };
 }

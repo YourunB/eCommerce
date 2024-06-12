@@ -97,7 +97,7 @@ export class PageBasket extends BaseComponent {
     this.basketItems.insertChildren(items);
     myCart.subscribe(this.update);
 
-    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+    this.totalPrice.setTextContent(`Total price: € ${this.getTotalPrice()} `);
     this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
     this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
     this.checkEmptyCart();

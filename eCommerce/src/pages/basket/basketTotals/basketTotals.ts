@@ -81,6 +81,7 @@ export class BasketTotals extends BaseComponent {
       const resp = await this.cart.addDiscountCode(promocode);
 
       if (resp) {
+        (this.promoInput.getElement() as HTMLInputElement).value = '';
         const promoResp = this.cart.cart.discountCodes.at(-1);
         if (promoResp?.state === 'DoesNotMatchCart') {
           dialog.show('This discount code doesn`t apply to your product categories');

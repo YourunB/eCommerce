@@ -158,9 +158,15 @@ export class PageBasket extends BaseComponent {
   }
 
   private getDiscountOnTotalPrice(): string {
-    return myCart.cart?.discountOnTotalPrice
-      ? (myCart.cart.discountOnTotalPrice.discountedAmount.centAmount / 100).toFixed(2)
-      : '0';
+    let totalDiscount = 0;
+    myCart.cart.lineItems.forEach((item) =>
+      item.discountedPricePerQuantity.forEach((discount) =>
+        discount.discountedPrice.includedDiscounts.forEach(
+          (includedDiscount) => (totalDiscount += includedDiscount.discountedAmount.centAmount)
+        )
+      )
+    );
+    return (totalDiscount / 100).toFixed(2);
   }
 
   private getSubTotalPrice(): string {

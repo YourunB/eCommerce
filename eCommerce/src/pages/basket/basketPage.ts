@@ -12,7 +12,6 @@ const myCart = new MyCart();
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
   public basketMain: BaseComponent;
-  public basketFooter: BaseComponent;
   public totalPrice: BaseComponent;
   public msgEmptyCart: BaseComponent;
   public msgEmptyCartText: BaseComponent;
@@ -63,12 +62,6 @@ export class PageBasket extends BaseComponent {
 
     this.btnOpenCatalog.getElement().addEventListener('click', () => {
       router.route('/yourunb-JSFE2023Q4/ecommerce/products');
-    });
-
-    this.basketFooter = new BaseComponent({
-      tagName: 'div',
-      classNames: 'basket-footer',
-      parentNode: this.element,
     });
 
     this.btnClearBasket = new Button({

@@ -127,7 +127,13 @@ export class PageBasket extends BaseComponent {
   public checkEmptyCart() {
     if (myCart.cart.lineItems.length === 0) {
       this.msgEmptyCart.getElement().classList.remove('msg-empty_hide');
-    } else this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
+      this.basketTotals.getElement().classList.add('invisible');
+      this.btnClearBasket.getElement().classList.add('unvisible');
+    } else {
+      this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
+      this.basketTotals.getElement().classList.remove('invisible');
+      this.btnClearBasket.getElement().classList.remove('unvisible');
+    }
   }
 
   public clearProductsItems(itemClass: string) {

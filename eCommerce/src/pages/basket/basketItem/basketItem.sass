@@ -1,3 +1,5 @@
+@import '../../../variables'
+
 .basket-item
   display: flex
   height: 6rem
@@ -69,6 +71,7 @@
 .product-price__discounted
   text-decoration: line-through
   opacity: 0.8
+  color: $color-text-errors
 
 .basket-item__dtn-delete
   height: 30%
@@ -85,8 +88,7 @@
     filter: brightness(1.7)
 
   .product-name__p:hover
-    filter: brightness(0.9)
-    text-shadow: 2px 2px black
+    color: $color-border-selected
 
 @container basket-items (width < 768px)
   .basket-item

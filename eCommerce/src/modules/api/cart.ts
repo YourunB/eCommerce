@@ -1,6 +1,6 @@
 import state from '../../state/state';
 import { InvalidOperation } from '@commercetools/importapi-sdk';
-import { Cart, CartDraft, CartUpdateAction } from '@commercetools/platform-sdk';
+import { Cart, CartDraft, CartUpdateAction, DiscountCode } from '@commercetools/platform-sdk';
 import { API_URL, AUTH_BEARER, CONTENT_TYPE_APP, MSG_NETWORK_ERROR, PROJECT_KEY } from '../login/constants';
 
 function responseProcess<T>(response: Response): Promise<T | Error> {
@@ -15,6 +15,7 @@ function handleError(e: Error): Error {
 type URLs = {
   isCartByCustomerId: URL;
   carts: URL;
+  discountCodeById: URL;
 };
 
 type RequestUpdateCart = {
@@ -25,7 +26,24 @@ type RequestUpdateCart = {
 export const url: URLs = {
   isCartByCustomerId: new URL(`${API_URL}/${PROJECT_KEY}/carts/customer-id=`),
   carts: new URL(`${API_URL}/${PROJECT_KEY}/carts`),
+  discountCodeById: new URL(`${API_URL}/${PROJECT_KEY}/discount-codes/`),
 };
+
+/**
+ * Get discount code by ID.
+ */
+export function getDiscountCodeById(id: string): Promise<Error | DiscountCode> {
+  const options = {
+    method: 'GET',
+    headers: {
+      Authorization: `${AUTH_BEARER} ${state.access_token.access_token}`,
+    },
+  };
+
+  return fetch(`${url.discountCodeById}${id}`, options)
+    .then(responseProcess<DiscountCode>)
+    .catch(handleError);
+}
 
 /**
  * Checks if a Cart of a Customer exists..

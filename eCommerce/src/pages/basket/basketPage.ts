@@ -5,6 +5,7 @@ import { deleteCartApi } from '../../modules/api/cart';
 import { MyCart } from '../../modules/cart/cart';
 import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
+import { BasketTotals } from './basketTotals/basketTotals';
 
 const myCart = new MyCart();
 
@@ -19,6 +20,7 @@ export class PageBasket extends BaseComponent {
   public btnOpenCatalog: Button;
   public cartId: string;
   public basketItems: BaseComponent;
+  public basketTotals: BasketTotals;
 
   constructor() {
     super({ tagName: 'div', classNames: 'basket-page' });
@@ -36,7 +38,9 @@ export class PageBasket extends BaseComponent {
     });
 
     this.basketItems = new BaseComponent({ tagName: 'div', classNames: 'basket-items' });
-    this.basketMain.insertChildren([this.basketItems]); // <-- insert a coupon section here
+    this.basketTotals = new BasketTotals({ tagName: 'div' });
+
+    this.basketMain.insertChildren([this.basketItems, this.basketTotals]); // <-- insert a coupon section here
 
     this.msgEmptyCart = new BaseComponent({
       tagName: 'div',
@@ -77,7 +81,7 @@ export class PageBasket extends BaseComponent {
       tagName: 'p',
       textContent: 'Total price: - €',
       classNames: 'basket-price',
-      parentNode: this.basketFooter.getElement(),
+      parentNode: this.basketTotals.getElement(),
     });
 
     this.btnClearBasket.getElement().addEventListener('click', () => {
@@ -93,16 +97,31 @@ export class PageBasket extends BaseComponent {
     this.basketItems.insertChildren(items);
     myCart.subscribe(this.update);
 
-    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+    this.totalPrice.setTextContent(`Total price: € ${this.getTotalPrice()} `);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
     this.checkEmptyCart();
   }
 
   public update = (): void => {
     this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
   };
 
   private getTotalPrice(): string {
     return myCart.cart?.totalPrice?.centAmount ? (myCart.cart.totalPrice.centAmount / 100).toFixed(2) : '0';
+  }
+
+  private getDiscountOnTotalPrice(): string {
+    return myCart.cart?.discountOnTotalPrice
+      ? (myCart.cart.discountOnTotalPrice.discountedAmount.centAmount / 100).toFixed(2)
+      : '0';
+  }
+
+  private getSubTotalPrice(): string {
+    const subTotalPrice = Number(this.getTotalPrice()) + Number(this.getDiscountOnTotalPrice());
+    return subTotalPrice.toString();
   }
 
   public checkEmptyCart() {

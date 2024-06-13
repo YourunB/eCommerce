@@ -27,6 +27,7 @@ export class PageBasket extends BaseComponent {
     this.basketHeader = new BaseComponent({
       tagName: 'div',
       classNames: 'basket-header',
+      textContent: 'BASKET',
       parentNode: this.element,
     });
 

@@ -18,8 +18,13 @@ export class PageBasket extends BaseComponent {
   public msgEmptyCartText: BaseComponent;
   public btnClearBasket: Button;
   public btnOpenCatalog: Button;
+  public btnClearBasketNo: Button;
+  public btnClearBasketYes: Button;
   public cartId: string;
   public basketItems: BaseComponent;
+  public clearConfirmOverlay: BaseComponent;
+  public clearConfirmForm: BaseComponent;
+  public clearConfirmFormTitle: BaseComponent;
   public basketTotals: BasketTotals;
 
   constructor() {
@@ -66,6 +71,36 @@ export class PageBasket extends BaseComponent {
       router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     });
 
+    this.clearConfirmOverlay = new BaseComponent({
+      tagName: 'div',
+      classNames: 'confirm-overlay',
+      parentNode: this.element,
+    });
+
+    this.clearConfirmForm = new BaseComponent({
+      tagName: 'div',
+      classNames: 'confirm-modal',
+      parentNode: this.clearConfirmOverlay.getElement(),
+    });
+
+    this.clearConfirmFormTitle = new BaseComponent({
+      tagName: 'h3',
+      classNames: 'confirm-modal__title',
+      textContent: 'Clear basket?',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
+    this.btnClearBasketNo = new Button({
+      textContent: 'Cancel',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
+    this.btnClearBasketYes = new Button({
+      textContent: 'Clear',
+      classNames: 'basket-page__btn-clear',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
     this.btnClearBasket = new Button({
       classNames: 'basket-page__btn-clear',
       parentNode: this.basketHeader.getElement(),
@@ -83,8 +118,17 @@ export class PageBasket extends BaseComponent {
       parentNode: this.basketTotals.getElement(),
     });
 
-    this.btnClearBasket.getElement().addEventListener('click', () => {
+    this.btnClearBasketNo.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.remove('confirm-overlay_show');
+    });
+
+    this.btnClearBasketYes.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.remove('confirm-overlay_show');
       this.clearCart();
+    });
+
+    this.btnClearBasket.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.add('confirm-overlay_show');
     });
 
     this.createProductsItems();

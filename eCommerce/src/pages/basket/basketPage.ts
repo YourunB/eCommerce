@@ -162,7 +162,7 @@ export class PageBasket extends BaseComponent {
     myCart.cart.lineItems.forEach((item) =>
       item.discountedPricePerQuantity.forEach((discount) =>
         discount.discountedPrice.includedDiscounts.forEach(
-          (includedDiscount) => (totalDiscount += includedDiscount.discountedAmount.centAmount)
+          (includedDiscount) => (totalDiscount += includedDiscount.discountedAmount.centAmount * item.quantity)
         )
       )
     );
@@ -171,7 +171,7 @@ export class PageBasket extends BaseComponent {
 
   private getSubTotalPrice(): string {
     const subTotalPrice = Number(this.getTotalPrice()) + Number(this.getDiscountOnTotalPrice());
-    return subTotalPrice.toString();
+    return subTotalPrice.toFixed(2).toString();
   }
 
   public checkEmptyCart() {

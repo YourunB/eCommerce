@@ -69,6 +69,6 @@ export class BasketItem extends BaseComponent {
     this._item = lineItem;
     this.quantityText.setTextContent(`${lineItem.quantity}`);
     const textTotal = (lineItem?.totalPrice.centAmount / 100).toFixed(2);
-    this.total.setTextContent(`${textTotal}`);
+    this.total.setTextContent(`€${textTotal}`);
   };
 }

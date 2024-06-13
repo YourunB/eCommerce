@@ -1,8 +1,34 @@
 @import '../variables/'
 
-.main-info h2
+.main-info h2,
+.main-info h3
   text-align: center
 
 .main-info p
   text-align: justify
   text-indent: 2rem
+
+.promo-box
+  display: flex
+  gap: 20px
+  align-items: center
+  justify-content: center
+  flex-wrap: wrap
+
+.promo-box__image
+  max-width: 300px
+
+.text-shine
+  font-weight: 700
+  background: linear-gradient(to right, rgb(255, 255, 255) 20%, yellow 40%, rgb(255, 62, 44) 70%)
+  background-clip: text
+  -webkit-text-fill-color: transparent
+  -webkit-background-clip: text
+  background-size: 500% auto
+  animation: text-shine 5s ease-in-out infinite alternate
+
+@keyframes text-shine
+  0%
+    background-position: 0% 50%
+  100%
+    background-position: 100% 50%

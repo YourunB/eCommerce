@@ -6,20 +6,25 @@ import { MyCart } from '../../modules/cart/cart';
 import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
 import { BasketTotals } from './basketTotals/basketTotals';
+import '../../assets/images/svg/delete.svg';
 
 const myCart = new MyCart();
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
   public basketMain: BaseComponent;
-  public basketFooter: BaseComponent;
   public totalPrice: BaseComponent;
   public msgEmptyCart: BaseComponent;
   public msgEmptyCartText: BaseComponent;
   public btnClearBasket: Button;
   public btnOpenCatalog: Button;
+  public btnClearBasketNo: Button;
+  public btnClearBasketYes: Button;
   public cartId: string;
   public basketItems: BaseComponent;
+  public clearConfirmOverlay: BaseComponent;
+  public clearConfirmForm: BaseComponent;
+  public clearConfirmFormTitle: BaseComponent;
   public basketTotals: BasketTotals;
 
   constructor() {
@@ -28,6 +33,7 @@ export class PageBasket extends BaseComponent {
     this.basketHeader = new BaseComponent({
       tagName: 'div',
       classNames: 'basket-header',
+      textContent: 'BASKET',
       parentNode: this.element,
     });
 
@@ -65,27 +71,64 @@ export class PageBasket extends BaseComponent {
       router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     });
 
-    this.basketFooter = new BaseComponent({
+    this.clearConfirmOverlay = new BaseComponent({
       tagName: 'div',
-      classNames: 'basket-footer',
+      classNames: 'confirm-overlay',
       parentNode: this.element,
     });
 
+    this.clearConfirmForm = new BaseComponent({
+      tagName: 'div',
+      classNames: 'confirm-modal',
+      parentNode: this.clearConfirmOverlay.getElement(),
+    });
+
+    this.clearConfirmFormTitle = new BaseComponent({
+      tagName: 'h3',
+      classNames: 'confirm-modal__title',
+      textContent: 'Clear basket?',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
+    this.btnClearBasketNo = new Button({
+      textContent: 'Cancel',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
+    this.btnClearBasketYes = new Button({
+      textContent: 'Clear',
+      classNames: 'basket-page__btn-clear',
+      parentNode: this.clearConfirmForm.getElement(),
+    });
+
     this.btnClearBasket = new Button({
-      textContent: 'Clear basket',
       classNames: 'basket-page__btn-clear',
       parentNode: this.basketHeader.getElement(),
     });
 
+    this.btnClearBasket.getElement().innerHTML = `
+      <img src="delete.svg">
+      Clear basket
+    `;
+
     this.totalPrice = new BaseComponent({
       tagName: 'p',
-      textContent: 'Total price: - €',
+      textContent: 'Total price: 0 €',
       classNames: 'basket-price',
       parentNode: this.basketTotals.getElement(),
     });
 
-    this.btnClearBasket.getElement().addEventListener('click', () => {
+    this.btnClearBasketNo.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.remove('confirm-overlay_show');
+    });
+
+    this.btnClearBasketYes.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.remove('confirm-overlay_show');
       this.clearCart();
+    });
+
+    this.btnClearBasket.getElement().addEventListener('click', () => {
+      this.clearConfirmOverlay.getElement().classList.add('confirm-overlay_show');
     });
 
     this.createProductsItems();
@@ -97,16 +140,17 @@ export class PageBasket extends BaseComponent {
     this.basketItems.insertChildren(items);
     myCart.subscribe(this.update);
 
-    this.totalPrice.setTextContent(`Total price: € ${this.getTotalPrice()} `);
-    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
-    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
+    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: ${this.getDiscountOnTotalPrice()} €`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: ${this.getSubTotalPrice()} €`);
     this.checkEmptyCart();
   }
 
   public update = (): void => {
     this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
-    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
-    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: ${this.getDiscountOnTotalPrice()} €`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: ${this.getSubTotalPrice()} €`);
+    this.checkEmptyCart();
   };
 
   private getTotalPrice(): string {
@@ -127,7 +171,13 @@ export class PageBasket extends BaseComponent {
   public checkEmptyCart() {
     if (myCart.cart.lineItems.length === 0) {
       this.msgEmptyCart.getElement().classList.remove('msg-empty_hide');
-    } else this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
+      this.basketTotals.getElement().classList.add('invisible');
+      this.btnClearBasket.getElement().classList.add('unvisible');
+    } else {
+      this.msgEmptyCart.getElement().classList.add('msg-empty_hide');
+      this.basketTotals.getElement().classList.remove('invisible');
+      this.btnClearBasket.getElement().classList.remove('unvisible');
+    }
   }
 
   public clearProductsItems(itemClass: string) {

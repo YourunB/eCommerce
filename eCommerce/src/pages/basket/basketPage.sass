@@ -1,17 +1,19 @@
 @import '../../variables/'
 
-.basket-header,
-.basket-footer
+.basket-header
   display: flex
   flex-wrap: wrap
-  justify-content: flex-end
+  justify-content: space-between
+  font-weight: 700
+  font-size: 1.5em
   height: 40px
 
 .basket-main
   display: flex
-  gap: 6%
+  flex-wrap: wrap
+  gap: 10px
   position: relative
-  min-height: calc(100vh - 280px)
+  min-height: calc(100vh - 240px)
   padding: 10px 0
 
 .msg-empty
@@ -49,6 +51,40 @@
 .basket-page__btn-clear
   background: $color-text-errors
 
+.basket-page__btn-clear img
+  width: 14px
+
+.confirm-overlay
+  position: fixed
+  z-index: 200
+  left: 0
+  top: 0
+  width: 100%
+  height: 100vh
+  backdrop-filter: blur(5px)
+  background: rgba(0, 0, 0, 0.6)
+  display: none
+
+.confirm-overlay_show
+  display: flex
+  justify-content: center
+  align-items: center
+
+.confirm-modal
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  align-items: center
+  gap: 20px
+  max-width: 300px
+
+.confirm-modal__title
+  width: 100%
+  text-align: center
+
+.unvisible
+  display: none
+
 @media (hover: hover)
   .basket-page__btn-clear:hover
     background: red
@@ -64,3 +100,12 @@
 
 .basket-price
   font-weight: 700
+  color: #faff78
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4)
+
+@media (max-width: 768px)
+  .basket-main
+    flex-wrap: wrap
+
+  .basket-price
+    text-align: right

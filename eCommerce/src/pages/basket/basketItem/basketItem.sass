@@ -1,8 +1,14 @@
+@import '../../../variables'
+
 .basket-item
   display: flex
   height: 6rem
   gap: 2rem
   flex-wrap: nowrap
+  background: white
+  color: gray
+  padding: 10px
+  border-radius: 3px
 
 .basket__product-price-container,
 .basket__quantity-total-container
@@ -43,6 +49,7 @@
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
+  font-weight: 700
 
 .basket-item__quantity-container
   display: flex
@@ -64,12 +71,11 @@
 .product-price__discounted
   text-decoration: line-through
   opacity: 0.8
+  color: $color-text-errors
 
 .basket-item__dtn-delete
   height: 30%
   aspect-ratio: 1/1
-
-  filter: brightness(2.0)
   background-color: transparent
   background-image: url("../../../assets/icons/del.svg")
   background-position: center
@@ -82,8 +88,7 @@
     filter: brightness(1.7)
 
   .product-name__p:hover
-    filter: brightness(0.9)
-    text-shadow: 2px 2px black
+    color: $color-border-selected
 
 @container basket-items (width < 768px)
   .basket-item
@@ -101,10 +106,16 @@
     gap: 2rem
     flex: 1 1 100%
     justify-content: flex-end
+    margin: auto
 
   .basket-item__dtn-delete
     height: 50%
 
-@container basket-items (width < 500px)
-  .product__price-container
-    display: none
+.basket-items
+  height: calc(100vh - 260px)
+  overflow-y: auto
+
+@media (max-width: 768px)
+  .basket-items
+    height: calc(100vh - 450px)
+    overflow-y: auto

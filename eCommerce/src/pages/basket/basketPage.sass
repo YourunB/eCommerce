@@ -9,7 +9,8 @@
 
 .basket-main
   display: flex
-  gap: 6%
+      flex-wrap: wrap
+  gap: 10px
   position: relative
   min-height: calc(100vh - 240px)
   padding: 10px 0
@@ -64,3 +65,10 @@
 
 .basket-price
   font-weight: 700
+
+@media (max-width: 768px)
+  .basket-main
+    flex-wrap: wrap
+
+  .basket-price
+    text-align: right

@@ -12,9 +12,18 @@
 .promo-input, .add-promo_button
   height: 1.5rem
   border-style: none
+
+.promo-input
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+
+.add-promo_button
+  border-top-right-radius: 3px
+  border-bottom-right-radius: 3px
   
 .promo-input
   background-color: #dbf5d5
+  padding: 5px
 
 .add-promo_button
   background: #46A358
@@ -46,3 +55,10 @@
 
 .invisible
   display: none
+
+@media (max-width: 768px)
+  .basket-totals__container
+    width: 100%
+    gap: 10px
+    height: 180px
+    overflow-y: auto

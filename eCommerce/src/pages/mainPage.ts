@@ -8,8 +8,13 @@ info.classList.add('main-info');
 info.innerHTML = `
   <h2>FAVORITES PLANTS FOR YOUR HOME</h2>
   <p>Plants are the eukaryotes that form the kingdom Plantae; they are predominantly photosynthetic. This means that they obtain their energy from sunlight, using chloroplasts derived from endosymbiosis with cyanobacteria to produce sugars from carbon dioxide and water, using the green pigment chlorophyll. Exceptions are parasitic plants that have lost the genes for chlorophyll and photosynthesis, and obtain their energy from other plants or fungi.</p>  
+  <h3 class="text-shine">SPECIAL PROMOTIONAL CODES FOR YOU</h3>
   <div class="promo-box">
     <img class="promo-box__image" src="sale.png" alt="Promo">
+    <ul>
+      <li><span class="text-shine">SUMMER</span> - 5% discount on the entire basket of goods</li>
+      <li><span class="text-shine">TREE</span> - 5% discount on all trees</li>
+    <ul>
   </div>
 `;
 

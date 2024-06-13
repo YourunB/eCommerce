@@ -22,7 +22,6 @@ export class BasketTotals extends BaseComponent {
     super({ classNames: 'basket-totals__container', ...props });
     this.cart = new MyCart();
     const dialog = Dialog.getInstance();
-    console.log(this.cart.cart);
 
     this.promocodeId = '';
     this.checkIsDiscounted();
@@ -118,8 +117,6 @@ export class BasketTotals extends BaseComponent {
     const resp = await this.cart.removeDiscountCode(discountCodeRef);
     if (resp) {
       this.promo.setClassName('invisible');
-
-      console.log(this.cart.cart);
     }
   };
 }

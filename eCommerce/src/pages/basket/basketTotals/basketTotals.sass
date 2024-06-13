@@ -1,4 +1,3 @@
-
 .basket-totals__container
   display: flex
   flex-direction: column
@@ -14,6 +13,7 @@
   border-style: none
 
 .promo-input
+  outline: none
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
 
@@ -35,9 +35,8 @@
   display: flex
   justify-content: space-around
   align-items: center
-  margin-top: 2%
-  width: 5rem
-  height: 1.3rem
+  padding: 5px
+  width: fit-content
   font-size: 0.8rem
   border-radius: 100px
   background: #46A358
@@ -62,3 +61,10 @@
     gap: 10px
     height: 180px
     overflow-y: auto
+
+  .promo-container
+    display: flex
+    align-items: center
+
+  .discount-code
+    margin-left: 5px

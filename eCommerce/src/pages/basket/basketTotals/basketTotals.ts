@@ -41,6 +41,7 @@ export class BasketTotals extends BaseComponent {
       attribute: { name: 'placeholder', value: 'Enter coupon code here...' },
       parentNode: this.promoContainer.getElement(),
     });
+    this.promoInput.getElement().addEventListener('keydown', this.keyEnterHandler);
     this.addPromoButton = new BaseComponent({
       tagName: 'button',
       attribute: { name: 'type', value: 'button' },
@@ -71,7 +72,7 @@ export class BasketTotals extends BaseComponent {
 
     this.insertChildren([this.totalsTitle, this.promoContainer, this.subTotal, this.promoDiscount]);
 
-    this.addPromoButton.getElement().addEventListener('click', this.addDiscount());
+    this.addPromoButton.getElement().addEventListener('click', this.addDiscount);
     this.removePromoButton.getElement().addEventListener('click', this.removeDiscount());
     this.cart.subscribe(this.resetPromos);
   }
@@ -91,7 +92,7 @@ export class BasketTotals extends BaseComponent {
     this.promo.setTextContent(content);
     this.promo.insertChild(this.removePromoButton);
   };
-  addDiscount = () => async () => {
+  addDiscount = async () => {
     if (this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart')) {
       dialog.show('you may apply only one discount code');
       return;
@@ -126,5 +127,12 @@ export class BasketTotals extends BaseComponent {
   resetPromos = () => {
     this.promo.setClassName('invisible');
     this.checkIsDiscounted();
+  };
+
+  keyEnterHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.addDiscount();
+    }
   };
 }

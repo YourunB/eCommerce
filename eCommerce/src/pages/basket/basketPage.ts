@@ -72,13 +72,13 @@ export class PageBasket extends BaseComponent {
     });
 
     this.btnClearBasket.getElement().innerHTML = `
-      <img src="/delete.svg" alt="Delete">
+      <img src="delete.svg">
       Clear basket
     `;
 
     this.totalPrice = new BaseComponent({
       tagName: 'p',
-      textContent: 'Total price: - €',
+      textContent: 'Total price: 0 €',
       classNames: 'basket-price',
       parentNode: this.basketTotals.getElement(),
     });
@@ -96,16 +96,16 @@ export class PageBasket extends BaseComponent {
     this.basketItems.insertChildren(items);
     myCart.subscribe(this.update);
 
-    this.totalPrice.setTextContent(`Total price: € ${this.getTotalPrice()} `);
-    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
-    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
+    this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: ${this.getDiscountOnTotalPrice()} €`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: ${this.getSubTotalPrice()} €`);
     this.checkEmptyCart();
   }
 
   public update = (): void => {
     this.totalPrice.setTextContent(`Total price: ${this.getTotalPrice()} €`);
-    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: € ${this.getDiscountOnTotalPrice()}`);
-    this.basketTotals.subTotal.setTextContent(`Subtotal: € ${this.getSubTotalPrice()}`);
+    this.basketTotals.promoDiscount.setTextContent(`Coupon discount: ${this.getDiscountOnTotalPrice()} €`);
+    this.basketTotals.subTotal.setTextContent(`Subtotal: ${this.getSubTotalPrice()} €`);
     this.checkEmptyCart();
   };
 

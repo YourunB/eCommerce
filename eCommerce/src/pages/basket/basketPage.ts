@@ -6,6 +6,7 @@ import { MyCart } from '../../modules/cart/cart';
 import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
 import { BasketTotals } from './basketTotals/basketTotals';
+import '../../assets/images/svg/delete.svg';
 
 const myCart = new MyCart();
 
@@ -66,10 +67,14 @@ export class PageBasket extends BaseComponent {
     });
 
     this.btnClearBasket = new Button({
-      textContent: 'Clear basket',
       classNames: 'basket-page__btn-clear',
       parentNode: this.basketHeader.getElement(),
     });
+
+    this.btnClearBasket.getElement().innerHTML = `
+      <img src="/delete.svg" alt="Delete">
+      Clear basket
+    `;
 
     this.totalPrice = new BaseComponent({
       tagName: 'p',

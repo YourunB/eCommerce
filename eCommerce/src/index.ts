@@ -234,20 +234,23 @@ btnLogOut.addEventListener('click', () => {
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;
   if (currentTarget.textContent === 'Home') {
-    nav.classList.remove('navigation_show');
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   if (currentTarget.textContent === 'Products') {
-    btnMenu.classList.remove('btn-menu_cliked');
-    nav.classList.remove('navigation_show');
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     return;
   }
   if (currentTarget.textContent === 'About') {
-    btnMenu.classList.remove('btn-menu_cliked');
-    nav.classList.remove('navigation_show');
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
     return;
   }
 });
+
+function hideMenu() {
+  btnMenu.classList.remove('btn-menu_cliked');
+  nav.classList.remove('navigation_show');
+}

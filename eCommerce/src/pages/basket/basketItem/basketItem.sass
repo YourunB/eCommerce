@@ -98,6 +98,7 @@
 
   .basket-item__img
     height: 6rem
+    border-radius: 2px
 
   .basket__product-price-container
     flex: none
@@ -112,10 +113,8 @@
     height: 50%
 
 .basket-items
-  height: calc(100vh - 260px)
-  overflow-y: auto
+  min-height: calc(100vh - 260px)
 
 @media (max-width: 768px)
   .basket-items
-    height: calc(100vh - 450px)
-    overflow-y: auto
+    min-height: calc(100vh - 450px)

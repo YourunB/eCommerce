@@ -196,7 +196,6 @@ export class Products {
           this.page.setSearchDataList(products.map((product) => product.name));
           this.page.renderProducts(products, cart.cart, fadeout);
         } else {
-          this.dialog.show('There are no products available at the selected conditions', 'warning');
           this.page.renderEmptyCard();
         }
       })
@@ -264,6 +263,7 @@ export class Products {
   public async getCategories(): Promise<MappedCategories[] | Error> {
     await waitToken(10, 100);
     const categories = await queryCategories();
+    if ('message' in categories) return categories;
     return categories instanceof Error ? categories : this.mapCategories(categories);
   }
 

@@ -12,21 +12,25 @@ export class BasketItem extends BaseComponent {
   private _item: LineItem;
   private quantityText: BaseComponent;
   private total: BaseComponent;
+  private btnDeleteItem: Button;
+  private btnMinusItem: Button;
+  private btnPlusItem: Button;
+  private containerImgNamePrice: ContainerImgNamePrice;
 
   constructor(item: LineItem) {
     super({ tagName: 'section', classNames: 'basket-item' });
     this._item = item;
 
-    const containerImgNamePrice = new ContainerImgNamePrice(item);
+    this.containerImgNamePrice = new ContainerImgNamePrice(item);
 
     const quantityContainer = new BaseComponent({ tagName: 'div', classNames: 'basket-item__quantity-container' });
     const { quantity } = item;
     this.quantityText = new BaseComponent({ tagName: 'span', textContent: `${quantity}` });
-    const btnMinusItem = new Button({ textContent: '-', classNames: 'basket-item__btn-quantity' });
-    const btnPlusItem = new Button({ textContent: '+', classNames: 'basket-item__btn-quantity' });
-    btnMinusItem.setOnclick(() => this.handleDecrement());
-    btnPlusItem.setOnclick(() => this.handleIncrement());
-    quantityContainer.insertChildren([btnMinusItem, this.quantityText, btnPlusItem]);
+    this.btnMinusItem = new Button({ textContent: '-', classNames: 'basket-item__btn-quantity' });
+    this.btnPlusItem = new Button({ textContent: '+', classNames: 'basket-item__btn-quantity' });
+    this.btnMinusItem.setOnclick(() => this.handleDecrement());
+    this.btnPlusItem.setOnclick(() => this.handleIncrement());
+    quantityContainer.insertChildren([this.btnMinusItem, this.quantityText, this.btnPlusItem]);
 
     const textTotal = (item.totalPrice.centAmount / 100).toFixed(2);
     this.total = new BaseComponent({
@@ -35,28 +39,48 @@ export class BasketItem extends BaseComponent {
       classNames: 'product-price__span',
     });
 
-    const btnDeleteItem = new Button({ classNames: 'basket-item__dtn-delete' });
-    btnDeleteItem.setOnclick(() => this.handleDelete());
+    this.btnDeleteItem = new Button({ classNames: 'basket-item__dtn-delete' });
+    this.btnDeleteItem.setOnclick(() => this.handleDelete());
 
     const quantityAndTotal = new BaseComponent({ tagName: 'div', classNames: 'basket__quantity-total-container' });
-    quantityAndTotal.insertChildren([quantityContainer, this.total, btnDeleteItem]);
-    this.insertChildren([containerImgNamePrice, quantityAndTotal]);
+    quantityAndTotal.insertChildren([quantityContainer, this.total, this.btnDeleteItem]);
+    this.insertChildren([this.containerImgNamePrice, quantityAndTotal]);
     mycart.subscribe(this.update);
   }
 
+  private blockControls(block: boolean): void {
+    if (block) {
+      this.btnDeleteItem.off();
+      this.btnMinusItem.off();
+      this.btnPlusItem.off();
+    } else {
+      this.btnDeleteItem.on();
+      this.btnMinusItem.on();
+      this.btnPlusItem.on();
+    }
+  }
+
   private handleIncrement(): void {
-    mycart.addLineItems([{ productId: this._item.productId, quantity: 1 }]);
+    this.blockControls(true);
+    mycart.addLineItems([{ productId: this._item.productId, quantity: 1 }]).finally(() => this.blockControls(false));
   }
 
   private handleDecrement(): void {
     if (this._item.quantity < 2) return;
-    mycart.removeLineItems([{ lineItemId: this._item.id, quantity: 1 }]);
+    this.blockControls(true);
+    mycart.removeLineItems([{ lineItemId: this._item.id, quantity: 1 }]).finally(() => this.blockControls(false));
   }
 
   private handleDelete(): void {
+    this.blockControls(true);
     const { id } = this._item;
-    mycart.removeLineItems([{ lineItemId: id }]).then(() => mycart.deleteSubscribe(this.update));
-    this.destroy();
+    mycart
+      .removeLineItems([{ lineItemId: id }])
+      .then(() => mycart.deleteSubscribe(this.update))
+      .then(
+        () => this.destroy(),
+        () => this.blockControls(false)
+      );
   }
 
   private update = (): void => {
@@ -70,5 +94,6 @@ export class BasketItem extends BaseComponent {
     this.quantityText.setTextContent(`${lineItem.quantity}`);
     const textTotal = (lineItem?.totalPrice.centAmount / 100).toFixed(2);
     this.total.setTextContent(`€${textTotal}`);
+    this.containerImgNamePrice.update(this._item);
   };
 }

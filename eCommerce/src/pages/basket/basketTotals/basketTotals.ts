@@ -5,6 +5,7 @@ import { Dialog } from '../../../components/modalDialog/modalDialog';
 import { DiscountCode, DiscountCodeInfo, DiscountCodeReference, LocalizedString } from '@commercetools/platform-sdk';
 import { getDiscountCodeById } from '../../../modules/api/cart';
 
+const dialog = Dialog.getInstance();
 export class BasketTotals extends BaseComponent {
   public totalsTitle: BaseComponent;
   public promoContainer: BaseComponent;
@@ -21,7 +22,6 @@ export class BasketTotals extends BaseComponent {
   constructor(props: BaseComponentProps) {
     super({ classNames: ['basket-totals__container', 'invisible'], ...props });
     this.cart = new MyCart();
-    const dialog = Dialog.getInstance();
 
     this.promocodeId = '';
     this.checkIsDiscounted();
@@ -41,6 +41,7 @@ export class BasketTotals extends BaseComponent {
       attribute: { name: 'placeholder', value: 'Enter coupon code here...' },
       parentNode: this.promoContainer.getElement(),
     });
+    this.promoInput.getElement().addEventListener('keydown', this.keyEnterHandler);
     this.addPromoButton = new BaseComponent({
       tagName: 'button',
       attribute: { name: 'type', value: 'button' },
@@ -71,30 +72,13 @@ export class BasketTotals extends BaseComponent {
 
     this.insertChildren([this.totalsTitle, this.promoContainer, this.subTotal, this.promoDiscount]);
 
-    this.addPromoButton.getElement().addEventListener('click', async () => {
-      if (this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart')) {
-        dialog.show('you may apply only one discount code');
-        return;
-      }
-      const promocode = (this.promoInput.getElement() as HTMLInputElement).value;
-      const resp = await this.cart.addDiscountCode(promocode);
-
-      if (resp) {
-        (this.promoInput.getElement() as HTMLInputElement).value = '';
-        const promoResp = this.cart.cart.discountCodes.at(-1);
-        if (promoResp?.state === 'DoesNotMatchCart') {
-          dialog.show('This discount code doesn`t apply to your product categories');
-          this.removeDiscount(promoResp.discountCode.id)();
-          return;
-        }
-
-        this.checkIsDiscounted();
-      }
-    });
+    this.addPromoButton.getElement().addEventListener('click', this.addDiscount);
     this.removePromoButton.getElement().addEventListener('click', this.removeDiscount());
+    this.cart.subscribe(this.resetPromos);
   }
   checkIsDiscounted = () => {
-    this.discounted = this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart');
+    const allDiscounts = this.cart.cart.discountCodes;
+    this.discounted = allDiscounts?.find((item) => item.state === 'MatchesCart');
     if (this.discounted) {
       this.promocodeId = this.discounted.discountCode.id;
       getDiscountCodeById(this.promocodeId).then((data: Error | DiscountCode) => {
@@ -108,7 +92,27 @@ export class BasketTotals extends BaseComponent {
     this.promo.setTextContent(content);
     this.promo.insertChild(this.removePromoButton);
   };
+  addDiscount = async () => {
+    if (this.cart.cart.discountCodes?.find((item) => item.state === 'MatchesCart')) {
+      dialog.show('you may apply only one discount code');
+      return;
+    }
+    const promocode = (this.promoInput.getElement() as HTMLInputElement).value;
+    const resp = await this.cart.addDiscountCode(promocode);
+    console.log(this.cart.cart);
 
+    if (resp) {
+      (this.promoInput.getElement() as HTMLInputElement).value = '';
+      const promoResp = this.cart.cart.discountCodes.at(-1);
+      if (promoResp?.state === 'DoesNotMatchCart') {
+        dialog.show('This discount code doesn`t apply to your product categories');
+        this.removeDiscount(promoResp.discountCode.id)();
+        return;
+      }
+
+      this.checkIsDiscounted();
+    }
+  };
   removeDiscount = (id?: string) => async () => {
     const discountCodeRef: DiscountCodeReference = {
       typeId: 'discount-code',
@@ -117,6 +121,18 @@ export class BasketTotals extends BaseComponent {
     const resp = await this.cart.removeDiscountCode(discountCodeRef);
     if (resp) {
       this.promo.setClassName('invisible');
+    }
+  };
+
+  resetPromos = () => {
+    this.promo.setClassName('invisible');
+    this.checkIsDiscounted();
+  };
+
+  keyEnterHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.addDiscount();
     }
   };
 }

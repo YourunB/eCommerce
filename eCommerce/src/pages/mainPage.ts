@@ -12,8 +12,9 @@ info.innerHTML = `
   <div class="promo-box">
     <img class="promo-box__image" src="sale.png" alt="Promo">
     <ul>
-      <li><span class="text-shine">SUMMER</span> - 5% discount on the entire basket of goods</li>
-      <li><span class="text-shine">TREE</span> - 5% discount on all trees</li>
+      <li><span class="text-shine">SUMMER</span> - 5% off for all your cart</li>
+      <li><span class="text-shine">TREE</span> - 7% off for all trees</li>
+      <li><span class="text-shine">FRUIT</span> - 10% off for all fruits</li>
     <ul>
   </div>
 `;

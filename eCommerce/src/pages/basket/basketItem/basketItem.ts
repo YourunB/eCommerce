@@ -15,12 +15,13 @@ export class BasketItem extends BaseComponent {
   private btnDeleteItem: Button;
   private btnMinusItem: Button;
   private btnPlusItem: Button;
+  private containerImgNamePrice: ContainerImgNamePrice;
 
   constructor(item: LineItem) {
     super({ tagName: 'section', classNames: 'basket-item' });
     this._item = item;
 
-    const containerImgNamePrice = new ContainerImgNamePrice(item);
+    this.containerImgNamePrice = new ContainerImgNamePrice(item);
 
     const quantityContainer = new BaseComponent({ tagName: 'div', classNames: 'basket-item__quantity-container' });
     const { quantity } = item;
@@ -43,7 +44,7 @@ export class BasketItem extends BaseComponent {
 
     const quantityAndTotal = new BaseComponent({ tagName: 'div', classNames: 'basket__quantity-total-container' });
     quantityAndTotal.insertChildren([quantityContainer, this.total, this.btnDeleteItem]);
-    this.insertChildren([containerImgNamePrice, quantityAndTotal]);
+    this.insertChildren([this.containerImgNamePrice, quantityAndTotal]);
     mycart.subscribe(this.update);
   }
 
@@ -93,5 +94,6 @@ export class BasketItem extends BaseComponent {
     this.quantityText.setTextContent(`${lineItem.quantity}`);
     const textTotal = (lineItem?.totalPrice.centAmount / 100).toFixed(2);
     this.total.setTextContent(`€${textTotal}`);
+    this.containerImgNamePrice.update(this._item);
   };
 }

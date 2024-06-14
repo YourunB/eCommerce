@@ -3,6 +3,9 @@ import { LineItem } from '@commercetools/platform-sdk';
 import { BaseComponent } from '../../../../components/baseComponent';
 
 export class ContainerImgNamePrice extends BaseComponent {
+  private price: BaseComponent;
+  private priceDiscounted: BaseComponent;
+
   constructor(item: LineItem) {
     super({ tagName: 'div', classNames: 'basket__product-price-container' });
 
@@ -22,24 +25,44 @@ export class ContainerImgNamePrice extends BaseComponent {
     });
     productName.insertChild(p);
 
-    const textDiscountedPrice = item.price.discounted
-      ? `€${(item.price.discounted.value.centAmount / 100).toFixed(2)}`
-      : '';
-    const textPrice = (item.price.value.centAmount / 100).toFixed(2);
-    const price = new BaseComponent({
+    const { price, discountedPrice } = this.getItemPrice(item);
+    this.price = new BaseComponent({
       tagName: 'span',
-      textContent: `€${textPrice}`,
+      textContent: price,
       classNames: 'product-price__span',
     });
-    if (textDiscountedPrice) price.setClassName('product-price__discounted');
-    const priceDiscounted = new BaseComponent({
+    if (discountedPrice) this.price.setClassName('product-price__discounted');
+
+    this.priceDiscounted = new BaseComponent({
       tagName: 'span',
-      textContent: textDiscountedPrice,
+      textContent: discountedPrice,
       classNames: ['product-price__span'],
     });
+
     const priceContainer = new BaseComponent({ tagName: 'div', classNames: 'product__price-container' });
-    priceContainer.insertChildren([priceDiscounted, price]);
+    priceContainer.insertChildren([this.priceDiscounted, this.price]);
 
     this.insertChildren([productImg, productName, priceContainer]);
   }
+
+  private getItemPrice(item: LineItem) {
+    const isCouponApplied = item.totalPrice.centAmount / item.quantity !== item.price.value.centAmount;
+    const textDiscountedPrice =
+      item.price.discounted || isCouponApplied
+        ? `€${(item.totalPrice.centAmount / item.quantity / 100).toFixed(2)}`
+        : '';
+    const textPrice = `€${(item.price.value.centAmount / 100).toFixed(2)}`;
+    return { price: textPrice, discountedPrice: textDiscountedPrice };
+  }
+
+  public update = (item: LineItem): void => {
+    const { price, discountedPrice } = this.getItemPrice(item);
+    this.price.setTextContent(price);
+    this.priceDiscounted.setTextContent(discountedPrice);
+    if (discountedPrice) {
+      this.price.setClassName('product-price__discounted');
+    } else {
+      this.price.removeClassName('product-price__discounted');
+    }
+  };
 }

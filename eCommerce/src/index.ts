@@ -8,7 +8,17 @@ import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
 import { PageBasket } from './pages/basket/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
+import {
+  header,
+  btnLogIn,
+  btnLogOut,
+  btnReg,
+  logo,
+  menu,
+  btnBasket,
+  btnProfile,
+  nav,
+} from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 import { PageProfile } from './pages/profile/pageProfile';
@@ -223,14 +233,17 @@ btnLogOut.addEventListener('click', () => {
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;
   if (currentTarget.textContent === 'Home') {
+    nav.classList.remove('navigation_show');
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   if (currentTarget.textContent === 'Products') {
+    nav.classList.remove('navigation_show');
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     return;
   }
   if (currentTarget.textContent === 'About') {
+    nav.classList.remove('navigation_show');
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
     return;
   }

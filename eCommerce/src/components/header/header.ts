@@ -64,4 +64,4 @@ navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, btnMenu);
 nav.append(menu);
 header.append(logo, nav, navBtnsBox);
 
-export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo };
+export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo, btnMenu };

@@ -18,6 +18,7 @@ import {
   btnBasket,
   btnProfile,
   nav,
+  btnMenu,
 } from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
@@ -238,11 +239,13 @@ menu.addEventListener('click', (event) => {
     return;
   }
   if (currentTarget.textContent === 'Products') {
+    btnMenu.classList.remove('btn-menu_cliked');
     nav.classList.remove('navigation_show');
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     return;
   }
   if (currentTarget.textContent === 'About') {
+    btnMenu.classList.remove('btn-menu_cliked');
     nav.classList.remove('navigation_show');
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
     return;

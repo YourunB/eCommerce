@@ -1,10 +1,12 @@
 import state from '../../../../state/state';
+import { router } from '../../../../modules/router';
 import { LineItem } from '@commercetools/platform-sdk';
 import { BaseComponent } from '../../../../components/baseComponent';
 
 export class ContainerImgNamePrice extends BaseComponent {
   private price: BaseComponent;
   private priceDiscounted: BaseComponent;
+  private url: string;
 
   constructor(item: LineItem) {
     super({ tagName: 'div', classNames: 'basket__product-price-container' });
@@ -17,12 +19,14 @@ export class ContainerImgNamePrice extends BaseComponent {
     });
 
     const productName = new BaseComponent({ tagName: 'div', classNames: 'basket-item__product-name' });
+    this.url = `${state.routes.products}#${item.productId}`;
     const p = new BaseComponent({
       tagName: 'a',
       textContent: item.name['en-GB'],
-      attribute: { name: 'href', value: `${state.routes.products}#${item.id}` },
+      attribute: { name: 'href', value: this.url },
       classNames: 'product-name__p',
     });
+    p.getElement().addEventListener('click', () => this.redirect());
     productName.insertChild(p);
 
     const { price, discountedPrice } = this.getItemPrice(item);
@@ -65,4 +69,9 @@ export class ContainerImgNamePrice extends BaseComponent {
       this.price.removeClassName('product-price__discounted');
     }
   };
+
+  private redirect(): void {
+    const hash = this.url.split('#').at(-1) || '';
+    router.route(`/yourunb-JSFE2023Q4/ecommerce/products#${hash}`);
+  }
 }

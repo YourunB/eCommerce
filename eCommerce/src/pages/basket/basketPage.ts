@@ -7,6 +7,7 @@ import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
 import { BasketTotals } from './basketTotals/basketTotals';
 import '../../assets/images/svg/delete.svg';
+import { waitCart } from '../../components/helpers/workarounds';
 
 const myCart = new MyCart();
 
@@ -131,7 +132,7 @@ export class PageBasket extends BaseComponent {
       this.clearConfirmOverlay.getElement().classList.add('confirm-overlay_show');
     });
 
-    this.createProductsItems();
+    waitCart(10, 100).then(() => this.createProductsItems());
   }
 
   public createProductsItems() {

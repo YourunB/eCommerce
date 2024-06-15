@@ -1,7 +1,7 @@
 import state from '../../state/state';
 import { MyCart } from '../cart/cart';
 import { ProductsState } from './productsState';
-import { waitToken } from '../../components/helpers/waitToken';
+import { waitToken } from '../../components/helpers/workarounds';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
 import { Dialog } from '../../components/modalDialog/modalDialog';

@@ -27,6 +27,10 @@
   background-size: 500% auto
   animation: text-shine 5s ease-in-out infinite alternate
 
+  &::selection
+    -webkit-text-fill-color: white
+    background-color: $color-text-errors
+
 @keyframes text-shine
   0%
     background-position: 0% 50%

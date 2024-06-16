@@ -97,7 +97,8 @@ export class BasketTotals extends BaseComponent {
       dialog.show('you may apply only one discount code');
       return;
     }
-    const promocode = (this.promoInput.getElement() as HTMLInputElement).value;
+    const { value } = this.promoInput.getElement() as HTMLInputElement;
+    const promocode = value.toUpperCase().trim();
     const resp = await this.cart.addDiscountCode(promocode);
     console.log(this.cart.cart);
 

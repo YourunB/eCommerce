@@ -65,26 +65,28 @@ export class Products {
   }
 
   public getPage() {
-    this.page.resetProducts();
-    this.getCategories()
-      .then((categories) => {
-        if (isMappedCategories(categories)) {
-          this.categoriesList = categories;
-          this.removeAllCategoryFilters();
+    waitToken(10, 100).then(() => {
+      this.page.resetProducts();
+      this.getCategories()
+        .then((categories) => {
+          if (isMappedCategories(categories)) {
+            this.categoriesList = categories;
+            this.removeAllCategoryFilters();
 
-          const { search } = window.location;
-          const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
-          if (idCategoryRoute) {
-            this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
-          } else {
-            this.currentCategory = state.rootCategory;
+            const { search } = window.location;
+            const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
+            if (idCategoryRoute) {
+              this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
+            } else {
+              this.currentCategory = state.rootCategory;
+            }
+            this.page.setCategoryActive(this.currentCategory || state.rootCategory);
+            this.page.renderFilters({ categories });
+            this.procesProducts();
           }
-          this.page.setCategoryActive(this.currentCategory || state.rootCategory);
-          this.page.renderFilters({ categories });
-          this.procesProducts();
-        }
-      })
-      .catch((error) => this.handleError(`${error}`));
+        })
+        .catch((error) => this.handleError(`${error}`));
+    });
 
     return this.page.getElement();
   }
@@ -261,7 +263,6 @@ export class Products {
   }
 
   public async getCategories(): Promise<MappedCategories[] | Error> {
-    await waitToken(10, 100);
     const categories = await queryCategories();
     if ('message' in categories) return categories;
     return categories instanceof Error ? categories : this.mapCategories(categories);

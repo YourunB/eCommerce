@@ -14,7 +14,7 @@ const myCart = new MyCart();
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
   public basketMain: BaseComponent;
-  public totalPrice: BaseComponent;
+  public totalPrice!: BaseComponent;
   public msgEmptyCart: BaseComponent;
   public msgEmptyCartText: BaseComponent;
   public btnClearBasket: Button;
@@ -26,7 +26,7 @@ export class PageBasket extends BaseComponent {
   public clearConfirmOverlay: BaseComponent;
   public clearConfirmForm: BaseComponent;
   public clearConfirmFormTitle: BaseComponent;
-  public basketTotals: BasketTotals;
+  public basketTotals!: BasketTotals;
 
   constructor() {
     super({ tagName: 'div', classNames: 'basket-page' });
@@ -45,9 +45,6 @@ export class PageBasket extends BaseComponent {
     });
 
     this.basketItems = new BaseComponent({ tagName: 'div', classNames: 'basket-items' });
-    this.basketTotals = new BasketTotals({ tagName: 'div' });
-
-    this.basketMain.insertChildren([this.basketItems, this.basketTotals]); // <-- insert a coupon section here
 
     this.msgEmptyCart = new BaseComponent({
       tagName: 'div',
@@ -112,13 +109,6 @@ export class PageBasket extends BaseComponent {
       Clear basket
     `;
 
-    this.totalPrice = new BaseComponent({
-      tagName: 'p',
-      textContent: 'Total price: 0 €',
-      classNames: 'basket-price',
-      parentNode: this.basketTotals.getElement(),
-    });
-
     this.btnClearBasketNo.getElement().addEventListener('click', () => {
       this.clearConfirmOverlay.getElement().classList.remove('confirm-overlay_show');
     });
@@ -132,7 +122,18 @@ export class PageBasket extends BaseComponent {
       this.clearConfirmOverlay.getElement().classList.add('confirm-overlay_show');
     });
 
-    waitCart(10, 100).then(() => this.createProductsItems());
+    waitCart(10, 100).then(() => {
+      this.basketTotals = new BasketTotals({ tagName: 'div' });
+      this.basketMain.insertChildren([this.basketItems, this.basketTotals]); // <-- insert a coupon section here
+      this.totalPrice = new BaseComponent({
+        tagName: 'p',
+        textContent: 'Total price: 0 €',
+        classNames: 'basket-price',
+        parentNode: this.basketTotals.getElement(),
+      });
+
+      this.createProductsItems();
+    });
   }
 
   public createProductsItems() {

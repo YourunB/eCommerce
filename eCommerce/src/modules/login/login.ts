@@ -47,14 +47,14 @@ export class Login {
     switch (type) {
       case 'login':
         this.page.btnOFF();
-        this.execute(this.email, this.password)
+        this.execute(this.email, this.password, true)
           .catch(() => {})
           .finally(() => this.page.btnON());
         break;
     }
   };
 
-  public async execute(email?: string, password?: string): Promise<string> {
+  public async execute(email?: string, password?: string, isAction = false): Promise<string> {
     try {
       if (!email || !password) {
         const credential = await lstorage.getCredentials();
@@ -73,7 +73,7 @@ export class Login {
         if (response.cart) cart.cart = response.cart;
         this.saveCredential();
         await this.getNewToken(this.email, this.password);
-        this.redirect();
+        isAction && this.redirect();
       } else {
         throw new Error(response.message);
       }

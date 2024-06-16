@@ -1,5 +1,4 @@
 import state from '../../state/state';
-import { MyCart } from '../../modules/cart/cart';
 
 /**
  * function is checking myCart.cart and if it undefined will check again after interval ms and repeat it count times.
@@ -8,12 +7,11 @@ import { MyCart } from '../../modules/cart/cart';
  */
 export async function waitCart(count: number, interval: number): Promise<void> {
   let cnt = count;
-  const myCart = new MyCart();
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (cnt < 1) return Promise.resolve();
     try {
-      if (myCart.cart) {
+      if (state.isLoaded) {
         return Promise.resolve();
       } else throw new Error();
     } catch (error) {
@@ -34,7 +32,7 @@ export async function waitToken(count: number, interval: number): Promise<void> 
   while (true) {
     if (cnt < 1) return Promise.resolve();
     try {
-      if (state.access_token.access_token) {
+      if (state.isLoaded) {
         return Promise.resolve();
       } else throw new Error();
     } catch (error) {

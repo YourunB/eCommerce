@@ -5,6 +5,7 @@ const initialState: State = {
     products: '/yourunb-JSFE2023Q4/ecommerce/products',
   },
   rootCategory: 'All Products',
+  isLoaded: false,
   authState: AuthState.notLogged,
   access_token: {},
   anonymousId: '',

@@ -38,6 +38,7 @@ login
     () => localStorage.setItem('logged', 'true'),
     () => localStorage.removeItem('logged')
   )
+  .finally(() => (state.isLoaded = true))
   .catch(() => {});
 
 document.body.append(header, main, footer, background);

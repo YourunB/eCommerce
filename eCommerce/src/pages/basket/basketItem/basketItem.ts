@@ -76,11 +76,12 @@ export class BasketItem extends BaseComponent {
     const { id } = this._item;
     mycart
       .removeLineItems([{ lineItemId: id }])
-      .then(() => mycart.deleteSubscribe(this.update))
-      .then(
-        () => this.destroy(),
-        () => this.blockControls(false)
-      );
+      .then((result) => {
+        if (!result) return;
+        mycart.deleteSubscribe(this.update);
+        this.destroy();
+      })
+      .finally(() => this.blockControls(false));
   }
 
   private update = (): void => {

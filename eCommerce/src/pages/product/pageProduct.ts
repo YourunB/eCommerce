@@ -24,7 +24,6 @@ export class PageProduct extends BaseComponent {
   private overlay: BaseComponent;
   private modalSwiper: BaseComponent;
   private closeModalButton: BaseComponent;
-  private productButtons: BasketButton;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
 
@@ -94,10 +93,6 @@ export class PageProduct extends BaseComponent {
       classNames: 'product-description',
       parentNode: this.productTextContainer.getElement(),
     });
-    this.productButtons = new BasketButton({
-      tagName: 'div',
-      parentNode: this.productTextContainer.getElement(),
-    });
 
     const Id = window.location.hash.substring(1);
     waitToken(10, 100)
@@ -116,6 +111,10 @@ export class PageProduct extends BaseComponent {
               this.renderImages(product);
               this.renderSwiper();
             }
+            new BasketButton({
+              tagName: 'div',
+              parentNode: this.productTextContainer.getElement(),
+            });
 
             return data;
           }

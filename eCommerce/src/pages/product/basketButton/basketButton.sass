@@ -1,0 +1,48 @@
+@use './src/variables' as *
+
+.basket-button__container
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: 2%
+
+.add_button
+  padding-left: 2%
+  padding-right: 2%
+  margin-top: 1rem
+  width: 8.5rem
+  height: 3rem
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 1%
+  border: none
+  border-radius: 100px
+  background: #46A358
+  color: white 
+  font-size: 0.8rem  
+  font-weight: 550  
+  cursor: pointer
+  
+.add_button_icon
+  width: 2rem
+  height: 1.5rem
+  background-image: url("../../../../src/assets/icons/cart.webp")
+  background-position: right
+  background-repeat: no-repeat
+  background-size: contain
+
+.remove_button
+  background-color: transparent
+  border: none
+  cursor: pointer
+  margin-top: 1rem
+  width: 2rem
+  height: 1.5rem
+  background-image: url("../../../../src/assets/icons/bin.svg")
+  background-repeat: no-repeat
+  background-size: contain
+
+.inactive
+  cursor: auto
+  opacity: 0.5

@@ -6,9 +6,20 @@ import { mainPage } from './pages/mainPage';
 import { Products } from './modules/products/products';
 import { notFoundPage, btnBackHome } from './pages/notFoundPage';
 import { aboutPage } from './pages/aboutPage';
-import { basketPage } from './pages/basketPage';
+import { PageBasket } from './pages/basket/basketPage';
 import { Login } from './modules/login/login';
-import { header, btnLogIn, btnLogOut, btnReg, logo, menu, btnBasket, btnProfile } from './components/header/header';
+import {
+  header,
+  btnLogIn,
+  btnLogOut,
+  btnReg,
+  logo,
+  menu,
+  btnBasket,
+  btnProfile,
+  nav,
+  btnMenu,
+} from './components/header/header';
 import { footer } from './components/footer/footer';
 import { PageRegistration } from './pages/registration/pageRegistration';
 import { PageProfile } from './pages/profile/pageProfile';
@@ -20,10 +31,15 @@ main.classList.add('main');
 const login = new Login();
 const products = new Products();
 
-login.isLogined().then(
-  () => localStorage.setItem('logged', 'true'),
-  () => localStorage.removeItem('logged')
-);
+login
+  .createAnonymousCustomer()
+  .then(() => login.execute())
+  .then(
+    () => localStorage.setItem('logged', 'true'),
+    () => localStorage.removeItem('logged')
+  )
+  .finally(() => (state.isLoaded = true))
+  .catch(() => {});
 
 document.body.append(header, main, footer, background);
 
@@ -94,7 +110,7 @@ router.addRoute({
   handler: () => {
     document.title = 'Basket';
     main.innerHTML = '';
-    main.append(basketPage);
+    main.append(new PageBasket().getElement());
     setActivePage();
     checkAuthorization();
   },
@@ -213,20 +229,29 @@ btnReg.addEventListener('click', () => {
 });
 btnLogOut.addEventListener('click', () => {
   localStorage.clear();
+  login.createAnonymousCustomer();
   router.route('/yourunb-JSFE2023Q4/ecommerce/');
 });
 menu.addEventListener('click', (event) => {
   const currentTarget = event.target as HTMLElement;
   if (currentTarget.textContent === 'Home') {
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/');
     return;
   }
   if (currentTarget.textContent === 'Products') {
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/products');
     return;
   }
   if (currentTarget.textContent === 'About') {
+    hideMenu();
     router.route('/yourunb-JSFE2023Q4/ecommerce/about');
     return;
   }
 });
+
+function hideMenu() {
+  btnMenu.classList.remove('btn-menu_cliked');
+  nav.classList.remove('navigation_show');
+}

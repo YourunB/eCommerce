@@ -7,7 +7,9 @@ import 'swiper/scss/pagination';
 import 'swiper/scss/navigation';
 import Swiper from 'swiper';
 import { Navigation } from 'swiper/modules';
-import { waitToken } from '../../components/helpers/waitToken';
+import { waitCart, waitToken } from '../../components/helpers/workarounds';
+import { router } from '../../modules/router';
+import { BasketButton } from './basketButton/basketButton';
 
 export class PageProduct extends BaseComponent {
   private productSwiper: BaseComponent;
@@ -22,6 +24,7 @@ export class PageProduct extends BaseComponent {
   private overlay: BaseComponent;
   private modalSwiper: BaseComponent;
   private closeModalButton: BaseComponent;
+  private productButtons: BasketButton;
   constructor(props: BaseComponentProps) {
     super({ classNames: 'page-product-container', ...props });
 
@@ -91,23 +94,33 @@ export class PageProduct extends BaseComponent {
       classNames: 'product-description',
       parentNode: this.productTextContainer.getElement(),
     });
+    this.productButtons = new BasketButton({
+      tagName: 'div',
+      parentNode: this.productTextContainer.getElement(),
+    });
 
     const Id = window.location.hash.substring(1);
-    waitToken(10, 100).then(() => {
-      getProduct(Id).then((data: Product | ErrorResponse) => {
-        if ('statusCode' in data) return;
-        const product = data.masterData;
-        this.productName.setTextContent(product.current.name['en-GB']);
-        this.productDescription.setTextContent(product.current.description ? product.current.description['en-GB'] : '');
-        this.renderPrices(product);
-        if (product.staged.masterVariant.images) {
-          this.renderImages(product);
-          this.renderSwiper();
-        }
+    waitToken(10, 100)
+      .then(() => waitCart(10, 100))
+      .then(() => {
+        getProduct(Id).then((data: Product | ErrorResponse) => {
+          if ('statusCode' in data) router.route('/yourunb-JSFE2023Q4/ecommerce/404');
+          else {
+            const product = data.masterData;
+            this.productName.setTextContent(product.current.name['en-GB']);
+            this.productDescription.setTextContent(
+              product.current.description ? product.current.description['en-GB'] : ''
+            );
+            this.renderPrices(product);
+            if (product.staged.masterVariant.images) {
+              this.renderImages(product);
+              this.renderSwiper();
+            }
 
-        return data;
+            return data;
+          }
+        });
       });
-    });
   }
 
   renderSwiper() {

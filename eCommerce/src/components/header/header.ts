@@ -2,7 +2,11 @@ import './header.sass';
 import '../../assets/images/svg/logo.svg';
 import '../../assets/images/svg/basket.svg';
 import '../../assets/images/svg/user.svg';
+import { MyCart } from '../../modules/cart/cart';
 import { Button } from '../../components/basebutton/baseButton';
+
+const myCart = new MyCart();
+myCart.subscribe(update);
 
 const header = document.createElement('header');
 header.classList.add('header');
@@ -60,8 +64,20 @@ function checkBtnMenuCondition() {
   } else btnMenu.classList.add('btn-menu_cliked');
 }
 
+function update(): void {
+  const attributeName = 'countitems';
+  const maxCount = 100;
+  const countItems = myCart.cart.lineItems.length;
+  const count = countItems > maxCount ? `${maxCount}+` : `${countItems}`;
+  if (countItems) {
+    navBtnsBox.setAttribute(attributeName, count);
+  } else {
+    navBtnsBox.removeAttribute(attributeName);
+  }
+}
+
 navBtnsBox.append(btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, btnMenu);
 nav.append(menu);
 header.append(logo, nav, navBtnsBox);
 
-export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo };
+export { header, nav, menu, navBtnsBox, btnBasket, btnProfile, btnLogIn, btnLogOut, btnReg, logo, btnMenu };

@@ -73,6 +73,25 @@
   transform: scale(0.9)
   transition: 0.2s
 
+.navigation__btns[countitems]
+  position: relative
+  &::before
+    content: attr(countitems)
+    display: flex
+    justify-content: center
+    align-items: center
+    position: absolute
+    inset: 0
+    left: 0.5rem
+    top: -0.25rem
+    background-color: $color-button-background
+    height: 1.5rem
+    width: 1.5rem
+    padding: 5px
+    border-radius: 50%
+    font-size: 0.8rem
+    color: $color-button-common
+
 .navigation
   gap: 10px
   transition: 1s
@@ -152,12 +171,12 @@
     .menu
       display: block
       text-align: center
-  
+
   .btn-menu
     display: block
 
 .navigation_show
-   transform: translateX(0)
+  transform: translateX(0)
 
 @media (max-width: 430px)
   .logo-box span

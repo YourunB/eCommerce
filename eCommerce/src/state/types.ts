@@ -1,5 +1,5 @@
-import { Customer } from '@commercetools/platform-sdk';
 import { AuthResponse } from '../modules/login/types';
+import { Customer } from '@commercetools/platform-sdk';
 
 export type StateValue = {
   [index: string]: unknown;
@@ -27,8 +27,10 @@ type Routes = {
 export interface State {
   readonly routes: Routes;
   readonly rootCategory: string;
+  isLoaded: boolean;
   authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
+  anonymousId: string;
   customer: Customer | Record<string, never>;
   readonly limits: string[];
   [index: string]: unknown;

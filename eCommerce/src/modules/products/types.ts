@@ -11,7 +11,8 @@ export type ActionsProducts = {
     | 'search'
     | 'reset-btn'
     | 'change-annual'
-    | 'change-perennial';
+    | 'change-perennial'
+    | 'cart-addLine';
   payload: {
     prop1: string;
     prop2: string;

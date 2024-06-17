@@ -1,5 +1,7 @@
 import state from '../../state/state';
-import { waitToken } from '../../components/helpers/waitToken';
+import { MyCart } from '../cart/cart';
+import { ProductsState } from './productsState';
+import { waitToken } from '../../components/helpers/workarounds';
 import { PageProducts } from '../../pages/products/pageProducts';
 import { mapProduct } from '../../components/helpers/mapProduct';
 import { Dialog } from '../../components/modalDialog/modalDialog';
@@ -23,6 +25,8 @@ const START_PAGE = 1;
 const DEFAULT_LIMIT = '10';
 const DEFAULT_SORT_FIELD: SortField = 'price';
 const DEFAULT_SORT_DIRECTION: SortDirection = 'asc';
+const productsState = new ProductsState();
+const cart = new MyCart();
 
 export class Products {
   private filter: Map<FilterRules, string> = new Map(); // Map of functions (filters) to construct filter query
@@ -61,26 +65,28 @@ export class Products {
   }
 
   public getPage() {
-    this.page.resetProducts();
-    this.getCategories()
-      .then((categories) => {
-        if (isMappedCategories(categories)) {
-          this.categoriesList = categories;
-          this.removeAllCategoryFilters();
+    waitToken(10, 100).then(() => {
+      this.page.resetProducts();
+      this.getCategories()
+        .then((categories) => {
+          if (isMappedCategories(categories)) {
+            this.categoriesList = categories;
+            this.removeAllCategoryFilters();
 
-          const { search } = window.location;
-          const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
-          if (idCategoryRoute) {
-            this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
-          } else {
-            this.currentCategory = state.rootCategory;
+            const { search } = window.location;
+            const idCategoryRoute = search.replace('?', '').replace(encodeURI(state.rootCategory), '');
+            if (idCategoryRoute) {
+              this.handleCategoryRoutes(idCategoryRoute, this.categoriesList);
+            } else {
+              this.currentCategory = state.rootCategory;
+            }
+            this.page.setCategoryActive(this.currentCategory || state.rootCategory);
+            this.page.renderFilters({ categories });
+            this.procesProducts();
           }
-          this.page.setCategoryActive(this.currentCategory || state.rootCategory);
-          this.page.renderFilters({ categories });
-          this.procesProducts();
-        }
-      })
-      .catch((error) => this.handleError(`${error}`));
+        })
+        .catch((error) => this.handleError(`${error}`));
+    });
 
     return this.page.getElement();
   }
@@ -103,6 +109,16 @@ export class Products {
     this.prop2 = action.payload.prop2;
 
     switch (type) {
+      case 'cart-addLine':
+        cart.addLineItems([{ productId: this.prop1, quantity: 1 }]).then((cart) => {
+          if (cart) {
+            const [lineCart] = cart.lineItems.filter((item) => item.productId === this.prop1);
+            productsState.set(lineCart.productId, lineCart);
+          } else {
+            productsState.set(this.prop1, 'isFail');
+          }
+        });
+        break;
       case 'change-category':
         this.changeCategory(this.prop1, this.prop2);
         break;
@@ -175,13 +191,13 @@ export class Products {
 
   private procesProducts(fadeout = false): void {
     this.page.buttons = 'disabled';
+    productsState.reset();
     this.getProducts()
       .then((products) => {
         if (isMappedProducts(products)) {
           this.page.setSearchDataList(products.map((product) => product.name));
-          this.page.renderProducts(products, fadeout);
+          this.page.renderProducts(products, cart.cart, fadeout);
         } else {
-          this.dialog.show('There are no products available at the selected conditions', 'warning');
           this.page.renderEmptyCard();
         }
       })
@@ -247,8 +263,8 @@ export class Products {
   }
 
   public async getCategories(): Promise<MappedCategories[] | Error> {
-    await waitToken(10, 100);
     const categories = await queryCategories();
+    if ('message' in categories) return categories;
     return categories instanceof Error ? categories : this.mapCategories(categories);
   }
 

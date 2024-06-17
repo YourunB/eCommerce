@@ -12,12 +12,19 @@
 .main-slider__title
   position: absolute
   z-index: 1
-  left: 50%
-  top: 50%
-  transform: translate(-50%, -50%)
+  max-width: 150px
+  max-height: 80px
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  margin: auto
   border: solid 4px white
   border-radius: 3px
-  padding: 20px
+  padding: 10px
+  display: flex
+  justify-content: center
+  align-items: center
   backdrop-filter: blur(10px)
   background: rgba(0, 0, 0, 0.3)
   transition: 0.7s

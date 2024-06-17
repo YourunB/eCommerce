@@ -5,10 +5,12 @@ const initialState: State = {
     products: '/yourunb-JSFE2023Q4/ecommerce/products',
   },
   rootCategory: 'All Products',
+  isLoaded: false,
   authState: AuthState.notLogged,
   access_token: {},
+  anonymousId: '',
   customer: {},
-  limits: ['10', '20', '30', '40', '50'],
+  limits: ['8', '16', '32', '64'],
 };
 
 const subscribers: Subscribers = {};

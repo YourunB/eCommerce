@@ -37,6 +37,7 @@ export class BasketButton extends BaseComponent {
     this.setButtonStatus();
 
     this.addButton.getElement().addEventListener('click', async () => {
+      this.addButton.setAttribute({ name: 'disabled', value: 'true' });
       const resp = await this.cart.addLineItems([{ productId: this.id, quantity: 1 }]);
       if (isCart(resp)) {
         this.setButtonStatus();
@@ -44,6 +45,7 @@ export class BasketButton extends BaseComponent {
     });
 
     this.removeButton.getElement().addEventListener('click', async () => {
+      this.removeButton.setAttribute({ name: 'disabled', value: 'true' });
       if (!this?.productInCart?.id) return;
       const resp = await this.cart.removeLineItems([{ lineItemId: this.productInCart.id }]);
       if (isCart(resp)) {

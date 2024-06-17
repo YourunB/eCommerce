@@ -7,9 +7,11 @@ import { router } from '../../modules/router';
 import { BasketItem } from './basketItem/basketItem';
 import { BasketTotals } from './basketTotals/basketTotals';
 import '../../assets/images/svg/delete.svg';
+import { Dialog } from '../../components/modalDialog/modalDialog';
 import { waitCart } from '../../components/helpers/workarounds';
 
 const myCart = new MyCart();
+const dialog = Dialog.getInstance();
 
 export class PageBasket extends BaseComponent {
   public basketHeader: BaseComponent;
@@ -198,7 +200,8 @@ export class PageBasket extends BaseComponent {
   public clearCart() {
     deleteCartApi(myCart.cart.id, myCart.cart.version)
       .then(() => myCart.create())
-      .then(() => this.updateCart());
+      .then(() => this.updateCart())
+      .catch((err) => dialog.show(err));
   }
 
   public updateCart() {

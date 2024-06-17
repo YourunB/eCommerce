@@ -100,7 +100,6 @@ export class BasketTotals extends BaseComponent {
     const { value } = this.promoInput.getElement() as HTMLInputElement;
     const promocode = value.toUpperCase().trim();
     const resp = await this.cart.addDiscountCode(promocode);
-    console.log(this.cart.cart);
 
     if (resp) {
       (this.promoInput.getElement() as HTMLInputElement).value = '';

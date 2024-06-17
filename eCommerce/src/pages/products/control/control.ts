@@ -86,7 +86,7 @@ export class SectionControl extends BaseComponent {
       this.resetButtons[name]?.destroy();
       delete this.resetButtons[name];
     } catch (error) {
-      console.log('SectionControl, removeResetButton. ', error);
+      console.warn('Reset Button. ', error);
     }
   }
 }

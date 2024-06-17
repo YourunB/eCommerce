@@ -27,6 +27,7 @@ type Routes = {
 export interface State {
   readonly routes: Routes;
   readonly rootCategory: string;
+  isLoaded: boolean;
   authState: AuthState;
   access_token: AuthResponse | Record<string, never>;
   anonymousId: string;

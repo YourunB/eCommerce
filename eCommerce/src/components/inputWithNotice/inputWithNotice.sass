@@ -1,0 +1,17 @@
+@use './src/variables' as *
+
+.notice
+  width: 100%
+  text-align: left
+  color: #ff4444
+
+  opacity: 0
+  transition-duration: 1s
+
+  & ul
+    padding-left: 1.5rem
+    font-size: 0.8rem
+    margin: 0.2rem 0
+
+.notice_show
+  opacity: 1

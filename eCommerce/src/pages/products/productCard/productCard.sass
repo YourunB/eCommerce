@@ -1,0 +1,174 @@
+@use './src/variables' as *
+
+.product-card
+  position: relative
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  align-items: center
+  overflow: hidden
+  gap: 1rem
+  width: 100%
+  height: 100%
+  max-width: 25rem
+  justify-self: center
+  background: rgba(0, 0, 0, 0.5)
+  padding: 10px
+  border-radius: 3px
+
+.product-card[discount]::after
+  content: "" attr(discount)
+  text-align: center
+  font-size: 1.1rem
+  line-height: 2.2rem
+  position: absolute
+  left: 0
+  top: 0.5rem
+  padding: 0 0.5rem
+  border: 1px solid $color-bacground-common
+  background-color: $color-button-background
+  color: $color-button-common
+
+.product-card__img
+  height: 70%
+  width: 100%
+  align-self: center
+  overflow: hidden
+  border-radius: 3px
+
+  & img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    transition-delay: 500ms
+    transition-duration: 2s
+
+.product-card__content
+  flex: 0 0 auto
+  width: 100%
+
+.product-card__name,
+.product-card__price
+  margin: 0
+  padding: 0.25rem 0
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.product-card__price-container
+  display: flex
+  flex-wrap: nowrap
+  gap: 1rem
+  margin-bottom: 0.5rem
+  font-size: 1.1rem
+
+.price-container__actual-price
+  font-weight: 700
+  color: $color-product-price
+
+.price-container__old-price
+  color: $color-product-price-cancel
+  text-decoration: line-through
+
+.widget-cart__container
+  position: relative
+  display: flex
+  justify-content: center
+  transform: translateY(-2.5rem)
+  transition-duration: 300ms
+
+.widget-cart__button_is-fetching,
+.widget-cart__container[data-set-is-in-cart] .widget-cart__button
+  background-color: $color-bacground-backdrop
+  backdrop-filter: blur(3px)
+  filter: grayscale(1)
+  cursor: default
+
+.widget-cart__button
+  position: relative
+  width: 3rem
+  height: 2rem
+  border-radius: 0.3rem
+  padding-right: 1.7rem
+
+  background-image: url("../../../../src/assets/icons/cart.webp")
+  background-position: 6px center
+  background-repeat: no-repeat
+  background-size: contain
+
+.widget-cart__text
+  position: absolute
+  top: -1.5rem
+  right: 50%
+  transform: translateX(100%)
+  padding: 0.25rem 0.5rem
+  color: $color-text-common
+  background-color: $color-product-price
+  border-radius: 0.3rem
+  cursor: default
+
+@media (hover: hover)
+  .product-card:hover
+    transition-duration: 250ms
+    cursor: pointer
+    box-shadow: 0 0 0 3px white
+
+  .product-card__img:hover
+    & img
+      transform: scale(1.2)
+
+  .widget-cart__container[data-set-is-in-cart] .widget-cart__button:hover
+    background-color: none
+
+  .widget-cart__button_is-fetching:hover
+    background-color: $color-bacground-backdrop
+
+.product-card:has(.product-card_empty)
+  background-image: url("../../../assets/images/card/no-data.webp")
+  background-position: center
+  background-repeat: no-repeat
+  background-size: contain
+
+  filter: grayscale(1)
+  pointer-events: none
+
+.product-card__description-content
+  min-height: 2.375rem
+  font-style: oblique
+  font-family: $font-family-description
+
+  overflow: hidden
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  line-clamp: 2
+  -webkit-box-orient: vertical
+  filter: brightness(0.8)
+
+// spinner
+.spinner__container
+  position: absolute
+  width: 50%
+  height: 100%
+  inset: 0
+  left: 1rem
+  transform-origin: left
+
+  background-image: url("../../../assets/images/cart/plant.webp")
+  background-position: right
+  background-repeat: no-repeat
+  background-size: contain
+
+  animation-name: spinner
+  animation-duration: 2s
+  animation-iteration-count: infinite
+
+@keyframes spinner
+  0%
+    opacity: 0
+    transform: rotate(-40deg)
+  30%
+    opacity: 1
+    transform: rotate(-30deg)
+
+  100%
+    transform: rotate(-10deg)

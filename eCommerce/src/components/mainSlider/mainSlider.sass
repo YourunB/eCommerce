@@ -1,0 +1,63 @@
+@import "../../variables"
+
+.main-slider
+  position: relative
+  overflow: hidden
+  border-radius: 5px
+  border: solid 5px white
+  background: rgba(0, 0, 0, 0.1)
+  box-shadow: 4px 4px 8px 8px rgba(0, 0, 0, 0.1)
+  user-select: none
+
+.main-slider__title
+  position: absolute
+  z-index: 1
+  max-width: 150px
+  max-height: 80px
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  margin: auto
+  border: solid 4px white
+  border-radius: 3px
+  padding: 10px
+  display: flex
+  justify-content: center
+  align-items: center
+  backdrop-filter: blur(10px)
+  background: rgba(0, 0, 0, 0.3)
+  transition: 0.7s
+
+.main-slider__slide
+  border-radius: 5px
+  width: 100%
+
+.main-slider__wrapper
+  display: flex
+  gap: 50%
+  animation: slide 20s infinite
+  animation-delay: 1s
+
+@media (hover: hover)
+  .main-slider__title:hover
+    cursor: pointer
+    background: none
+    backdrop-filter: blur(0)
+    box-shadow: 0 0 4px 4px rgba(255, 255, 255, 0.5)
+
+.main-slider__title:active
+  transition: 0.2s
+  background: rgba(70, 163, 88, 0.8)
+
+@keyframes slide
+  0%
+    transform: translateX(0)
+  25%
+    transform: translateX(-150%)
+  50%
+    transform: translateX(-300%)
+  75%
+    transform: translateX(-450%)
+  100%
+    transform: translateX(0)

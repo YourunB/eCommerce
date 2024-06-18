@@ -1,0 +1,68 @@
+@import "../../variables"
+
+@keyframes move_wave
+  0%
+    transform: translateX(0) translateZ(0) scaleY(1)
+  50%
+    transform: translateX(-25%) translateZ(0) scaleY(0.55)
+  100%
+    transform: translateX(-50%) translateZ(0) scaleY(1)
+
+.back-wrapper
+  overflow: hidden
+  position: absolute
+  z-index: -1
+  left: 0
+  right: 0
+  bottom: 0
+  top: 0
+  margin: auto
+
+.back-wrapper__inner
+  position: absolute
+  width: 100%
+  overflow: hidden
+  height: 100%
+  bottom: -1px
+  background-image: linear-gradient(to top, #3b8637 20%, #333c27 80%)
+
+.back-top
+  opacity: 0.5
+  z-index: 15
+
+.back-middle
+  opacity: 0.75
+  z-index: 10
+
+.back-bottom
+  z-index: 5
+
+.wave
+  position: absolute
+  left: 0
+  width: 200%
+  height: 100%
+  background-repeat: repeat no-repeat
+  background-position: 0 bottom
+  transform-origin: center bottom
+
+.wave-top
+  background-size: 50% 100px
+
+.wave-animation .wave-top
+  animation: move-wave 3s
+  -webkit-animation: move-wave 3s
+  -webkit-animation-delay: 1s
+  animation-delay: 1s
+
+.wave-middle
+  background-size: 50% 120px
+
+.wave-animation .wave-middle
+  animation: move_wave 10s linear infinite
+
+.wave-bottom
+  background-size: 50% 100px
+
+.wave-animation .wave-bottom
+  animation: move_wave 15s linear infinite

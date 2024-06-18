@@ -1,0 +1,112 @@
+@import '../variables/'
+
+.about-page__title
+  text-align: center
+
+.about-page__text a,
+.rss-box__title a
+  display: inline-block
+  font-weight: 700
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4)
+  color: $color-border-selected
+  transition: 0.7s
+
+.about-page__text a:hover,
+.rss-box__title a:hover
+  cursor: pointer
+  color: white
+  transform: scale(1.02)
+
+.developers
+  margin: auto
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  gap: 10px
+
+.developers__title
+  width: 100%
+  text-align: center
+
+.developer
+  position: relative
+  display: block
+  width: 300px
+  padding: 10px
+  border: solid 3px white
+  border-radius: 3px
+  background: white
+  color: gray
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1)
+  transition: 1s
+  transform: translateX(-100vw)
+  opacity: 0
+  animation: show-developers 1s forwards
+
+.developer:nth-of-type(2)
+  animation-delay: 0.5s
+.developer:nth-of-type(3)
+  animation-delay: 1s
+
+@media (hover:hover)
+  .developer:hover
+    cursor: pointer
+    scale: 1.03
+
+.developer:active
+  transition: 0.2s
+  scale: 0.9
+
+.developer span
+  color: $color-border-selected
+  font-weight: 700
+
+.developer__logo
+  position: absolute
+  top: 10px
+  right: 10px
+  width: 35px
+  padding: 5px
+  background: white
+  border-radius: 100px
+
+.developer__image
+  width: 100%
+  max-height: 274px
+  border-radius: 3px
+
+.developer__name
+  color: $color-border-selected
+  width: 100%
+  font-weight: 700
+  text-align: center
+
+.rss-box
+  display: flex
+  justify-content: center
+  flex-wrap: wrap
+  justify-content: center
+
+.rss-box__logo
+  width: 300px
+  transition: 0.7s
+
+@media (hover:hover)
+  .rss-box__logo:hover
+    transform: rotate(10deg)
+
+.rss-box__logo:active
+  transition: 0.2s
+  transform: scale(0.9)
+
+.rss-box__title
+  width: 100%
+  text-align: center
+
+@keyframes show-developers
+  0%
+    opacity: 0
+    transform: translateX(-100vw)
+  100%
+    opacity: 1
+    transform: translateX(0)

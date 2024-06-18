@@ -1,0 +1,13 @@
+export const AUTH_BASIC = 'Basic';
+export const AUTH_BEARER = 'Bearer';
+export const PROJECT_KEY = 'tpepapuz';
+export const GRANT_PASSWORD = 'password';
+export const PATH = `/oauth/${PROJECT_KEY}/customers/token`;
+export const CLIENT_ID = 'yK9n9gAhU-I9R9GqMuqQltBr';
+export const CLIENT_SECRET = 'OCgFOhzrouHycxT0ADKvY4s9sHA_YxHH';
+export const AUTH_PARAMS = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+export const CONTENT_TYPE_APP = 'application/x-www-form-urlencoded';
+export const AUTH_URL = 'https://auth.eu-central-1.aws.commercetools.com';
+export const API_URL = 'https://api.eu-central-1.aws.commercetools.com';
+export const MSG_NETWORK_ERROR = '(network error) failed to fetch data from a server';
+export const SCOPES_CLIENT = ['manage_project:tpepapuz'];
